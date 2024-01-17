@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>paofeng</groupId>
+        <artifactId>paofeng</artifactId>
+        <version>3.6.3</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>paofeng-system</module>
+        <module>paofeng-gen</module>
+        <module>paofeng-job</module>
+        <module>paofeng-file</module>
+    </modules>
+
+    <artifactId>paofeng-modules</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        paofeng-modules业务模块
+    </description>
+
+</project>

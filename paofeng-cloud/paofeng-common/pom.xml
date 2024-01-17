@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>paofeng</groupId>
+        <artifactId>paofeng</artifactId>
+        <version>3.6.3</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>paofeng-common-log</module>
+        <module>paofeng-common-core</module>
+        <module>paofeng-common-redis</module>
+        <module>paofeng-common-seata</module>
+        <module>paofeng-common-swagger</module>
+        <module>paofeng-common-security</module>
+        <module>paofeng-common-datascope</module>
+        <module>paofeng-common-datasource</module>
+    </modules>
+
+    <artifactId>paofeng-common</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        paofeng-common通用模块
+    </description>
+
+</project>

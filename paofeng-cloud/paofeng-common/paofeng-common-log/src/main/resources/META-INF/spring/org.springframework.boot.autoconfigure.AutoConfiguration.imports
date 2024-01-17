@@ -1,0 +1,2 @@
+com.paofeng.common.log.service.AsyncLogService
+com.paofeng.common.log.aspect.LogAspect

@@ -1,0 +1,3 @@
+# com.paofeng.common.swagger.config.SwaggerAutoConfiguration
+# com.paofeng.common.swagger.config.SwaggerWebConfiguration
+# com.paofeng.common.swagger.config.SwaggerBeanPostProcessor
