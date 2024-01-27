@@ -39,6 +39,14 @@ public class TokenController {
         return R.ok(tokenService.createToken(userInfo));
     }
 
+    @PostMapping("loginByPhone")
+    public R<?> loginByPhone(@RequestBody LoginBody form) {
+        // 用户登录
+        LoginUser userInfo = sysLoginService.loginByPhone(form.getPhone(), form.getPassword());
+        // 获取登录token
+        return R.ok(tokenService.createToken(userInfo));
+    }
+
     @DeleteMapping("logout")
     public R<?> logout(HttpServletRequest request) {
         String token = SecurityUtils.getToken(request);
@@ -66,7 +74,11 @@ public class TokenController {
     @PostMapping("register")
     public R<?> register(@RequestBody RegisterBody registerBody) {
         // 用户注册
-        sysLoginService.register(registerBody.getUsername(), registerBody.getPassword());
+        if (registerBody.getUsername() == null) {
+            sysLoginService.registerCustomer(registerBody.getPhone(), registerBody.getPassword());
+        } else {
+            sysLoginService.register(registerBody.getUsername(), registerBody.getPassword());
+        }
         return R.ok();
     }
 }

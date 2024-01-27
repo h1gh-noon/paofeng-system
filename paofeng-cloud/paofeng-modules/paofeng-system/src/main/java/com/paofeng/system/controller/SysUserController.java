@@ -99,7 +99,28 @@ public class SysUserController extends BaseController {
     public R<LoginUser> info(@PathVariable("username") String username) {
         SysUser sysUser = userService.selectUserByUserName(username);
         if (StringUtils.isNull(sysUser)) {
-            return R.fail("用户名或密码错误");
+            return R.fail("未查询到");
+        }
+        // 角色集合
+        Set<String> roles = permissionService.getRolePermission(sysUser);
+        // 权限集合
+        Set<String> permissions = permissionService.getMenuPermission(sysUser);
+        LoginUser sysUserVo = new LoginUser();
+        sysUserVo.setSysUser(sysUser);
+        sysUserVo.setRoles(roles);
+        sysUserVo.setPermissions(permissions);
+        return R.ok(sysUserVo);
+    }
+
+    /**
+     * 获取当前用户信息
+     */
+    @InnerAuth
+    @GetMapping("/infoByPhone/{phone}")
+    public R<LoginUser> infoByPhone(@PathVariable("phone") String phone) {
+        SysUser sysUser = userService.selectUserByPhone(phone);
+        if (StringUtils.isNull(sysUser)) {
+            return R.fail("未查询到");
         }
         // 角色集合
         Set<String> roles = permissionService.getRolePermission(sysUser);
@@ -124,6 +145,9 @@ public class SysUserController extends BaseController {
         }
         if (!userService.checkUserNameUnique(sysUser)) {
             return R.fail("保存用户'" + username + "'失败，注册账号已存在");
+        }
+        if (!userService.checkPhoneUnique(sysUser)) {
+            return R.fail("保存用户'" + sysUser.getPhonenumber() + "'失败，注册手机号已存在");
         }
         return R.ok(userService.registerUser(sysUser));
     }

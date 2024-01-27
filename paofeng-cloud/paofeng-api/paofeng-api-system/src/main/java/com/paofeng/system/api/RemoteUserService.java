@@ -31,6 +31,16 @@ public interface RemoteUserService {
     @GetMapping("/user/info/{username}")
     R<LoginUser> getUserInfo(@PathVariable("username") String username,
                              @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+    /**
+     * 通过用户名查询用户信息
+     *
+     * @param username 用户名
+     * @param source   请求来源
+     * @return 结果
+     */
+    @GetMapping("/user/infoByPhone/{phone}")
+    R<LoginUser> getUserInfoByPhone(@PathVariable("phone") String username,
+                             @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 
     /**
      * 注册用户信息

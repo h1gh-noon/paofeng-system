@@ -7,4 +7,14 @@ package com.paofeng.auth.form;
  */
 public class RegisterBody extends LoginBody {
 
+
+    private String phone;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

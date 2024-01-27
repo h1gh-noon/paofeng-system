@@ -16,6 +16,14 @@ public class LoginBody {
      */
     private String password;
 
+
+    /**
+     * 用户手机号登录
+     */
+    private String phone;
+
+
+
     public String getUsername() {
         return username;
     }
@@ -30,5 +38,13 @@ public class LoginBody {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

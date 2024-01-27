@@ -1,0 +1,2090 @@
+<template>
+  <view>
+    <div class="mui-content">
+      <!--悬浮按钮-->
+      <div class="xuanfu" id="xuanfu">
+        <img src="@/static/image/shop/order/tianjia.png" alt="" class="tianjia" />
+        <p class="quanBu"><img src="@/static/image/shop/order/quanbu.png" /><span>全部</span></p>
+        <p class="bianji link" data-link="order_msg_import.html"><img src="@/static/image/shop/order/bianji.png" /></p>
+        <p class="meituan"><img src="@/static/image/shop/order/meituan.png" /></p>
+        <p class="baidu"><img src="@/static/image/shop/order/baidu.png" /></p>
+        <p class="eleme"><img src="@/static/image/shop/order/eleme.png" /></p>
+      </div>
+      <!--默认不显示，单机悬浮按钮的选项后进行显示相关内容-->
+      <div id="slider" class="mui-slider mui-fullscreen" style="display: none;">
+        <div id="sliderSegmentedControl"
+          class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+          <div class="mui-scroll">
+            <a class="mui-control-item mui-active">
+              待发布
+            </a>
+            <a class="mui-control-item">
+              待抢单
+            </a>
+            <a class="mui-control-item">
+              待取货
+            </a>
+            <a class="mui-control-item">
+              配送中
+            </a>
+            <a class="mui-control-item yc aa">
+              异常单 <b></b>
+            </a>
+          </div>
+        </div>
+
+        <div class="mui-slider-group">
+          <div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+            <div id="scroll1" class="mui-scroll-wrapper">
+              <div class="mui-scroll">
+                <div class="main">
+                  <div class="main_two">
+                    <div class="main_two_list">
+                      <div class="two_list_top">
+                        <p><img src="@/static/image/shop/user/meituan.png" /></p>
+                        <p>
+                          <span>美团外卖</span>
+                          <span class="mui-ellipsis">000000000000000</span>
+                        </p>
+                        <p class="check"><img src="@/static/image/shop/order/xuankuang.png" class="wxz" /></p>
+                        <p class="link look" data-link="order_detail.html">
+                          查看详情
+                        </p>
+                      </div>
+                      <div class="two_list_two tel">
+                        <p>配送地址:</p>
+                        <p>
+                          <span>
+                            <i>小明</i>
+                            <i>18000000000</i>
+                            <a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
+                          </span>
+                          <span class="mui-ellipsis">中原国家广告产业园7号楼3层</span>
+                        </p>
+                      </div>
+                      <div class="two_list_three">
+                        <ul>
+                          <li>
+                            <span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+                            <span>x1</span>
+                            <span>￥9</span>
+                          </li>
+                          <li>
+                            <span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+                            <span>x1</span>
+                            <span>￥9</span>
+                          </li>
+                          <li>
+                            <span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+                            <span>x1</span>
+                            <span>￥9</span>
+                          </li>
+                          <li>
+                            <span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+                            <span>x1</span>
+                            <span>￥9</span>
+                          </li>
+                          <li>
+                            <span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+                            <span>x1</span>
+                            <span>￥9</span>
+                          </li>
+                          <li>
+                            <span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+                            <span>x1</span>
+                            <span>￥9</span>
+                          </li>
+                          <li>
+                            <span>西红柿炒鸡蛋盖浇饭</span>
+                            <span>x1</span>
+                            <span>￥9</span>
+                          </li>
+                          <li>
+                            <span>西红柿炒鸡蛋盖浇饭</span>
+                            <span>x1</span>
+                            <span>￥9</span>
+                          </li>
+
+                        </ul>
+                        <p class="more">
+                          <span>展开更多</span>
+                          <img src="@/static/image/shop/order/xiala.png" alt="" />
+                        </p>
+                        <div class="pay">
+                          <p>
+                            <span>商品费</span>
+                            <span>￥58</span>
+                          </p>
+                          <p>
+                            <span>商品费</span>
+                            <span>￥5</span>
+                          </p>
+                        </div>
+                        <div class="zongJi">
+                          <span>总计：</span>
+                          <span>￥61</span>
+                        </div>
+                      </div>
+                      <div class="two_list_five">
+                        <p class="publish">发布订单</p>
+                        <!--添加小费成功后的状态，初始不显示-->
+                        <p class="added" style="display: none;">已添加5元小费</p>
+                        <!--添加小费成功后，追加小费不在显示-->
+                        <p class="add">追加小费</p>
+                        <p class="cancel_order">取消订单</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+          <!--<div id="item2mobile" class="mui-slider-item mui-control-content">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div class="main">
+									<div class="main_two">
+							    		<div class="main_two_list">
+							    			<div class="two_list_top">
+							    				<p><img src="@/static/image/shop/user/meituan.png"/></p>
+							    				<p>
+							    					<span>美团外卖</span>
+							    					<span class="mui-ellipsis">000000000000000</span>
+							    				</p>
+							    				<p class="link look" data-link="wait_order_detail.html">
+							    					查看详情
+							    				</p>							    				
+							    			</div>
+							    			<div class="two_list_two tel">
+						    					<p>配送地址:</p>
+						    					<p>
+						    						<span>
+						    							<i>小明</i>
+						    							<i>18000000000</i>
+						    							<a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
+						    						</span>
+						    						<span class="mui-ellipsis">中原国家广告产业园7号楼3层</span>
+						    					</p>
+							    			</div>
+							    			<div class="two_list_three">
+							    				<ul>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>		    					
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span>西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    				</ul>
+							    				<p class="more">
+							    					<span>展开更多</span>
+							    					<img src="@/static/image/shop/order/xiala.png" alt="" />
+							    				</p>
+							    				<div class="pay">
+							    					<p>
+							    						<span>商品费</span>
+							    						<span>￥58</span>
+							    					</p>
+							    					<p>
+							    						<span>商品费</span>
+							    						<span>￥5</span>
+							    					</p>
+							    				</div>
+							    				<div class="zongJi">
+							    					<span>总计：</span>
+							    					<span>￥61</span>
+							    				</div>
+							    			</div>
+							    		    <div class="two_list_five">
+							    		    	<p class="wait">等待抢单<span class="djs"></span></p>
+							    		    	<p class="add">追加小费</p>
+							    		    	<p class="cancel_order">取消订单</p>		    		    	
+							    		    </div>
+							    		</div>
+							    	</div>
+								</div>
+							</div>
+						</div>
+					</div>-->
+          <!--<div id="item3mobile" class="mui-slider-item mui-control-content">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div class="main">
+									<div class="main_two">
+							    		<div class="main_two_list">
+							    			<div class="two_list_top">
+							    				<p><img src="@/static/image/shop/user/meituan.png"/></p>
+							    				<p>
+							    					<span>美团外卖</span>
+							    					<span class="mui-ellipsis">000000000000000</span>
+							    				</p>
+							    				<p class="look link" data-link="dqh_order_detail.html">
+							    					查看详情
+							    				</p>
+							    			</div>
+							    			<div class="two_list_two tel">
+						    					<p>配送地址:</p>
+						    					<p>
+						    						<span>
+						    							<i>小明</i>
+						    							<i>18000000000</i>
+						    							<a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
+						    						</span>
+						    						<span class="mui-ellipsis">中原国家广告产业园7号楼3层</span>
+						    					</p>
+							    			</div>
+							    			<div class="two_list_three">
+							    				<ul>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>		    					
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span>西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    				</ul>
+							    				<p class="more">
+							    					<span>展开更多</span>
+							    					<img src="@/static/image/shop/order/xiala.png" alt="" />
+							    				</p>
+							    				<div class="pay">
+							    					<p>
+							    						<span>商品费</span>
+							    						<span>￥58</span>
+							    					</p>
+							    					<p>
+							    						<span>商品费</span>
+							    						<span>￥5</span>
+							    					</p>
+							    				</div>
+							    				<div class="zongJi">
+							    					<span>总计：</span>
+							    					<span>￥61</span>
+							    				</div>
+							    			</div>
+							    		    <div class="two_list_fore two_list_fore1">
+							    		    	<p>
+							    		    		<img src="@/static/image/shop/user/touxiang.png"/>
+							    		    	</p>
+							    		    	<p>
+							    		    		<span>于师傅 <b>已接单</b><i>18000000000</i></span>			    		    	   
+							    		    	</p>							    		    	
+							    		    	<p class="tel">
+							    		    		<a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
+							    		    	</p>
+							    		    	<div class="add_order">
+							    		    		<p class="link" data-link="qiShou_area.html">查看距离</p>
+							    		    		<p class="link" data-link="add_order.html">追加订单</p>
+							    		    	</div>
+							    		    </div>
+							    		    <div class="two_list_five">
+							    		    	<p class="cancel_order">取消订单</p>		    		    	
+							    		    </div>
+							    		</div>
+							    	</div>
+								</div>
+							</div>
+						</div>
+					</div>-->
+          <!--<div id="item4mobile" class="mui-slider-item mui-control-content">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div class="main">
+									<div class="main_two">
+							    		<div class="main_two_list" style="padding-bottom: 10px;">
+							    			<div class="two_list_top">
+							    				<p><img src="@/static/image/shop/user/meituan.png"/></p>
+							    				<p>
+							    					<span>美团外卖</span>
+							    					<span class="mui-ellipsis">000000000000000</span>
+							    				</p>
+							    				<p class="look link" data-link="psz_order_detail.html">
+							    					查看详情
+							    				</p>
+							    			</div>
+							    			<div class="two_list_two tel">
+						    					<p>配送地址:</p>
+						    					<p>
+						    						<span>
+						    							<i>小明</i>
+						    							<i>18000000000</i>
+						    							<a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
+						    						</span>
+						    						<span class="mui-ellipsis">中原国家广告产业园7号楼3层</span>
+						    					</p>
+							    			</div>
+							    			<div class="two_list_three">
+							    				<ul>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>		    					
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span>西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    				</ul>
+							    				<p class="more">
+							    					<span>展开更多</span>
+							    					<img src="@/static/image/shop/order/xiala.png" alt="" />
+							    				</p>
+							    				<div class="pay">
+							    					<p>
+							    						<span>商品费</span>
+							    						<span>￥58</span>
+							    					</p>
+							    					<p>
+							    						<span>商品费</span>
+							    						<span>￥5</span>
+							    					</p>
+							    				</div>
+							    				<div class="zongJi">
+							    					<span>总计：</span>
+							    					<span>￥61</span>
+							    				</div>
+							    			</div>
+							    		    <div class="two_list_fore">
+							    		    	<p>
+							    		    		<img src="@/static/image/shop/user/touxiang.png"/>
+							    		    	</p>
+							    		    	<p class="link" data-link="qiShou_area.html">
+							    		    		<span>于师傅 <i>18000000000</i></span>
+							    		    	    <span>配送中 <i>查看距离</i></span>
+							    		    	</p>
+							    		    	
+							    		    	<p class="tel">
+							    		    		<a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
+							    		    	</p>
+							    		    </div>							    		  
+							    		</div>
+							    	</div>
+								</div>
+							</div>
+						</div>
+					</div>-->
+          <!--<div id="item5mobile" class="mui-slider-item mui-control-content">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div class="main">
+									<div class="main_two" style="margin-bottom: 10px;">
+										<div class="two_one">
+							    			商户取消
+							    		</div>
+							    		<div class="main_two_list" style="padding-bottom: 10px;">							    			
+							    			<div class="two_list_top">
+							    				<p><img src="@/static/image/shop/user/meituan.png"/></p>
+							    				<p>
+							    					<span>美团外卖</span>
+							    					<span class="mui-ellipsis">000000000000000</span>
+							    				</p>
+							    				<p class="look link" data-link="ycd_detail.html">
+							    					查看详情
+							    				</p>
+							    			</div>
+							    			<div class="two_list_two tel">
+						    					<p>配送地址:</p>
+						    					<p>
+						    						<span>
+						    							<i>小明</i>
+						    							<i>18000000000</i>
+						    							<a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
+						    						</span>
+						    						<span class="mui-ellipsis">中原国家广告产业园7号楼3层</span>
+						    					</p>
+							    			</div>
+							    			<div class="two_list_three">
+							    				<ul>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>		    					
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    					<li>
+							    						<span>西红柿炒鸡蛋盖浇饭</span>
+							    						<span>x1</span>
+							    						<span>￥9</span>
+							    					</li>
+							    				</ul>
+							    				<p class="more">
+							    					<span>展开更多</span>
+							    					<img src="@/static/image/shop/order/xiala.png" alt="" />
+							    				</p>
+							    				<div class="pay">
+							    					<p>
+							    						<span>商品费</span>
+							    						<span>￥58</span>
+							    					</p>
+							    					<p>
+							    						<span>商品费</span>
+							    						<span>￥5</span>
+							    					</p>
+							    				</div>
+							    				<div class="zongJi" style="border-bottom: none;">
+							    					<span>总计：</span>
+							    					<span>￥61</span>
+							    				</div>
+							    			</div>							    		    							    		  
+							    		</div>
+							    	    <div class="two_three">
+							    	    	<p class="hulue">
+							    	    		<img src="@/static/image/shop/order/hulue.png"/>
+							    	    		<span>忽略此单</span>
+							    	    	</p>
+							    	    	<p class="begin">
+							    	    		<img src="@/static/image/shop/order/chongxin.png"/>
+							    	    		<span>重新发单</span>
+							    	    	</p>
+							    	    </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>-->
+
+        </div>
+        <p class="btn publish">一键发单</p>
+      </div>
+      <!--刚进来是没有数据的，默认显示-->
+      <div class="none">
+        <img src="@/static/image/shop/order/qishou.png" alt="" />
+        <p class="none_tip">暂时没有数据</p>
+        <p class="btn yjfd" style="display: none;">一键发单</p>
+      </div>
+    </div>
+    <!--异常单里的取消弹框-->
+    <div class="yc_quxiao_pop" style="display: none;">
+      <div class="yc_quxiao">
+        <p>提示</p>
+        <p>有一个订单已被买家取消,请查看</p>
+        <p>
+          <a class="yc_look">查看</a>
+          <a class="yc_enter">确定</a>
+        </p>
+      </div>
+    </div>
+    <!--异常单里的忽略此单弹框-->
+    <div class="hl_Order_pop" style="display: none;">
+      <div class="hlOrder">
+        <p>请选择忽略订单的原因</p>
+        <p class="hl">未完成配送</p>
+        <p class="hl">已完成配送</p>
+      </div>
+    </div>
+    <!--异常单里的重新发单弹框-->
+    <div class="yc_begin_pop" style="display: none;">
+      <div class="yc_begin">
+        <p>提示</p>
+        <p>确定要重新发布该订单吗？</p>
+        <p>
+          <a class="yc_cancel">取消</a>
+          <a class="yc_enter">确定</a>
+        </p>
+      </div>
+    </div>
+    <!--电话弹框-->
+    <div class="phone_pop" style="display: none;">
+      <div class="phone">
+        <p>18000000000</p>
+        <p>
+          <a class="cancel">取消</a>
+          <a href="tel:123456789">呼叫</a>
+        </p>
+      </div>
+    </div>
+    <!--取消弹框-->
+    <div class="quxiao_pop" style="display: none;">
+      <div class="quxiao">
+        <p>确定订单取消将要扣取佣金</p>
+        <p>
+          <a class="enter" style="color: #666;">确认</a>
+          <a class="cancel">取消</a>
+        </p>
+      </div>
+    </div>
+    <!--确认取消原因弹框-->
+    <div class="qxOrder_pop" style="display: none;">
+      <div class="qxOrder">
+        <p>请选择取消订单的原因</p>
+        <p class="qx">买家取消</p>
+        <p class="qx">商家自己配送</p>
+        <p class="qx">没有骑手接单</p>
+        <div class="finished">完成</div>
+      </div>
+    </div>
+    <!--追加小费弹框-->
+    <div class="addPay_pop" style="display: none;">
+      <div class="addPay">
+        <p>请输入小费金额</p>
+        <p><input type="text" class="jine" />元</p>
+        <p class="enter">
+          确定
+        </p>
+      </div>
+    </div>
+    <!--输入交易密码弹框-->
+    <div class="jiaoYi_pop" style="display: none;">
+      <div class="jiaoYi">
+        <p>
+          <img src="@/static/image/shop/user/xuanfen.png" alt="" />
+          <span>请输入交易密码</span>
+        </p>
+        <p><input type="text" class="jine" placeholder="请输入密码" /></p>
+        <p class="enter">
+          确定
+        </p>
+      </div>
+    </div>
+    <div class="zzc" style="display: none;"></div>
+  </view>
+</template>
+
+<script>
+import { initHandler } from "./order";
+//#ifdef H5  
+import $ from '@/static/js/jquery-1.7.2.js'
+//#endif
+
+export default {
+  data() {
+    return {
+    }
+  },
+  onReady() {
+    initHandler()
+  },
+  methods: {
+  }
+}
+</script>
+
+<style scoped>
+.mui-bar {
+  padding: 0 15px !important;
+  height: 44px;
+  line-height: 44px;
+  background: #6A4A23;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.shouye,
+.message {
+  display: inline-block;
+  width: 44px;
+  height: 44px;
+  position: relative;
+}
+
+.shouye img,
+.message img {
+  width: 16px;
+  position: absolute;
+  top: 13px;
+}
+
+.shouye {
+  float: left;
+}
+
+.message {
+  float: right;
+}
+
+.message img {
+  right: 0;
+}
+
+.mui-title {
+  color: #fff;
+  font-size: 16px;
+}
+
+.mui-content {
+  width: 100%;
+  /*	background: #fff;*/
+}
+
+
+/**/
+.zzc {
+  /*display: none;*/
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.xuanfu {
+  min-width: 62px;
+  min-height: 62px;
+  position: absolute;
+  top: 44px;
+  left: 0px;
+  z-index: 11;
+}
+
+.quanBu {
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+}
+
+.quanBu span,
+.quanBu_1 span {
+  display: inline-block;
+  width: 100%;
+  height: 14px;
+  text-align: center;
+  line-height: 14px;
+  color: #f9842a;
+  font-size: 12px;
+  position: absolute;
+  top: 55%;
+  left: 0;
+}
+
+.tianjia {
+  width: 62px;
+  height: 62px;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+}
+
+.xuanfu p {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.xuanfu p img {
+  width: 45px;
+}
+
+.quanBu,
+.quanBu_1 {
+  background: #fff;
+}
+
+.quanBu img,
+.quanBu_1 img {
+  margin-left: -10px;
+  width: 18px !important;
+  height: 18px;
+  position: absolute;
+  top: 15%;
+  left: 50%;
+}
+
+.bianji,
+.meituan,
+.baidu,
+.eleme,
+.quanBu {
+  display: none;
+  top: 10px;
+  left: 10px;
+}
+
+.quanBu_1 {
+  display: block;
+  animation: quanBu_1 .3s 1 ease forwards;
+  -moz-animation: quanBu_1 .3s 1 ease forwards;
+  /* Firefox */
+  -webkit-animation: quanBu_1 .3s 1 ease forwards;
+  /* Safari 和 Chrome */
+  -o-animation: quanBu_1 .3s 1 ease forwards;
+  /* Opera */
+  transition: all .3s;
+}
+
+.bianji_1 {
+  display: block;
+  animation: bianji_1 .4s 1 ease forwards;
+  -moz-animation: bianji_1 .4s 1 ease forwards;
+  /* Firefox */
+  -webkit-animation: bianji_1 .4s 1 ease forwards;
+  /* Safari 和 Chrome */
+  -o-animation: bianji_1 .4s 1 ease forwards;
+  /* Opera */
+  transition: all .4s;
+}
+
+.meituan_1 {
+  display: block;
+  animation: meituan_1 .5s 1 ease forwards;
+  -moz-animation: meituan_1 .5s 1 ease forwards;
+  /* Firefox */
+  -webkit-animation: meituan_1 .5s 1 ease forwards;
+  /* Safari 和 Chrome */
+  -o-animation: meituan_1 .5s 1 ease forwards;
+  /* Opera */
+  transition: all .5s;
+}
+
+.baidu_1 {
+  display: block;
+  animation: baidu_1 .6s 1 ease forwards;
+  -moz-animation: baidu_1 .6s 1 ease forwards;
+  /* Firefox */
+  -webkit-animation: baidu_1 .6s 1 ease forwards;
+  /* Safari 和 Chrome */
+  -o-animation: baidu_1 .6s 1 ease forwards;
+  /* Opera */
+  transition: all .6s;
+}
+
+.eleme_1 {
+  display: block;
+  animation: eleme_1 .7s 1 ease forwards;
+  -moz-animation: eleme_1 .7s 1 ease forwards;
+  /* Firefox */
+  -webkit-animation: eleme_1 .7s 1 ease forwards;
+  /* Safari 和 Chrome */
+  -o-animation: eleme_1 .7s 1 ease forwards;
+  /* Opera */
+  transition: all .7s;
+}
+
+/**/
+@keyframes quanBu_1 {
+  0% {
+    top: 50px;
+    left: 80px
+  }
+
+  100% {
+    top: 25px;
+    left: 120px
+  }
+
+}
+
+@-moz-keyframes quanBu_1 {
+  0% {
+    top: 50px;
+    left: 80px
+  }
+
+  100% {
+    top: 25px;
+    left: 120px
+  }
+}
+
+@-webkit-keyframes quanBu_1 {
+  0% {
+    top: 50px;
+    left: 80px
+  }
+
+  100% {
+    top: 25px;
+    left: 120px
+  }
+}
+
+@-o-keyframes quanBu_1 {
+  0% {
+    top: 50px;
+    left: 80px
+  }
+
+  100% {
+    top: 25px;
+    left: 120px
+  }
+}
+
+/*///////////////////////////////*/
+@keyframes bainji_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 0px;
+    left: 80px
+  }
+
+}
+
+@-moz-keyframes bianji_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 0px;
+    left: 80px
+  }
+}
+
+@-webkit-keyframes bianji_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 0px;
+    left: 80px
+  }
+}
+
+@-o-keyframes bianji_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 0px;
+    left: 80px
+  }
+}
+
+/**/
+@keyframes meituan_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 5px;
+    left: 33px
+  }
+
+}
+
+@-moz-keyframes meituan_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 5px;
+    left: 33px
+  }
+}
+
+@-webkit-keyframes meituan_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 5px;
+    left: 33px
+  }
+}
+
+@-o-keyframes meituan_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 5px;
+    left: 33px
+  }
+}
+
+/**/
+@keyframes baidu_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 40px;
+    left: 0px
+  }
+
+}
+
+@-moz-keyframes baidu_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 40px;
+    left: 0px
+  }
+}
+
+@-webkit-keyframes baidu_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 40px;
+    left: 0px
+  }
+}
+
+@-o-keyframes baidu_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 40px;
+    left: 0px
+  }
+}
+
+/**/
+@keyframes eleme_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 88px;
+    left: 5px
+  }
+
+}
+
+@-moz-keyframes eleme_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 88px;
+    left: 5px
+  }
+}
+
+@-webkit-keyframes eleme_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 88px;
+    left: 5px
+  }
+}
+
+@-o-keyframes eleme_1 {
+  0% {
+    top: 73px;
+    left: 80px
+  }
+
+  100% {
+    top: 88px;
+    left: 5px
+  }
+}
+
+/**/
+.mui-segmented-control.mui-scroll-wrapper .mui-scroll {
+  width: 100%;
+  height: 40px;
+  background: #fff;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.mui-segmented-control.mui-scroll-wrapper {
+  height: auto;
+}
+
+.mui-segmented-control {
+  overflow: auto;
+}
+
+/*toubu*/
+.mui-segmented-control.mui-scroll-wrapper .mui-control-item {
+  display: inline-block;
+  float: left;
+  padding: 0;
+  width: 20%;
+  color: #666;
+  font-size: 14px;
+  background: #fff;
+  border-bottom: 2px solid #dbdbdb;
+}
+
+.mui-slider .mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+  border-bottom: 2px solid #6A4A23;
+  background: #fff;
+}
+
+.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+  color: #6A4A23;
+  border-bottom: 2px solid #6A4A23;
+}
+
+/*提示*/
+.mui-bar~.mui-content .mui-fullscreen {
+  top: 44px;
+  height: auto;
+}
+
+.mui-pull-top-tips {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  margin-left: -25px;
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  z-index: 1;
+}
+
+.mui-bar~.mui-pull-top-tips {
+  top: 24px;
+}
+
+.mui-pull-top-wrapper {
+  width: 42px;
+  height: 42px;
+  display: block;
+  text-align: center;
+  background-color: #efeff4;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  background-clip: padding-box;
+  box-shadow: 0 4px 10px #bbb;
+  overflow: hidden;
+}
+
+.mui-pull-top-tips.mui-transitioning {
+  -webkit-transition-duration: 200ms;
+  transition-duration: 200ms;
+}
+
+.mui-pull-top-tips .mui-pull-loading {
+  /*-webkit-backface-visibility: hidden;
+				-webkit-transition-duration: 400ms;
+				transition-duration: 400ms;*/
+  margin: 0;
+}
+
+.mui-pull-top-wrapper .mui-icon,
+.mui-pull-top-wrapper .mui-spinner {
+  margin-top: 7px;
+}
+
+.mui-pull-top-wrapper .mui-icon.mui-reverse {
+  /*-webkit-transform: rotate(180deg) translateZ(0);*/
+}
+
+.mui-pull-bottom-tips {
+  margin-bottom: 60px;
+  margin-top: -40px;
+  text-align: center;
+  background-color: transparent;
+  font-size: 15px;
+  line-height: 40px;
+  color: #777;
+}
+
+.mui-pull-top-canvas {
+  overflow: hidden;
+  background-color: #fafafa;
+  border-radius: 40px;
+  box-shadow: 0 4px 10px #bbb;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+}
+
+.mui-pull-top-canvas canvas {
+  width: 40px;
+}
+
+.mui-slider-indicator.mui-segmented-control {
+  background-color: #fff;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.mui-slider .mui-segmented-control.mui-segmented-control-inverted~.mui-slider-group .mui-slider-item {
+  border-top: none;
+}
+
+.mui-segmented-control .mui-control-item {
+  line-height: 40px;
+}
+
+/*//没有数据时///*/
+.none {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9;
+}
+
+.none img {
+  width: 162.5px;
+  height: 116.5px;
+  position: absolute;
+  top: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+}
+
+.none p.none_tip {
+  width: 100%;
+  height: 45px;
+  text-align: center;
+  line-height: 45px;
+  color: #999999;
+  font-size: 13px;
+  position: absolute;
+  top: 310px;
+}
+
+.btn {
+  /*display: none;*/
+  margin-left: -39.219%;
+  width: 78.438%;
+  height: 35px;
+  text-align: center;
+  line-height: 35px;
+  color: #fff;
+  font-size: 15px;
+  border-radius: 30px;
+  background: #6A4A23;
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+}
+
+/*/////////////////////*/
+.main {
+  margin-bottom: 20px;
+  width: 100%;
+  padding: 10px;
+  background: #f5f5f5;
+}
+
+/*//*/
+.main_two {
+  width: 100%;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.main_two_list {
+  padding: 0 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.two_list_top {
+  padding: 12px 0px;
+  width: 100%;
+  height: 56px;
+}
+
+.two_list_top p {
+  float: left;
+}
+
+.two_list_top p:nth-child(1) {
+  margin-right: 2.595%;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.two_list_top p:nth-child(1) img {
+  width: 100%;
+  border-radius: 50%;
+}
+
+.two_list_top p:nth-child(2) {
+  width: 47.41%;
+}
+
+.two_list_top p:nth-child(2) span {
+  display: block;
+  width: 100%;
+  color: #666;
+  font-size: 14px;
+}
+
+.two_list_top p:nth-child(2) span:nth-child(1) {
+  height: 20px;
+  line-height: 20px;
+}
+
+.two_list_top p:nth-child(2) span:nth-child(2) {
+  height: 14px;
+  line-height: 14px;
+}
+
+.two_list_top p.check {
+  margin-top: -5px;
+  margin-left: 12px;
+  float: right;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+}
+
+.xz {
+  width: 21px !important;
+}
+
+.wxz {
+  margin-top: 7px;
+  width: 15px !important;
+}
+
+.two_list_top p.look {
+  float: right;
+  width: 65px;
+  height: 20px;
+  text-align: center;
+  line-height: 19px;
+  color: #CC3333;
+  font-size: 14px;
+  border: 1px solid #CC3333;
+}
+
+.two_list_top p:nth-child(4) span:nth-child(1) {
+  margin-right: 5px;
+}
+
+.two_list_two {
+  padding: 6px 0;
+  width: 100%;
+  height: 60px;
+  border-bottom: 1px dotted #dbdbdb;
+  border-top: 1px dotted #dbdbdb;
+  position: relative;
+}
+
+.two_list_two p {
+  float: left;
+}
+
+.two_list_two p:nth-child(1) {
+  width: 22%;
+  height: 29px;
+  line-height: 29px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.two_list_two p:nth-child(2) {
+  padding-left: 10px;
+  width: 60%;
+}
+
+.two_list_two p:nth-child(2) span {
+  display: block;
+  width: 100%;
+}
+
+.two_list_two p:nth-child(2) span:nth-child(1) {
+  height: 29px;
+  line-height: 29px;
+  color: #333;
+  font-size: 14px;
+
+}
+
+.two_list_two p:nth-child(2) span:nth-child(1) i {
+  margin-right: 5px;
+  font-style: normal;
+}
+
+.two_list_two p:nth-child(2) span:nth-child(1) a {
+  display: inline-block;
+  margin-left: 5px;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 14px;
+  right: 0;
+}
+
+.two_list_two p:nth-child(2) span:nth-child(1) a img {
+  width: 100%;
+  height: 100%;
+}
+
+.two_list_two p:nth-child(2) span:nth-child(2) {
+  height: 14px;
+  line-height: 14px;
+  color: #333;
+  font-size: 14px;
+}
+
+/*/////*/
+.two_list_three ul {
+  padding: 0px 9px;
+  margin: 11px 0 15px 0;
+  width: 100%;
+  height: 55px;
+  background: #f9f9f9;
+  overflow: hidden;
+}
+
+.two_list_three ul li {
+  margin-bottom: 3px;
+  width: 100%;
+  height: 21px;
+  line-height: 21px;
+
+}
+
+.two_list_three ul li:first-child {
+  margin-top: 8px;
+}
+
+.two_list_three ul li:last-child {
+  margin-bottom: 8px;
+}
+
+.two_list_three ul li span {
+  display: inline-block;
+  float: left;
+  font-size: 14px;
+}
+
+.two_list_three ul li span:nth-child(1) {
+  width: 145px;
+  color: #333;
+}
+
+.two_list_three ul li span:nth-child(2) {
+  width: 25px;
+  color: #666;
+}
+
+.two_list_three ul li span:nth-child(3) {
+  width: 91px;
+  color: #333;
+  text-align: right;
+}
+
+.two_list_three p.more {
+  margin: auto;
+  width: 85px;
+  height: 20px;
+  /*line-height:18px;*/
+  text-align: center;
+  color: #cc3333;
+  font-size: 14px;
+  border: 1px solid #CC3333;
+  position: relative;
+}
+
+.two_list_three p.more span {
+  position: absolute;
+  top: -1px;
+  left: 10%;
+}
+
+.two_list_three p.more img {
+  width: 9px !important;
+  height: 5px;
+  position: absolute;
+  top: 7px;
+  left: 80%;
+}
+
+.two_list_three div.pay {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  padding-right: 10px;
+  width: 100%;
+}
+
+.two_list_three div.pay p {
+  width: 100%;
+  height: 21px;
+  font-size: 14px;
+}
+
+.two_list_three div.pay p span:nth-child(1) {
+  display: inline-block;
+  height: 21px;
+  line-height: 21px;
+  float: left;
+  color: #666;
+}
+
+.two_list_three div.pay p span:nth-child(2) {
+  display: inline-block;
+  height: 21px;
+  line-height: 21px;
+  float: right;
+  text-align: right;
+  color: #333;
+}
+
+.two_list_three div.zongJi {
+  padding-right: 10px;
+  width: 100%;
+  height: 40px;
+  text-align: right;
+  line-height: 40px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px dotted #DBDBDB;
+  border-top: 1px dotted #dbdbdb;
+}
+
+.two_list_three div.zongJi span:nth-child(2) {
+  color: #CC3333;
+}
+
+/*//////*/
+.two_list_fore {
+  padding: 10px 9px;
+  margin-top: 11px;
+  width: 100%;
+  height: 60px;
+  background: #f9f9f9;
+  position: relative;
+}
+
+.two_list_fore1 {
+  height: 90px !important;
+}
+
+.two_list_fore p {
+  float: left;
+  color: #666;
+  font-size: 14px;
+}
+
+.two_list_fore p:nth-child(1) {
+  margin-right: 10px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.two_list_fore p:nth-child(1) img {
+  width: 100%;
+}
+
+.two_list_fore>p:nth-child(2) {
+  margin-top: -2px;
+  width: 180px;
+  height: 35px;
+}
+
+.two_list_fore1>p:nth-child(2) {
+  margin-top: -2px;
+  width: 80% !important;
+  height: 35px;
+}
+
+.two_list_fore p:nth-child(2) span {
+  display: inline-block;
+  width: 100%;
+  height: 12px;
+  line-height: 12px;
+  color: #666666;
+  font-size: 14px;
+}
+
+.two_list_fore p:nth-child(2) span i,
+.two_list_fore p:nth-child(2) span b {
+  margin-left: 10px;
+  font-style: normal;
+  font-weight: 100;
+}
+
+.two_list_fore p:nth-child(2) span:nth-child(2) i {
+  color: #CC3333;
+}
+
+.two_list_fore p:nth-child(3) {
+  float: right;
+  width: 30px;
+  height: 30px;
+}
+
+.two_list_fore1 p:nth-child(3) {
+  float: right;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 10px;
+  top: 32px;
+  z-index: 3;
+}
+
+.two_list_fore p:nth-child(3) img {
+  width: 30px;
+  margin-top: 4px;
+}
+
+.add_order {
+  margin-top: 20px;
+  width: 100%;
+  height: 40px;
+}
+
+.add_order p {
+  float: left !important;
+  margin: 0 !important;
+  margin-right: 15px !important;
+  width: 70px !important;
+  height: 22px !important;
+  text-align: center;
+  line-height: 22px;
+  color: #fff;
+  font-size: 14px;
+  background: #CC3333;
+  border-radius: 3px !important;
+}
+
+/*//////*/
+
+.two_list_five {
+  padding: 14px 0;
+  width: 100%;
+  height: 52px;
+}
+
+.two_list_five p {
+  float: right;
+  padding: 0 5px;
+  height: 22px;
+  text-align: center;
+  line-height: 23px;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 3px;
+  margin-left: 8px;
+}
+
+.two_list_five p {
+  background: #6A4A23;
+}
+
+.two_list_five p:last-child,
+.two_list_five p.added {
+  background: #999999;
+}
+
+.wait {
+  background: #CC3333 !important;
+  font-size: 14px !important;
+}
+
+/*异常单*/
+.two_one {
+  width: 100%;
+  height: 34px;
+  text-align: center;
+  line-height: 34px;
+  color: #CC3333;
+  font-size: 13px;
+  border: 1px solid #CC3333;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.two_three {
+  padding: 0 9px;
+  width: 100%;
+  height: 37px;
+}
+
+.two_three p {
+  padding: 2px 0;
+  float: left;
+  width: 50%;
+  height: 22px;
+  text-align: center;
+  line-height: 15px;
+  color: #666;
+  font-size: 13px;
+}
+
+.two_three p:nth-child(1) {
+  border-right: 1px solid #dbdbdb;
+}
+
+.two_three p img {
+  width: 15px !important;
+  margin-right: 5px;
+}
+
+/*忽略订单*/
+/*////*/
+.hl_Order_pop,
+.yc_quxiao_pop,
+.addPay_pop,
+.jiaoYi_pop,
+.yc_begin_pop {
+  /*display: none;*/
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.hlOrder,
+.jiaoYi {
+  padding: 0 15px;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: #fff;
+}
+
+.hlOrder p {
+  width: 100%;
+  height: 43px;
+  background: #fff;
+  text-align: center;
+  line-height: 43px;
+  color: #333;
+  font-size: 14px;
+  border-bottom: 1px dotted #dbdbdb;
+}
+
+.hlOrder p:last-child {
+  border-bottom: none;
+}
+
+.hlOrder p:first-child {
+  width: 100%;
+  height: 40px;
+  background: #fff;
+  text-align: center;
+  line-height: 40px;
+  color: #6A4A23;
+  font-size: 14px;
+}
+
+/*异常取消*/
+.yc_quxiao,
+.addPay,
+.yc_begin {
+  width: 65%;
+  height: 120px;
+  background: #fff;
+  border-radius: 6px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
+
+.yc_quxiao p,
+.yc_begin p {
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 14px;
+}
+
+.yc_quxiao p:nth-child(1),
+.yc_begin p:nth-child(1) {
+  margin-top: 15px;
+  color: #CC3333;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+}
+
+.yc_quxiao p:nth-child(2),
+.yc_begin p:nth-child(2) {
+  margin-top: -5px;
+  color: #333;
+  border-bottom: 1px dotted #dbdbdb;
+}
+
+.yc_quxiao p:nth-child(3),
+.yc_begin p:nth-child(3) {
+  height: 40px;
+  line-height: 40px;
+}
+
+.yc_quxiao p:nth-child(3) a,
+.yc_begin p:nth-child(3) a {
+  display: inline-block;
+  float: left;
+  width: 50%;
+  height: 40px;
+  line-height: 40px;
+  color: #CC3333;
+  font-size: 14px;
+}
+
+.yc_quxiao p:nth-child(3) a:nth-child(1),
+.yc_begin p:nth-child(3) a:nth-child(1) {
+  border-right: 1px dotted #dbdbdb;
+}
+
+/*/////*/
+/*//////*/
+.phone_pop,
+.quxiao_pop,
+.qxOrder_pop {
+  /*display: none;*/
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.phone,
+.quxiao {
+  width: 65%;
+  height: 100px;
+  background: #fff;
+  border-radius: 6px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
+
+.phone p,
+.quxiao p {
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 14px;
+}
+
+.phone p:nth-child(1),
+.quxiao p:nth-child(1) {
+  color: #333;
+  border-bottom: 1px dotted #dbdbdb;
+}
+
+.phone p:nth-child(2) a,
+.quxiao p:nth-child(2) a {
+  display: inline-block;
+  float: left;
+  width: 50%;
+  height: 50px;
+  color: #CC3333;
+  font-size: 14px;
+}
+
+.phone p:nth-child(2) a:nth-child(1),
+.quxiao p:nth-child(2) a:nth-child(1) {
+  border-right: 1px dotted #dbdbdb;
+}
+
+/*////*/
+.qxOrder {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background: #939393;
+}
+
+.qxOrder p {
+  padding: 0 5%;
+  width: 100%;
+  height: 43px;
+  background: #fff;
+  text-align: center;
+  line-height: 43px;
+  color: #333;
+  font-size: 14px;
+  border-bottom: 1px dotted #dbdbdb;
+}
+
+.qxOrder p:last-child {
+  border-bottom: none;
+}
+
+.qxOrder p:first-child {
+  width: 100%;
+  height: 40px;
+  background: #fff;
+  text-align: center;
+  line-height: 40px;
+  color: #6A4A23;
+  font-size: 14px;
+}
+
+.qxOrder div {
+  margin-top: 10px;
+  width: 100%;
+  height: 43px;
+  text-align: center;
+  line-height: 43px;
+  color: #fff;
+  font-size: 15px;
+  background: #6A4A23;
+}
+
+/**/
+.yc {
+  color: #CC3333 !important;
+  position: relative;
+}
+
+.yc b {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  width: 6px;
+  height: 6px;
+  background: #CC3333;
+  border-radius: 50%;
+}
+
+/**/
+.addPay p:nth-child(1) {
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 14px;
+  color: #333;
+}
+
+.addPay p:nth-child(2) {
+  margin-top: -15px;
+  margin-bottom: 5px;
+  width: 100%;
+  height: 40px;
+  text-align: center;
+  color: #333;
+}
+
+.addPay p:nth-child(2) input {
+  margin: auto;
+  padding: 0;
+  margin: 0;
+  width: 40%;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  color: #333;
+  font-size: 14px;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.addPay p:nth-child(3) {
+  width: 100%;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 14px;
+  color: #fff;
+  border-top: 1px dotted #dbdbdb;
+  background: #6A4A23;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+/*输入交易密码*/
+.jiaoYi p:nth-child(1) {
+  width: 100%;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  color: #333333;
+  font-size: 14px;
+  border-bottom: 1px dotted #ccc;
+  position: relative;
+}
+
+.jiaoYi p:nth-child(1) img {
+  width: 7px;
+  position: absolute;
+  top: 13px;
+  left: 0;
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+}
+
+.jiaoYi p:nth-child(2) {
+  padding: 0 17px;
+  margin-top: 29px;
+  width: 100%;
+  height: 32px;
+  ;
+}
+
+.jiaoYi p:nth-child(2) input {
+  padding: 0 15px !important;
+  margin: 0;
+  width: 100%;
+  height: 32px;
+  line-height: 33px;
+  color: #333333;
+  font-size: 14px;
+}
+
+.jiaoYi p:nth-child(3) {
+  margin: auto;
+  width: 78%;
+  height: 32px;
+  margin-top: 90px;
+  margin-bottom: 30px;
+  text-align: center;
+  line-height: 32px;
+  color: #fff;
+  font-size: 15px;
+  background: #6A4A23;
+  border-radius: 30px;
+}
+</style>

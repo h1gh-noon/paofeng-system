@@ -1,0 +1,50 @@
+body {
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+  font-family: "微软雅黑";
+  color: black;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: black
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  padding: 0;
+  border: 0;
+  margin: 0;
+  display: block;
+}
+
+.youxi:before {
+  content: "\e60e";
+}
+
+.wenjian:before {
+  content: "\e60f";
+}
+
+.zhuanfa:before {
+  content: "\e610";
+}
