@@ -1,45 +1,53 @@
 <template>
-  <div class="mui-content">
-    <div class="list">
-      <p>
-        <img src="@/static/image/shop/enter/xiaoxi_1.png" />
-      </p>
-      <p>
-        <span>订单状态</span>
-        <span class="mui-ellipsis">您有新的订单状态，点击查水电费v看</span>
-      </p>
-      <p>
-        <span>05-22</span>
-        <span>09:56</span>
-      </p>
+  <view>
+    <header class="mui-bar mui-bar-nav">
+      <a class="mui-action-back" @click="uni.navigateBack()">
+        <img src="@/static/image/shop/order/back.png" alt="" />
+      </a>
+      <h1 class="mui-title">消息</h1>
+    </header>
+    <div class="mui-content">
+      <div class="list">
+        <p>
+          <img src="@/static/image/shop/enter/xiaoxi_1.png" />
+        </p>
+        <p>
+          <span>订单状态</span>
+          <span class="mui-ellipsis">您有新的订单状态，点击查水电费v看</span>
+        </p>
+        <p>
+          <span>05-22</span>
+          <span>09:56</span>
+        </p>
+      </div>
+      <div class="list">
+        <p>
+          <img src="@/static/image/shop/enter/xiaoxi_2.png" />
+        </p>
+        <p>
+          <span>通知消息</span>
+          <span class="mui-ellipsis">您有一个新的订单，点击查看</span>
+        </p>
+        <p>
+          <span>05-22</span>
+          <span>09:56</span>
+        </p>
+      </div>
+      <div class="list">
+        <p>
+          <img src="@/static/image/shop/enter/xiaoxi_3.png" />
+        </p>
+        <p>
+          <span>异常订单</span>
+          <span>您有一个异常订单，点击查看</span>
+        </p>
+        <p>
+          <span>05-22</span>
+          <span>09:56</span>
+        </p>
+      </div>
     </div>
-    <div class="list">
-      <p>
-        <img src="@/static/image/shop/enter/xiaoxi_2.png" />
-      </p>
-      <p>
-        <span>通知消息</span>
-        <span class="mui-ellipsis">您有一个新的订单，点击查看</span>
-      </p>
-      <p>
-        <span>05-22</span>
-        <span>09:56</span>
-      </p>
-    </div>
-    <div class="list">
-      <p>
-        <img src="@/static/image/shop/enter/xiaoxi_3.png" />
-      </p>
-      <p>
-        <span>异常订单</span>
-        <span>您有一个异常订单，点击查看</span>
-      </p>
-      <p>
-        <span>05-22</span>
-        <span>09:56</span>
-      </p>
-    </div>
-  </div>
+  </view>
 </template>
 
 <script>
@@ -84,6 +92,7 @@ header img {
 
 .mui-content {
   padding: 0 15px;
+  padding-top: 44px;
   width: 100%;
   background: #fff;
   border-bottom: 1px solid #dbdbdb;

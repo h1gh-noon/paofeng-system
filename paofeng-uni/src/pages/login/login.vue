@@ -62,6 +62,7 @@ export default {
 
       loginByPhone(this.requestForm).then(res => {
         if (res.code === 200) {
+          uni.setStorageSync('auth_token', res.data.access_token)
           uni.showToast({
             title: '登录成功！',
             duration: 2000,

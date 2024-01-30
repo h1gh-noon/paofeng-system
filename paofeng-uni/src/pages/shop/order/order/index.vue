@@ -1,5 +1,16 @@
 <template>
   <view>
+    <header class="mui-bar mui-bar-nav">
+      <navigator url="/pages/shop/user/user" hover-class="other-navigator-hover">
+        <a class="shouye link">
+          <img src="@/static/image/shop/order/zhuye.png" alt="" />
+        </a>
+      </navigator>
+      <h1 class="mui-title">订单管理</h1>
+      <a class="message link" data-link="../../html/enter/message.html">
+        <img src="@/static/image/shop/order/xiaoxi.png" alt="" />
+      </a>
+    </header>
     <div class="mui-content">
       <!--悬浮按钮-->
       <div class="xuanfu" id="xuanfu">

@@ -1,15 +1,15 @@
 package com.paofeng.file.controller;
 
+import com.paofeng.common.core.domain.R;
+import com.paofeng.common.core.utils.file.FileUtils;
+import com.paofeng.file.service.ISysFileService;
+import com.paofeng.system.api.domain.SysFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.paofeng.common.core.domain.R;
-import com.paofeng.common.core.utils.file.FileUtils;
-import com.paofeng.file.service.ISysFileService;
-import com.paofeng.system.api.domain.SysFile;
 
 /**
  * 文件请求处理

@@ -3,8 +3,8 @@ import baseConfig from '../baseConfig.js'
 const httpRequest = {
   request: function (method, url, data) {
     const header = {
-      'Content-Type': 'application/json'
-      // 'Auth-Token': uni.getStorageSync('auth_token')
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + uni.getStorageSync('auth_token')
     }
 
     return new Promise((resolve, reject) => {

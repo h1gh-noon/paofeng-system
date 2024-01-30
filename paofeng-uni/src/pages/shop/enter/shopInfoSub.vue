@@ -1,129 +1,203 @@
 <template>
-  <div class="mui-content">
-    <div class="jinDu">
-      <img src="@/static/image/shop/enter/jingdu_1.png" />
-      <p>
-        <span>完善信息</span>
-        <span>审核中</span>
-      </p>
-    </div>
-    <div class="wzz_list">
-      <p>
-        <span>联系人：</span>
-        <span><input type="text" value="" id="name" /></span>
-        <span></span>
-      </p>
-      <p>
-        <span>店铺名称：</span>
-        <span><input type="text" value="" id="name" /></span>
-        <span></span>
-      </p>
-      <p class="link" data-link="../../html/order/keRen_area.html">
-        <span>店铺地址：</span>
-        <!--下面是提示字体颜色为666，当选中之后返回该页面字体颜色变为333-->
-        <span class="lb">请选择地址</span>
-        <!---->
-        <span><img src="@/static/image/shop/user/xuanfen.png" /></span>
-      </p>
-      <p>
-        <span>详细地址：</span>
-        <span><input type="text" value="" placeholder="请输入详细地址" /></span>
-        <span></span>
-      </p>
-    </div>
-    <div class="main_top">
-      <p class="tit">请上传店铺门头与分组人合照：</p>
-      <div>
-        <div class="con">
-          <!--    照片添加    -->
-          <div class="z_photo">
-            <div class="z_file">
-              <input type="file" name="file" id="file" value="" accept="image/*" multiple />
-            </div>
-          </div>
-          <span>真实照片</span>
-        </div>
-      </div>
-    </div>
-    <div class="main_top">
-      <p class="tit">请上传身份证正面照片：</p>
-      <div>
+  <view>
+    <header class="mui-bar mui-bar-nav">
+      <a class="mui-action-back">
+        <img src="@/static/image/shop/order/back.png" alt="" />
+      </a>
+      <h1 class="mui-title">完善信息</h1>
+    </header>
+    <div class="mui-content">
+      <div class="jinDu">
+        <img src="@/static/image/shop/enter/jingdu_1.png" />
         <p>
-          <img src="@/static/image/shop/enter/sfz_07.png" alt="" />
-          <span>示例</span>
+          <span>完善信息</span>
+          <span>审核中</span>
         </p>
-        <div class="con">
-          <!--    照片添加    -->
-          <div class="z_photo">
-            <div class="z_file">
-              <input type="file" name="file1" id="file1" value="" accept="image/*" multiple />
-            </div>
-          </div>
-          <span>正面</span>
-        </div>
       </div>
-    </div>
-    <div class="main_top">
-      <p class="tit">请上传身份证背面照片：</p>
-      <div>
+      <div class="wzz_list">
         <p>
-          <img src="@/static/image/shop/enter/sfz_10.png" alt="" />
-          <span>示例</span>
+          <span>店铺名称：</span>
+          <span><input type="text" v-model="formObj.shopName" /></span>
+          <span></span>
         </p>
-        <div class="con">
-          <div class="z_photo">
-            <div class="z_file">
-              <input type="file" name="file2" id="file2" value="" accept="image/*" multiple />
+        <!-- <p class="link" data-link="../../html/order/keRen_area.html" style="justify-content: space-between;">
+          <span class="list-item">
+            <span>店铺地址：</span>
+            <span class="lb">请选择地址</span>
+          </span>
+          <img class="icon-right" src="@/static/image/shop/user/xuanfen.png" />
+        </p> -->
+        <p>
+          <span>店铺地址：</span>
+          <span><input type="text" v-model="formObj.address" placeholder="请输入详细地址" /></span>
+          <span></span>
+        </p>
+      </div>
+      <div class="main_top">
+        <p class="tit">请上传店铺门头与分组人合照：</p>
+        <div>
+          <div class="con">
+            <!--    照片添加    -->
+            <div class="z_photo">
+              <div class="z_file">
+                <uni-file-picker class="file-input" limit="9" v-model="formObj.shopPhoto"
+                  @select="e => selectFile(e, 'shopPhoto')">
+                  <view></view>
+                </uni-file-picker>
+              </div>
             </div>
+            <span>真实照片</span>
           </div>
-          <span>背面</span>
         </div>
       </div>
-    </div>
-    <div class="main_top">
-      <p class="tit mui-ellipsis">请上传营业执照照片<span>(非必须,但上传可提高审核通过率)</span></p>
-      <div>
-        <div class="con">
-          <div class="z_photo">
-            <div class="z_file">
-              <input type="file" name="file3" id="file3" value="" accept="image/*" multiple />
+      <div class="main_top">
+        <p class="tit">请上传身份证正面照片：</p>
+        <div>
+          <p>
+            <img src="@/static/image/shop/enter/sfz_07.png" alt="" />
+            <span>示例</span>
+          </p>
+          <div class="con">
+            <!--    照片添加    -->
+            <div class="z_photo">
+              <div class="z_file">
+                <uni-file-picker class="file-input" limit="1" v-model="formObj.cardPhotoZ"
+                  @select="e => selectFile(e, 'cardPhotoZ')">
+                  <view></view>
+                </uni-file-picker>
+              </div>
             </div>
+            <span>正面</span>
           </div>
-          <span>营业执照</span>
         </div>
       </div>
-    </div>
-    <div class="main_top">
-      <p class="tit mui-ellipsis">请上传餐饮许可证照片<span>(非必须,但上传可提高审核通过率)</span></p>
-      <div>
-        <div class="con">
-          <div class="z_photo">
-            <div class="z_file">
-              <input type="file" name="file4" id="file4" value="" accept="image/*" multiple />
+      <div class="main_top">
+        <p class="tit">请上传身份证背面照片：</p>
+        <div>
+          <p>
+            <img src="@/static/image/shop/enter/sfz_10.png" alt="" />
+            <span>示例</span>
+          </p>
+          <div class="con">
+            <div class="z_photo">
+              <div class="z_file">
+                <uni-file-picker class="file-input" limit="1" v-model="formObj.cardPhotoB"
+                  @select="e => selectFile(e, 'cardPhotoB')">
+                  <view></view>
+                </uni-file-picker>
+              </div>
             </div>
+            <span>背面</span>
           </div>
-          <span>餐饮许可证</span>
         </div>
       </div>
+      <div class="main_top">
+        <p class="tit mui-ellipsis">请上传营业执照照片<span>(非必须,但上传可提高审核通过率)</span></p>
+        <div>
+          <div class="con">
+            <div class="z_photo">
+              <div class="z_file">
+                <uni-file-picker class="file-input" limit="9" v-model="formObj.businessLicense"
+                  @select="e => selectFile(e, 'businessLicense')">
+                  <view></view>
+                </uni-file-picker>
+              </div>
+            </div>
+            <span>营业执照</span>
+          </div>
+        </div>
+      </div>
+      <div class="main_top">
+        <p class="tit mui-ellipsis">请上传餐饮许可证照片<span>(非必须,但上传可提高审核通过率)</span></p>
+        <div>
+          <div class="con">
+            <div class="z_photo">
+              <div class="z_file">
+                <uni-file-picker class="file-input" limit="9" v-model="formObj.cateringLicense"
+                  @select="e => selectFile(e, 'cateringLicense')">
+                  <view></view>
+                </uni-file-picker>
+              </div>
+            </div>
+            <span>餐饮许可证</span>
+          </div>
+        </div>
+      </div>
+      <div class="xieyi">
+        <uni-data-checkbox v-model="pact" :localdata="pactArr" multiple />
+        <span></span>
+      </div>
+      <p class="btn link" style="margin-bottom: 10px;" @click="subHandler" data-link="../../html/enter/shenHe_ing.html">
+        提交审核</p>
     </div>
-    <div class="xieyi">
-      <span class="dui"></span>
-      <span>我已阅读并同意</span>
-      <span>《捷速外卖平台商家协议》</span>
-    </div>
-    <p class="btn link" data-link="../../html/enter/shenHe_ing.html">提交审核</p>
-  </div>
+  </view>
 </template>
 
 <script>
+import { uniUploadImage } from "@/api/upload";
+
 export default {
   data() {
     return {
+      formObj: {
+        shopName: '',
+        address: '',
+        shopPhoto: [],
+        cardPhotoZ: [],
+        cardPhotoB: [],
+        businessLicense: [],
+        cateringLicense: [],
+      },
+      pact: '',
+      pactArr: [{
+        text: '我已阅读并同意《捷速外卖平台商家协议》',
+        value: 1
+      }]
     }
   },
   onLoad() {
   },
   methods: {
+    selectFile(e, field) {
+      console.log(e, field)
+      const uploadArr = e.tempFilePaths.map(m => uniUploadImage(m))
+      Promise.all(uploadArr).then(res => {
+        this.formObj[field] = res.reduce((a, c) => {
+          if (c.code === 200) {
+            const arr = c.data.name.split('.')
+            const extname = arr[arr.length - 1]
+            a.push({
+              ...c.data,
+              extname
+            })
+          }
+          return a
+        }, [])
+      })
+    },
+    subHandler() {
+      if (!Object.values(this.formObj).every(e => e.length)) {
+        uni.showModal({
+          title: '提示',
+          content: '请检查未填内容',
+          showCancel: false
+        })
+        return
+      }
+
+      if (!this.pact) {
+        uni.showModal({
+          title: '提示',
+          content: '请阅读协议',
+          showCancel: false
+        })
+        return
+      }
+
+
+      
+
+    }
   }
 }
 </script>
@@ -157,7 +231,7 @@ header img {
 
 .mui-content {
   width: 100%;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
   background: #f5f5f5;
 }
 
@@ -213,12 +287,15 @@ header img {
 }
 
 .wzz_list p {
+  display: flex;
+  align-items: center;
   width: 100%;
   height: 41px;
   line-height: 41px;
   font-size: 14px;
   border-bottom: 1px dotted #dbdbdb;
   position: relative;
+  margin-bottom: 0;
 }
 
 .wzz_list p:last-child {
@@ -254,9 +331,15 @@ header img {
   right: 0;
 }
 
-.wzz_list p span:nth-child(3) img {
+.wzz_list .list-item {
+  display: flex;
+  align-items: center;
+}
+
+.wzz_list .icon-right {
   width: 6px;
   height: 10px;
+  justify-items: flex-end;
 }
 
 /**/
@@ -364,6 +447,7 @@ header img {
   color: #999999;
   font-size: 12px;
   position: relative;
+  display: flex;
 }
 
 .xieyi span:nth-child(1) {
@@ -404,13 +488,15 @@ header img {
   bottom: 0;
 }
 
-#file,
-#file1,
-#file2,
-#file3,
-#file4 {
-  opacity: 0;
-  width: 100%;
+.z_file .file-input {
   height: 100%;
+  height: 100%;
+}
+
+.file-input /deep/ .uni-file-picker,
+.file-input /deep/ .uni-file-picker__container,
+.file-input /deep/ .file-picker__box {
+  height: 100% !important;
+  width: 100% !important;
 }
 </style>
