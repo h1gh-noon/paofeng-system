@@ -135,6 +135,7 @@
 
 <script>
 import { uniUploadImage } from "@/api/upload";
+import { shopAdd } from "@/api/shop";
 
 export default {
   data() {
@@ -194,8 +195,27 @@ export default {
         return
       }
 
+      const data = {
+        shopName: this.formObj.shopName,
+        address: this.formObj.address,
+        shopPhoto: JSON.stringify(this.formObj.shopPhoto),
+        cardPhotoZ: JSON.stringify(this.formObj.cardPhotoZ),
+        cardPhotoB: JSON.stringify(this.formObj.cardPhotoB),
+        businessLicense: JSON.stringify(this.formObj.businessLicense),
+        cateringLicense: JSON.stringify(this.formObj.cateringLicense)
+      }
 
-      
+      shopAdd(data).then(res => {
+        if (res.code === 200) {
+          uni.showToast({
+            title: '操作成功！',
+            duration: 2000,
+          });
+          setTimeout(() => {
+            uni.redirectTo({ url: '/pages/shop/enter/shopInfoProess' })
+          }, 1000);
+        }
+      })
 
     }
   }

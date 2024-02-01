@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paofeng.system.mapper.SysShopMapper">
+
+    <resultMap type="SysShop" id="SysShopResult">
+        <id property="shopId" column="shop_id"/>
+        <result property="shopName" column="shop_name"/>
+        <result property="address" column="address"/>
+        <result property="shopPhoto" column="shop_photo"/>
+        <result property="cardPhotoZ" column="card_photo_z"/>
+        <result property="cardPhotoB" column="card_photo_b"/>
+        <result property="businessLicense" column="business_license"/>
+        <result property="cateringLicense" column="catering_license"/>
+        <result property="shopMoney" column="shop_money"/>
+        <result property="status" column="status"/>
+        <result property="creatTime" column="creat_time"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="phonenumber" column="phonenumber"/>
+    </resultMap>
+
+    <sql id="selectShopVo">
+        select s.shop_id,
+               s.shop_name,
+               s.address,
+               s.shop_photo,
+               s.card_photo_z,
+               s.card_photo_b,
+               s.business_license,
+               s.catering_license,
+               s.shop_money,
+               s.status,
+               s.creat_time,
+               u.nick_name,
+               u.phonenumber
+        from sys_shop s,
+             sys_user u
+        where s.user_id = u.user_id
+    </sql>
+
+    <select id="selectShopList" parameterType="SysShop" resultMap="SysShopResult">
+        <include refid="selectShopVo"/>
+        <if test="shopName != null and shopName != ''">
+            AND u.shop_name like concat('%', #{shopName}, '%')
+        </if>
+        <if test="status != null and status != ''">
+            AND s.status = #{status}
+        </if>
+        <if test="phonenumber != null and phonenumber != ''">
+            AND u.phonenumber like concat('%', #{phonenumber}, '%')
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+        </if>
+    </select>
+
+    <select id="selectShopById" parameterType="Long" resultMap="SysShopResult">
+        <include refid="selectShopVo"/>
+        <if test="shopId != null">
+            AND s.shopId = #{shopId}
+        </if>
+    </select>
+
+    <select id="selectShopByUserId" parameterType="Long" resultMap="SysShopResult">
+        <include refid="selectShopVo"/>
+        <if test="userId != null">
+            AND s.userId = #{userId}
+        </if>
+    </select>
+
+    <insert id="insertShop" parameterType="SysShop" useGeneratedKeys="true" keyProperty="shopId">
+        insert into sys_shop(
+        <if test="shopName != null and shopName != ''">shop_name,</if>
+        <if test="address != null and address != ''">address,</if>
+        <if test="shopPhoto != null and shopPhoto != ''">shop_photo,</if>
+        <if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
+        <if test="cardPhotoZ != null and cardPhotoZ != ''">card_photo_z,</if>
+        <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b,</if>
+        <if test="businessLicense != null and businessLicense != ''">business_license,</if>
+        <if test="cateringLicense != null and cateringLicense != ''">catering_license,</if>
+        create_time
+        )values(
+        <if test="shopName != null and shopName != ''">#{shopName},</if>
+        <if test="address != null and address != ''">#{address},</if>
+        <if test="shopPhoto != null and shopPhoto != ''">#{shopPhoto},</if>
+        <if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>
+        <if test="cardPhotoZ != null and cardPhotoZ != ''">#{cardPhotoZ},</if>
+        <if test="cardPhotoB != null and cardPhotoB != ''">#{cardPhotoB},</if>
+        <if test="businessLicense != null and businessLicense != ''">#{businessLicense},</if>
+        <if test="cateringLicense != null and cateringLicense != ''">#{cateringLicense},</if>
+        sysdate()
+        )
+    </insert>
+
+    <update id="updateShop" parameterType="SysShop">
+        update sys_shop
+        <set>
+            <if test="shopName != null and shopName != ''">shop_name = #{shopName},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="shopPhoto != null and shopPhoto != ''">shop_photo = #{shopPhoto},</if>
+            <if test="cardPhotoZ != null and cardPhotoZ != ''">card_photo_z = #{cardPhotoZ},</if>
+            <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b = #{cardPhotoB},</if>
+            <if test="businessLicense != null and businessLicense != ''">business_license = #{businessLicense},</if>
+            <if test="cateringLicense != null and cateringLicense != ''">catering_license = #{cateringLicense},</if>
+            status='0'
+        </set>
+        where shop_id = #{shopId}
+    </update>
+
+    <update id="updateShopByAdmin" parameterType="SysShop">
+        update sys_shop
+        <set>
+            <if test="shopName != null and shopName != ''">shop_name = #{shopName},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="shopPhoto != null and shopPhoto != ''">shop_photo = #{shopPhoto},</if>
+            <if test="cardPhotoZ != null and cardPhotoZ != ''">card_photo_z = #{cardPhotoZ},</if>
+            <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b = #{cardPhotoB},</if>
+            <if test="businessLicense != null and businessLicense != ''">business_license = #{businessLicense},</if>
+            <if test="cateringLicense != null and cateringLicense != ''">catering_license = #{cateringLicense},</if>
+            status='0'
+        </set>
+        where shop_id = #{shopId}
+    </update>
+
+    <delete id="deleteShopById" parameterType="Long">
+        update sys_shop
+        set del_flag = '2'
+        where shop_id = #{shopId}
+    </delete>
+
+    <delete id="deleteShopByIds" parameterType="Long">
+        update sys_shop set del_flag = '2' where shop_id in
+        <foreach collection="array" item="shopId" open="(" separator="," close=")">
+            #{shopId}
+        </foreach>
+    </delete>
+
+    <update id="updateShopStatus" parameterType="SysShop">
+        update sys_shop
+        set status = #{status}
+        where shop_id = #{shopId}
+    </update>
+
+</mapper> 

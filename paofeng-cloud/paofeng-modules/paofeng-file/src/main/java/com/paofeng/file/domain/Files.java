@@ -2,7 +2,7 @@ package com.paofeng.file.domain;
 
 public class Files {
 
-    String[] files;
+    private String[] files;
 
     public String[] getFiles() {
         return files;
