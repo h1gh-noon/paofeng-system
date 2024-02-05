@@ -68,6 +68,7 @@ public class SysShopController extends BaseController {
     public AjaxResult add(@Validated @RequestBody SysShop shop) {
 
         shop.setUserId(SecurityUtils.getUserId());
+
         if (shopService.insertShop(shop) > 0) {
             return success(shop.getShopId());
         } else {
@@ -91,7 +92,7 @@ public class SysShopController extends BaseController {
     // 修改状态
     @RequiresPermissions("system:shop:edit")
     @Log(title = "店铺管理", businessType = BusinessType.UPDATE)
-    @GetMapping("/updateStatus")
+    @PostMapping("/updateStatus")
     public AjaxResult updateStatus(@Validated @RequestBody SysShop shop) {
         return toAjax(shopService.updateShopStatus(shop));
     }

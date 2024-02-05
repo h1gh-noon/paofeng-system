@@ -15,7 +15,7 @@
         <result property="cateringLicense" column="catering_license"/>
         <result property="shopMoney" column="shop_money"/>
         <result property="status" column="status"/>
-        <result property="creatTime" column="creat_time"/>
+        <result property="createTime" column="create_time"/>
         <result property="nickName" column="nick_name"/>
         <result property="phonenumber" column="phonenumber"/>
     </resultMap>
@@ -31,7 +31,7 @@
                s.catering_license,
                s.shop_money,
                s.status,
-               s.creat_time,
+               s.create_time,
                u.nick_name,
                u.phonenumber
         from sys_shop s,
@@ -42,7 +42,7 @@
     <select id="selectShopList" parameterType="SysShop" resultMap="SysShopResult">
         <include refid="selectShopVo"/>
         <if test="shopName != null and shopName != ''">
-            AND u.shop_name like concat('%', #{shopName}, '%')
+            AND s.shop_name like concat('%', #{shopName}, '%')
         </if>
         <if test="status != null and status != ''">
             AND s.status = #{status}
@@ -50,31 +50,37 @@
         <if test="phonenumber != null and phonenumber != ''">
             AND u.phonenumber like concat('%', #{phonenumber}, '%')
         </if>
-        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-            AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+        <if test="address != null and address != ''">
+            AND s.address like concat('%', #{address}, '%')
         </if>
-        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-            AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+        <if test="params != null">
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(s.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(s.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
         </if>
     </select>
 
     <select id="selectShopById" parameterType="Long" resultMap="SysShopResult">
         <include refid="selectShopVo"/>
         <if test="shopId != null">
-            AND s.shopId = #{shopId}
+            AND s.shop_id = #{shopId}
         </if>
     </select>
 
     <select id="selectShopByUserId" parameterType="Long" resultMap="SysShopResult">
         <include refid="selectShopVo"/>
         <if test="userId != null">
-            AND s.userId = #{userId}
+            AND s.user_id = #{userId}
         </if>
     </select>
 
     <insert id="insertShop" parameterType="SysShop" useGeneratedKeys="true" keyProperty="shopId">
         insert into sys_shop(
         <if test="shopName != null and shopName != ''">shop_name,</if>
+        <if test="userId != null and userId != ''">user_id,</if>
         <if test="address != null and address != ''">address,</if>
         <if test="shopPhoto != null and shopPhoto != ''">shop_photo,</if>
         <if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
@@ -85,6 +91,7 @@
         create_time
         )values(
         <if test="shopName != null and shopName != ''">#{shopName},</if>
+        <if test="userId != null and userId != ''">#{userId},</if>
         <if test="address != null and address != ''">#{address},</if>
         <if test="shopPhoto != null and shopPhoto != ''">#{shopPhoto},</if>
         <if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>

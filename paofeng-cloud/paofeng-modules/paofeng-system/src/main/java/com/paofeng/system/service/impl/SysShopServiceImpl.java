@@ -1,7 +1,12 @@
 package com.paofeng.system.service.impl;
 
+import com.paofeng.common.core.enums.SysRoles;
+import com.paofeng.common.security.service.TokenService;
+import com.paofeng.common.security.utils.SecurityUtils;
+import com.paofeng.system.api.model.LoginUser;
 import com.paofeng.system.domain.SysShop;
 import com.paofeng.system.mapper.SysShopMapper;
+import com.paofeng.system.service.ISysRoleService;
 import com.paofeng.system.service.ISysShopService;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +18,13 @@ public class SysShopServiceImpl implements ISysShopService {
 
     @Resource
     private SysShopMapper shopMapper;
+
+    @Resource
+    private ISysRoleService roleService;
+
+    @Resource
+    private TokenService tokenService;
+
 
     @Override
     public List<SysShop> selectShopList(SysShop shop) {
@@ -31,6 +43,15 @@ public class SysShopServiceImpl implements ISysShopService {
 
     @Override
     public int insertShop(SysShop shop) {
+        // 如果没有shop角色就添加一个
+        if (SecurityUtils.getLoginUser().getRoles().stream().noneMatch(e -> e.equals(SysRoles.SHOP.getName()))) {
+            roleService.insertAuthUsers(SysRoles.SHOP.getId(), new Long[]{shop.getUserId()});
+            LoginUser loginUser = SecurityUtils.getLoginUser();
+            loginUser.getRoles().add(SysRoles.SHOP.getName());
+            // 刷新redis
+            tokenService.setLoginUser(loginUser);
+        }
+
         return shopMapper.insertShop(shop);
     }
 

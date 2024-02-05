@@ -1,10 +1,12 @@
 package com.paofeng.system.domain;
 
 
+import com.paofeng.common.core.web.domain.BaseEntity;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class SysShop {
+public class SysShop extends BaseEntity {
 
     private Long shopId;
     private String shopName;
@@ -20,7 +22,6 @@ public class SysShop {
     private String nickName;
     private String phonenumber;
     private Date createTime;
-
 
 
     public Date getCreateTime() {

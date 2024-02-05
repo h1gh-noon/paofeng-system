@@ -2,6 +2,23 @@
 	"pages": [
 		// pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/rider/enter/riderInfoSub",
+			"style": {
+				"navigationBarTitleText": "完善信息",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
 			"path": "pages/shop/order/order/index",
 			"style": {
 				"navigationBarTitleText": "订单管理",

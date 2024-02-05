@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paofeng.system.mapper.SysRiderMapper">
+
+    <resultMap type="SysRider" id="SysRiderResult">
+        <id property="riderId" column="rider_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="riderName" column="rider_name"/>
+        <result property="sex" column="sex"/>
+        <result property="cardId" column="card_id"/>
+        <result property="riderPhoto" column="rider_photo"/>
+        <result property="cardPhotoZ" column="card_photo_z"/>
+        <result property="cardPhotoB" column="card_photo_b"/>
+        <result property="riderMoney" column="rider_money"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectRiderVo">
+        select r.rider_id,
+               r.rider_name,
+               r.sex,
+               r.card_id,
+               r.rider_photo,
+               r.card_photo_z,
+               r.card_photo_b,
+               r.rider_money,
+               r.status,
+               r.create_time,
+               u.phonenumber
+        from sys_rider r,
+             sys_user u
+        where r.user_id = u.user_id
+    </sql>
+
+    <select id="selectRiderList" parameterType="SysRider" resultMap="SysRiderResult">
+        <include refid="selectRiderVo"/>
+        <if test="riderName != null and riderName != ''">
+            AND s.rider_name like concat('%', #{riderName}, '%')
+        </if>
+        <if test="sex != null and sex != ''">
+            AND s.sex = #{sex}
+        </if>
+        <if test="status != null and status != ''">
+            AND s.status = #{status}
+        </if>
+        <if test="phonenumber != null and phonenumber != ''">
+            AND u.phonenumber like concat('%', #{phonenumber}, '%')
+        </if>
+        <if test="params != null">
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(s.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(s.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </if>
+    </select>
+
+    <select id="selectRiderById" parameterType="Long" resultMap="SysRiderResult">
+        <include refid="selectRiderVo"/>
+        <if test="riderId != null">
+            AND s.rider_id = #{riderId}
+        </if>
+    </select>
+
+    <select id="selectRiderByUserId" parameterType="Long" resultMap="SysRiderResult">
+        <include refid="selectRiderVo"/>
+        <if test="userId != null">
+            AND s.user_id = #{userId}
+        </if>
+    </select>
+
+    <insert id="insertRider" parameterType="SysRider" useGeneratedKeys="true" keyProperty="riderId">
+        insert into sys_rider(
+        <if test="riderName != null and riderName != ''">rider_name,</if>
+        <if test="userId != null and userId != ''">user_id,</if>
+        <if test="cardId != null and cardId != ''">card_id,</if>
+        <if test="sex != null and sex != ''">sex,</if>
+        <if test="riderPhoto != null and riderPhoto != ''">rider_photo,</if>
+        <if test="cardPhotoZ != null and cardPhotoZ != ''">card_photo_z,</if>
+        <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b,</if>
+        create_time
+        )values(
+        <if test="riderName != null and riderName != ''">#{rider_name},</if>
+        <if test="userId != null and userId != ''">#{userId},</if>
+        <if test="cardId != null and cardId != ''">#{cardId},</if>
+        <if test="sex != null and sex != ''">#{sex},</if>
+        <if test="riderPhoto != null and riderPhoto != ''">#{riderPhoto},</if>
+        <if test="cardPhotoZ != null and cardPhotoZ != ''">#{cardPhotoZ},</if>
+        <if test="cardPhotoB != null and cardPhotoB != ''">#{cardPhotoB},</if>
+        sysdate()
+        )
+    </insert>
+
+    <update id="updateRider" parameterType="SysRider">
+        update sys_rider
+        <set>
+            <if test="riderName != null and riderName != ''">rider_name = #{riderName},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="cardId != null and cardId != ''">card_id = #{cardId},</if>
+            <if test="riderPhoto != null and riderPhoto != ''">rider_photo = #{riderPhoto},</if>
+            <if test="cardPhotoZ != null and cardPhotoZ != ''">card_photo_z = #{cardPhotoZ},</if>
+            <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b = #{cardPhotoB},</if>
+            status='0'
+        </set>
+        where rider_id = #{riderId}
+    </update>
+
+    <update id="updateRiderByAdmin" parameterType="SysRider">
+        update sys_rider
+        <set>
+            <if test="riderName != null and riderName != ''">rider_name = #{riderName},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="cardId != null and cardId != ''">card_id = #{cardId},</if>
+            <if test="riderPhoto != null and riderPhoto != ''">rider_photo = #{riderPhoto},</if>
+            <if test="cardPhotoZ != null and cardPhotoZ != ''">card_photo_z = #{cardPhotoZ},</if>
+            <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b = #{cardPhotoB},</if>
+        </set>
+        where rider_id = #{riderId}
+    </update>
+
+    <update id="updateRiderStatus" parameterType="SysRider">
+        update sys_rider
+        set status = #{status}
+        where rider_id = #{riderId}
+    </update>
+
+</mapper> 
