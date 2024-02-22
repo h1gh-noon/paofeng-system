@@ -18,15 +18,22 @@
       <div class="wzz_list">
         <p>
           <span>姓名：</span>
-          <input type="text" value="" id="name" />
+          <input type="text" v-model="formObj.riderName" />
         </p>
         <p class="xingbie">
           <span class="bot1">性别：</span>
-          <span class="bot2"></span>
+          <span class="bot2">
+            <label class="radio">
+              <radio value="0" @click="formObj.sex = '0'" :checked="formObj.sex === '0'" />男
+            </label>
+            <label class="radio">
+              <radio value="1" @click="formObj.sex = '1'" :checked="formObj.sex === '1'" />女
+            </label>
+          </span>
         </p>
         <p>
           <span>身份证号：</span>
-          <span class="lb"><input type="text" value="" id="sfzh" /></span>
+          <span class="lb"><input type="text" v-model="formObj.cardId" /></span>
           <span></span>
         </p>
         <!-- <p class="link" data-link="keRen_area.html">
@@ -35,19 +42,15 @@
           <span><img src="@/static/image/rider/enter/right.png" /></span>
         </p> -->
         <p>
-          <span>第二联系人：</span>
-          <span class="lb"><input type="text" value="" id="lxr" /></span>
-          <span></span>
-        </p>
-        <p>
           <span>第二联系人电话：</span>
-          <span class="lb"><input type="num " value="" id="phone" style="width: 60%;" /></span>
+          <span class="lb"><input type="number" v-model="formObj.secondPhone" style="width: 60%;" /></span>
           <span></span>
         </p>
       </div>
       <div class="main_top">
         <p class="tit">手持身份证正面照片</p>
-        <uni-file-picker class="file-input" limit="1">
+        <uni-file-picker class="file-input" limit="1" v-model="formObj.riderPhoto"
+          @select="e => selectFile(e, 'riderPhoto')">
         </uni-file-picker>
       </div>
       <div class="main_top">
@@ -55,7 +58,7 @@
         <div class="form-item-file">
           <img class="demo-img" src="@/static/image/rider/enter/sfz1.png" alt="" />
           <div class="file-input">
-            <uni-file-picker limit="1">
+            <uni-file-picker limit="1" v-model="formObj.cardPhotoZ" @select="e => selectFile(e, 'cardPhotoZ')">
             </uni-file-picker>
           </div>
         </div>
@@ -65,7 +68,7 @@
         <div class="form-item-file">
           <img class="demo-img" src="@/static/image/rider/enter/sfz2.png" alt="" />
           <div class="file-input">
-            <uni-file-picker limit="1">
+            <uni-file-picker limit="1" v-model="formObj.cardPhotoB" @select="e => selectFile(e, 'cardPhotoB')">
             </uni-file-picker>
           </div>
         </div>
@@ -90,14 +93,82 @@
 </template>
 
 <script>
+import { uniUploadImage } from "@/api/upload";
+import { riderAdd } from "@/api/rider";
+
 export default {
   data() {
     return {
+      formObj: {
+        riderName: '',
+        sex: '',
+        cardId: '',
+        secondPhone: '',
+        riderPhoto: [],
+        cardPhotoZ: [],
+        cardPhotoB: [],
+      }
     }
   },
   onLoad() {
   },
   methods: {
+    selectFile(e, field) {
+      const uploadArr = e.tempFilePaths.map(m => uniUploadImage(m))
+      Promise.all(uploadArr).then(res => {
+        this.formObj[field] = res.reduce((a, c) => {
+          const arr = c.data.name.split('.')
+          const extname = arr[arr.length - 1]
+          a.push({
+            ...c.data,
+            extname
+          })
+          return a
+        }, [])
+      })
+    },
+    subHandler() {
+      if (!Object.values(this.formObj).every(e => e.length)) {
+        uni.showModal({
+          title: '提示',
+          content: '请检查未填内容',
+          showCancel: false
+        })
+        return
+      }
+
+      if (!this.pact) {
+        uni.showModal({
+          title: '提示',
+          content: '请阅读协议',
+          showCancel: false
+        })
+        return
+      }
+
+      const data = {
+        riderName: this.formObj.riderName,
+        address: this.formObj.address,
+        riderPhoto: JSON.stringify(this.formObj.riderPhoto),
+        cardPhotoZ: JSON.stringify(this.formObj.cardPhotoZ),
+        cardPhotoB: JSON.stringify(this.formObj.cardPhotoB),
+        businessLicense: JSON.stringify(this.formObj.businessLicense),
+        cateringLicense: JSON.stringify(this.formObj.cateringLicense)
+      }
+
+      riderAdd(data).then(res => {
+        if (res.code === 200) {
+          uni.showToast({
+            title: '操作成功！',
+            duration: 2000,
+          });
+          setTimeout(() => {
+            uni.redirectTo({ url: '/pages/rider/enter/riderInfoProess' })
+          }, 1000);
+        }
+      })
+
+    }
   }
 }
 </script>

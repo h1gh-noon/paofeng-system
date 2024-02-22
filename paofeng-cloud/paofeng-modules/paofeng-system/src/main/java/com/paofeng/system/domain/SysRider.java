@@ -13,6 +13,7 @@ public class SysRider extends BaseEntity {
     private Long userId;
     private String sex;
     private String cardId;
+    private String secondPhone;
     private String riderPhoto;
     private String cardPhotoZ;
     private String cardPhotoB;
@@ -47,6 +48,13 @@ public class SysRider extends BaseEntity {
         this.userId = userId;
     }
 
+    public String getSecondPhone() {
+        return secondPhone;
+    }
+
+    public void setSecondPhone(String secondPhone) {
+        this.secondPhone = secondPhone;
+    }
 
     public String getSex() {
         return sex;

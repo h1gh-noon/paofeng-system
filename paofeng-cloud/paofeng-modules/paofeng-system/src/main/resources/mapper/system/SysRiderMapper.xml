@@ -10,6 +10,7 @@
         <result property="riderName" column="rider_name"/>
         <result property="sex" column="sex"/>
         <result property="cardId" column="card_id"/>
+        <result property="secondPhone" column="second_phone"/>
         <result property="riderPhoto" column="rider_photo"/>
         <result property="cardPhotoZ" column="card_photo_z"/>
         <result property="cardPhotoB" column="card_photo_b"/>
@@ -23,6 +24,7 @@
                r.rider_name,
                r.sex,
                r.card_id,
+               r.second_phone,
                r.rider_photo,
                r.card_photo_z,
                r.card_photo_b,
@@ -78,6 +80,7 @@
         <if test="riderName != null and riderName != ''">rider_name,</if>
         <if test="userId != null and userId != ''">user_id,</if>
         <if test="cardId != null and cardId != ''">card_id,</if>
+        <if test="secondPhone != null and secondPhone != ''">second_phone,</if>
         <if test="sex != null and sex != ''">sex,</if>
         <if test="riderPhoto != null and riderPhoto != ''">rider_photo,</if>
         <if test="cardPhotoZ != null and cardPhotoZ != ''">card_photo_z,</if>
@@ -87,6 +90,7 @@
         <if test="riderName != null and riderName != ''">#{rider_name},</if>
         <if test="userId != null and userId != ''">#{userId},</if>
         <if test="cardId != null and cardId != ''">#{cardId},</if>
+        <if test="secondPhone != null and secondPhone != ''">#{second_phone},</if>
         <if test="sex != null and sex != ''">#{sex},</if>
         <if test="riderPhoto != null and riderPhoto != ''">#{riderPhoto},</if>
         <if test="cardPhotoZ != null and cardPhotoZ != ''">#{cardPhotoZ},</if>
@@ -101,6 +105,7 @@
             <if test="riderName != null and riderName != ''">rider_name = #{riderName},</if>
             <if test="sex != null and sex != ''">sex = #{sex},</if>
             <if test="cardId != null and cardId != ''">card_id = #{cardId},</if>
+            <if test="secondPhone != null and secondPhone != ''">second_phone = #{secondPhone},</if>
             <if test="riderPhoto != null and riderPhoto != ''">rider_photo = #{riderPhoto},</if>
             <if test="cardPhotoZ != null and cardPhotoZ != ''">card_photo_z = #{cardPhotoZ},</if>
             <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b = #{cardPhotoB},</if>
@@ -114,7 +119,7 @@
         <set>
             <if test="riderName != null and riderName != ''">rider_name = #{riderName},</if>
             <if test="sex != null and sex != ''">sex = #{sex},</if>
-            <if test="cardId != null and cardId != ''">card_id = #{cardId},</if>
+            <if test="secondPhone != null and secondPhone != ''">second_phone = #{secondPhone},</if>
             <if test="riderPhoto != null and riderPhoto != ''">rider_photo = #{riderPhoto},</if>
             <if test="cardPhotoZ != null and cardPhotoZ != ''">card_photo_z = #{cardPhotoZ},</if>
             <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b = #{cardPhotoB},</if>
