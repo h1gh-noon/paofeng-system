@@ -5,6 +5,8 @@ import com.paofeng.common.core.web.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.Date;
+
 /**
  * 聊天对象 chat_message
  *
@@ -14,11 +16,24 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class ChatMessage extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+
     /**
      * id
      */
     @Excel(name = "id")
-    private String id;
+    private Long id;
+
+    /**
+     * 发送者
+     */
+    @Excel(name = "发送者")
+    private Long senderId;
+
+    /**
+     * targetId 接收者id
+     */
+    @Excel(name = "目标id")
+    private Long targetId;
 
     /**
      * 内容
@@ -27,16 +42,10 @@ public class ChatMessage extends BaseEntity {
     private String content;
 
     /**
-     * 发送者
+     * 内容
      */
-    @Excel(name = "发送者")
-    private String sender;
-
-    /**
-     * 接收者
-     */
-    @Excel(name = "接收者")
-    private String receiver;
+    @Excel(name = "时间")
+    private Date createTime;
 
     /**
      * 类型 默认私聊
@@ -44,11 +53,11 @@ public class ChatMessage extends BaseEntity {
     @Excel(name = "类型 默认私聊")
     private String type;
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -60,22 +69,6 @@ public class ChatMessage extends BaseEntity {
         return content;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
     public void setType(String type) {
         this.type = type;
     }
@@ -84,13 +77,39 @@ public class ChatMessage extends BaseEntity {
         return type;
     }
 
+    public Long getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(Long senderId) {
+        this.senderId = senderId;
+    }
+
+    public Long getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(Long targetId) {
+        this.targetId = targetId;
+    }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("content", getContent())
-                .append("sender", getSender())
-                .append("receiver", getReceiver())
+                .append("senderId", getSenderId())
+                .append("targetId", getTargetId())
                 .append("createTime", getCreateTime())
                 .append("type", getType())
                 .toString();

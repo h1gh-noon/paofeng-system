@@ -2,6 +2,7 @@ package com.paofeng.chat.controller;
 
 import com.paofeng.chat.domain.ChatMessage;
 import com.paofeng.chat.service.IChatMessageService;
+import com.paofeng.chat.service.RabbitMQService;
 import com.paofeng.common.core.utils.poi.ExcelUtil;
 import com.paofeng.common.core.web.controller.BaseController;
 import com.paofeng.common.core.web.domain.AjaxResult;
@@ -9,9 +10,9 @@ import com.paofeng.common.core.web.page.TableDataInfo;
 import com.paofeng.common.log.annotation.Log;
 import com.paofeng.common.log.enums.BusinessType;
 import com.paofeng.common.security.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -24,8 +25,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/chat")
 public class ChatMessageController extends BaseController {
-    @Autowired
+
+    @Resource
     private IChatMessageService chatMessageService;
+
+    @Resource
+    private RabbitMQService rabbitMQService;
 
     /**
      * 查询聊天列表
@@ -57,6 +62,13 @@ public class ChatMessageController extends BaseController {
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return success(chatMessageService.selectChatMessageById(id));
+    }
+
+    @RequestMapping("/test")
+    public AjaxResult test(String msg, String r) {
+        System.out.println(msg);
+        rabbitMQService.sendMessage(r, msg);
+        return success();
     }
 
     /**

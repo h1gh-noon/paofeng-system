@@ -7,22 +7,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="ChatMessage" id="ChatMessageResult">
         <result property="id"    column="id"    />
         <result property="content"    column="content"    />
-        <result property="sender"    column="sender"    />
-        <result property="receiver"    column="receiver"    />
+        <result property="senderId"    column="sender_id"    />
+        <result property="targetId"    column="target_id"    />
         <result property="createTime"    column="create_time"    />
         <result property="type"    column="type"    />
     </resultMap>
 
     <sql id="selectChatMessageVo">
-        select id, content, sender, receiver, create_time, type from chat_message
+        select id, content, sender_id, target_id, create_time, type from chat_message
     </sql>
 
     <select id="selectChatMessageList" parameterType="ChatMessage" resultMap="ChatMessageResult">
         <include refid="selectChatMessageVo"/>
         <where>  
             <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
-            <if test="sender != null  and sender != ''"> and sender = #{sender}</if>
-            <if test="receiver != null  and receiver != ''"> and receiver = #{receiver}</if>
+            <if test="senderId != null  and senderId != ''"> and sender_id = #{senderId}</if>
+            <if test="targetId != null  and targetId != ''"> and targetId = #{targetId}</if>
             <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
         </where>
@@ -37,15 +37,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into chat_message
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="content != null">content,</if>
-            <if test="sender != null">sender,</if>
-            <if test="receiver != null">receiver,</if>
+            <if test="senderId != null">sender_id,</if>
+            <if test="targetId != null">target_id,</if>
             <if test="createTime != null">create_time,</if>
             <if test="type != null">type,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="content != null">#{content},</if>
-            <if test="sender != null">#{sender},</if>
-            <if test="receiver != null">#{receiver},</if>
+            <if test="senderId != null">#{senderId},</if>
+            <if test="targetId != null">#{targetId},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="type != null">#{type},</if>
          </trim>
@@ -55,8 +55,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update chat_message
         <trim prefix="SET" suffixOverrides=",">
             <if test="content != null">content = #{content},</if>
-            <if test="sender != null">sender = #{sender},</if>
-            <if test="receiver != null">receiver = #{receiver},</if>
+            <if test="senderId != null">sender_id = #{senderId},</if>
+            <if test="targetId != null">target_id = #{targetId},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="type != null">type = #{type},</if>
         </trim>

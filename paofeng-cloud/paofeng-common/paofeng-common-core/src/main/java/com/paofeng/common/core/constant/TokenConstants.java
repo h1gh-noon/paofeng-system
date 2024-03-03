@@ -12,6 +12,11 @@ public class TokenConstants {
     public static final String AUTHENTICATION = "Authorization";
 
     /**
+     * websocket令牌自定义标识
+     */
+    public static final String WEBSOCKET_AUTHENTICATION = "sec-websocket-protocol";
+
+    /**
      * 令牌前缀
      */
     public static final String PREFIX = "Bearer ";
