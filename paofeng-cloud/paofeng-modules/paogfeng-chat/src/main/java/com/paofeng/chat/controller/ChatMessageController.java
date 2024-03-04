@@ -1,6 +1,6 @@
 package com.paofeng.chat.controller;
 
-import com.paofeng.chat.domain.ChatMessage;
+import com.paofeng.chat.domain.ChatMessageVo;
 import com.paofeng.chat.service.IChatMessageService;
 import com.paofeng.chat.service.RabbitMQService;
 import com.paofeng.common.core.utils.poi.ExcelUtil;
@@ -37,9 +37,9 @@ public class ChatMessageController extends BaseController {
      */
     @RequiresPermissions("chat:chat:list")
     @GetMapping("/list")
-    public TableDataInfo list(ChatMessage chatMessage) {
+    public TableDataInfo list(ChatMessageVo chatMessage) {
         startPage();
-        List<ChatMessage> list = chatMessageService.selectChatMessageList(chatMessage);
+        List<ChatMessageVo> list = chatMessageService.selectChatMessageList(chatMessage);
         return getDataTable(list);
     }
 
@@ -49,9 +49,9 @@ public class ChatMessageController extends BaseController {
     @RequiresPermissions("chat:chat:export")
     @Log(title = "聊天", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ChatMessage chatMessage) {
-        List<ChatMessage> list = chatMessageService.selectChatMessageList(chatMessage);
-        ExcelUtil<ChatMessage> util = new ExcelUtil<ChatMessage>(ChatMessage.class);
+    public void export(HttpServletResponse response, ChatMessageVo chatMessage) {
+        List<ChatMessageVo> list = chatMessageService.selectChatMessageList(chatMessage);
+        ExcelUtil<ChatMessageVo> util = new ExcelUtil<ChatMessageVo>(ChatMessageVo.class);
         util.exportExcel(response, list, "聊天数据");
     }
 

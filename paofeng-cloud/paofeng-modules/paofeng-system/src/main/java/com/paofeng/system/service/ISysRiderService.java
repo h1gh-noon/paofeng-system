@@ -60,12 +60,4 @@ public interface ISysRiderService {
      */
     int updateRiderStatus(SysRider rider);
 
-    /**
-     * 修改骑手状态
-     *
-     * @param rider 骑手信息
-     * @return 结果
-     */
-    int updateRiderByAdmin(SysRider rider);
-
 }

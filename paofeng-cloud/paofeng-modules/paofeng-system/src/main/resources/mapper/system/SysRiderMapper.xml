@@ -40,23 +40,23 @@
     <select id="selectRiderList" parameterType="SysRider" resultMap="SysRiderResult">
         <include refid="selectRiderVo"/>
         <if test="riderName != null and riderName != ''">
-            AND s.rider_name like concat('%', #{riderName}, '%')
+            AND r.rider_name like concat('%', #{riderName}, '%')
         </if>
         <if test="sex != null and sex != ''">
-            AND s.sex = #{sex}
+            AND r.sex = #{sex}
         </if>
         <if test="status != null and status != ''">
-            AND s.status = #{status}
+            AND r.status = #{status}
         </if>
         <if test="phonenumber != null and phonenumber != ''">
             AND u.phonenumber like concat('%', #{phonenumber}, '%')
         </if>
         <if test="params != null">
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                AND date_format(s.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                AND date_format(r.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                AND date_format(s.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                AND date_format(r.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
             </if>
         </if>
     </select>
@@ -87,10 +87,10 @@
         <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b,</if>
         create_time
         )values(
-        <if test="riderName != null and riderName != ''">#{rider_name},</if>
+        <if test="riderName != null and riderName != ''">#{riderName},</if>
         <if test="userId != null and userId != ''">#{userId},</if>
         <if test="cardId != null and cardId != ''">#{cardId},</if>
-        <if test="secondPhone != null and secondPhone != ''">#{second_phone},</if>
+        <if test="secondPhone != null and secondPhone != ''">#{secondPhone},</if>
         <if test="sex != null and sex != ''">#{sex},</if>
         <if test="riderPhoto != null and riderPhoto != ''">#{riderPhoto},</if>
         <if test="cardPhotoZ != null and cardPhotoZ != ''">#{cardPhotoZ},</if>
@@ -110,19 +110,6 @@
             <if test="cardPhotoZ != null and cardPhotoZ != ''">card_photo_z = #{cardPhotoZ},</if>
             <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b = #{cardPhotoB},</if>
             status='0'
-        </set>
-        where rider_id = #{riderId}
-    </update>
-
-    <update id="updateRiderByAdmin" parameterType="SysRider">
-        update sys_rider
-        <set>
-            <if test="riderName != null and riderName != ''">rider_name = #{riderName},</if>
-            <if test="sex != null and sex != ''">sex = #{sex},</if>
-            <if test="secondPhone != null and secondPhone != ''">second_phone = #{secondPhone},</if>
-            <if test="riderPhoto != null and riderPhoto != ''">rider_photo = #{riderPhoto},</if>
-            <if test="cardPhotoZ != null and cardPhotoZ != ''">card_photo_z = #{cardPhotoZ},</if>
-            <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b = #{cardPhotoB},</if>
         </set>
         where rider_id = #{riderId}
     </update>

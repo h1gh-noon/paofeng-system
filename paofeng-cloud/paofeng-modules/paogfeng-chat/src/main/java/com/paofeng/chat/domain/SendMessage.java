@@ -19,6 +19,12 @@ public class SendMessage {
     private Long senderId;
 
     /**
+     * 发送者
+     */
+    @Excel(name = "接收者")
+    private Long targetId;
+
+    /**
      * 内容
      */
     @Excel(name = "内容")
@@ -61,6 +67,15 @@ public class SendMessage {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+
+    public Long getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(Long targetId) {
+        this.targetId = targetId;
     }
 
     @Override

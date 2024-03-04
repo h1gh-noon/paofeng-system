@@ -1,6 +1,7 @@
 package com.paofeng.chat.service.impl;
 
 import com.paofeng.chat.domain.ChatMessage;
+import com.paofeng.chat.domain.ChatMessageVo;
 import com.paofeng.chat.mapper.ChatMessageMapper;
 import com.paofeng.chat.service.IChatMessageService;
 import com.paofeng.common.core.utils.DateUtils;
@@ -27,7 +28,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
      * @return 聊天
      */
     @Override
-    public ChatMessage selectChatMessageById(String id) {
+    public ChatMessageVo selectChatMessageById(String id) {
         return chatMessageMapper.selectChatMessageById(id);
     }
 
@@ -38,7 +39,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
      * @return 聊天
      */
     @Override
-    public List<ChatMessage> selectChatMessageList(ChatMessage chatMessage) {
+    public List<ChatMessageVo> selectChatMessageList(ChatMessageVo chatMessage) {
         return chatMessageMapper.selectChatMessageList(chatMessage);
     }
 

@@ -1,17 +1,17 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="发送者" prop="sender">
+      <el-form-item label="发送者" prop="senderUser">
         <el-input
-          v-model="queryParams.sender"
+          v-model="queryParams.senderUser"
           placeholder="请输入发送者"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="接收者" prop="receiver">
+      <el-form-item label="接收者" prop="targetUser">
         <el-input
-          v-model="queryParams.receiver"
+          v-model="queryParams.targetUser"
           placeholder="请输入接收者"
           clearable
           @keyup.enter.native="handleQuery"
@@ -35,7 +35,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -66,7 +66,7 @@
           @click="handleDelete"
           v-hasPermi="['chat:chat:remove']"
         >删除</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -81,18 +81,18 @@
     </el-row>
 
     <el-table v-loading="loading" :data="chatList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
+      <!-- <el-table-column label="id" align="center" prop="id" /> -->
       <el-table-column label="内容" align="center" prop="content" />
-      <el-table-column label="发送者" align="center" prop="sender" />
-      <el-table-column label="接收者" align="center" prop="receiver" />
+      <el-table-column label="发送者" align="center" prop="senderUser" />
+      <el-table-column label="接收者" align="center" prop="targetUser" />
       <el-table-column label="发送时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类型 默认私聊" align="center" prop="type" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="类型 默认私聊" align="center" prop="type" /> -->
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -109,35 +109,16 @@
             v-hasPermi="['chat:chat:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
-    
+
     <pagination
-      v-show="total>0"
+      v-show="total"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <!-- 添加或修改聊天对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="内容">
-          <editor v-model="form.content" :min-height="192"/>
-        </el-form-item>
-        <el-form-item label="发送者" prop="sender">
-          <el-input v-model="form.sender" placeholder="请输入发送者" />
-        </el-form-item>
-        <el-form-item label="接收者" prop="receiver">
-          <el-input v-model="form.receiver" placeholder="请输入接收者" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -173,8 +154,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         content: null,
-        sender: null,
-        receiver: null,
+        senderUser: null,
+        targetUser: null,
         createTime: null,
         type: null
       },
@@ -213,8 +194,8 @@ export default {
       this.form = {
         id: null,
         content: null,
-        sender: null,
-        receiver: null,
+        senderUser: null,
+        targetUser: null,
         createTime: null,
         type: null
       };

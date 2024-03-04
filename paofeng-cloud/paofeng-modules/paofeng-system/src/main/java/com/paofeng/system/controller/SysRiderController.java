@@ -44,9 +44,9 @@ public class SysRiderController extends BaseController {
 
         SysRider rider = riderService.selectRiderById(id);
 
-        // 如果userId不是当然登录人的 就检查角色权限是否为客服
+        // 如果userId不是当前登录人的 就检查角色权限是否为客服
         if (!Objects.equals(rider.getUserId(), SecurityUtils.getUserId())) {
-            AuthUtil.checkRole("customer_service*");
+            AuthUtil.checkPermi("system:rider:edit");
         }
         return success(rider);
     }
@@ -76,9 +76,15 @@ public class SysRiderController extends BaseController {
         }
     }
 
-    @Log(title = "骑手管理", businessType = BusinessType.UPDATE)
+    @Log(title = "骑手信息修改", businessType = BusinessType.UPDATE)
     @PostMapping("/update")
     public AjaxResult update(@Validated @RequestBody SysRider rider) {
+        SysRider sysRider = riderService.selectRiderById(rider.getRiderId());
+
+        // 如果userId不是当前登录人的 就检查权限
+        if (!Objects.equals(sysRider.getUserId(), SecurityUtils.getUserId())) {
+            AuthUtil.checkPermi("system:rider:edit");
+        }
         return toAjax(riderService.updateRider(rider));
     }
 
@@ -86,7 +92,7 @@ public class SysRiderController extends BaseController {
     @Log(title = "骑手管理", businessType = BusinessType.UPDATE)
     @PostMapping("/updateByAdmin")
     public AjaxResult updateByAdmin(@Validated @RequestBody SysRider rider) {
-        return toAjax(riderService.updateRiderByAdmin(rider));
+        return toAjax(riderService.updateRider(rider));
     }
 
     // 修改状态

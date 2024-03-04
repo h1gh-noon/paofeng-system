@@ -1,38 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paofeng.chat.mapper.ChatMessageMapper">
-    
+
+    <resultMap type="ChatMessageVo" id="ChatMessageVoResult">
+        <result property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="senderId" column="sender_id"/>
+        <result property="senderUser" column="sender_user"/>
+        <result property="targetId" column="target_id"/>
+        <result property="targetUser" column="target_user"/>
+        <result property="createTime" column="create_time"/>
+        <result property="type" column="type"/>
+    </resultMap>
+
     <resultMap type="ChatMessage" id="ChatMessageResult">
-        <result property="id"    column="id"    />
-        <result property="content"    column="content"    />
-        <result property="senderId"    column="sender_id"    />
-        <result property="targetId"    column="target_id"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="type"    column="type"    />
+        <result property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="senderId" column="sender_id"/>
+        <result property="targetId" column="target_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="type" column="type"/>
     </resultMap>
 
     <sql id="selectChatMessageVo">
-        select id, content, sender_id, target_id, create_time, type from chat_message
+        select c.id,
+               c.content,
+               c.sender_id,
+               u.user_name sender_user,
+               c.target_id,
+               s.user_name target_user,
+               c.create_time,
+               c.type
+        from chat_message c,
+             sys_user u,
+             sys_user s
+        where c.sender_id = u.user_id
+          and c.target_id = s.user_id
     </sql>
 
-    <select id="selectChatMessageList" parameterType="ChatMessage" resultMap="ChatMessageResult">
+    <select id="selectChatMessageList" parameterType="ChatMessageVo" resultMap="ChatMessageVoResult">
         <include refid="selectChatMessageVo"/>
-        <where>  
-            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
-            <if test="senderId != null  and senderId != ''"> and sender_id = #{senderId}</if>
-            <if test="targetId != null  and targetId != ''"> and targetId = #{targetId}</if>
-            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
-        </where>
+        <if test="content != null  and content != ''">and c.content like concat('%', #{content}, '%')</if>
+        <if test="senderUser != null  and senderUser != ''">and u.user_name like concat('%', #{senderUser}, '%')</if>
+        <if test="targetUser != null  and targetUser != ''">and s.user_name like concat('%', #{targetUser}, '%')</if>
+        <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+            and c.create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+        </if>
+        <if test="type != null  and type != ''">and type = #{type}</if>
     </select>
-    
-    <select id="selectChatMessageById" parameterType="String" resultMap="ChatMessageResult">
+
+    <select id="selectChatMessageById" parameterType="String" resultMap="ChatMessageVoResult">
         <include refid="selectChatMessageVo"/>
-        where id = #{id}
+        and c.id = #{id}
     </select>
-        
+
     <insert id="insertChatMessage" parameterType="ChatMessage" useGeneratedKeys="true" keyProperty="id">
         insert into chat_message
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -41,14 +64,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="targetId != null">target_id,</if>
             <if test="createTime != null">create_time,</if>
             <if test="type != null">type,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="content != null">#{content},</if>
             <if test="senderId != null">#{senderId},</if>
             <if test="targetId != null">#{targetId},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="type != null">#{type},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateChatMessage" parameterType="ChatMessage">
@@ -64,11 +87,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteChatMessageById" parameterType="String">
-        delete from chat_message where id = #{id}
+        delete
+        from chat_message
+        where id = #{id}
     </delete>
 
     <delete id="deleteChatMessageByIds" parameterType="String">
-        delete from chat_message where id in 
+        delete from chat_message where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

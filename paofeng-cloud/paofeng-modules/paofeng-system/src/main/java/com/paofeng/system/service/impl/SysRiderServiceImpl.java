@@ -6,8 +6,8 @@ import com.paofeng.common.security.utils.SecurityUtils;
 import com.paofeng.system.api.model.LoginUser;
 import com.paofeng.system.domain.SysRider;
 import com.paofeng.system.mapper.SysRiderMapper;
-import com.paofeng.system.service.ISysRoleService;
 import com.paofeng.system.service.ISysRiderService;
+import com.paofeng.system.service.ISysRoleService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -65,8 +65,4 @@ public class SysRiderServiceImpl implements ISysRiderService {
         return riderMapper.updateRiderStatus(rider);
     }
 
-    @Override
-    public int updateRiderByAdmin(SysRider rider) {
-        return riderMapper.updateRider(rider);
-    }
 }

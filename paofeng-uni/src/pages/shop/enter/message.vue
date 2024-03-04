@@ -57,8 +57,18 @@ export default {
     }
   },
   onLoad() {
+    this.initWebsocket()
   },
   methods: {
+    initWebsocket() {
+      uni.connectSocket({
+        url: 'ws://localhost:18080/chat/websocket',
+        protocols: [uni.getStorageSync('auth_token')]
+      });
+      uni.onSocketMessage(function (res) {
+        console.log('收到服务器内容：' + res.data);
+      });
+    }
   }
 }
 </script>

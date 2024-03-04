@@ -1,6 +1,7 @@
 package com.paofeng.chat.mapper;
 
 import com.paofeng.chat.domain.ChatMessage;
+import com.paofeng.chat.domain.ChatMessageVo;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface ChatMessageMapper {
      * @param id 聊天主键
      * @return 聊天
      */
-    public ChatMessage selectChatMessageById(String id);
+    public ChatMessageVo selectChatMessageById(String id);
 
     /**
      * 查询聊天列表
@@ -25,7 +26,7 @@ public interface ChatMessageMapper {
      * @param chatMessage 聊天
      * @return 聊天集合
      */
-    public List<ChatMessage> selectChatMessageList(ChatMessage chatMessage);
+    public List<ChatMessageVo> selectChatMessageList(ChatMessageVo chatMessage);
 
     /**
      * 新增聊天

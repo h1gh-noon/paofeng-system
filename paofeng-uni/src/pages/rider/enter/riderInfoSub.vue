@@ -73,7 +73,7 @@
           </div>
         </div>
       </div>
-      <div class="btn link" data-link="shenHe_ing.html">确认提交</div>
+      <div class="btn link" @click="subHandler" data-link="shenHe_ing.html">确认提交</div>
     </div>
     <div class="xingbie_pop">
       <div>
@@ -137,24 +137,15 @@ export default {
         return
       }
 
-      if (!this.pact) {
-        uni.showModal({
-          title: '提示',
-          content: '请阅读协议',
-          showCancel: false
-        })
-        return
-      }
-
-      const data = {
-        riderName: this.formObj.riderName,
-        address: this.formObj.address,
+      const photo = {
         riderPhoto: JSON.stringify(this.formObj.riderPhoto),
         cardPhotoZ: JSON.stringify(this.formObj.cardPhotoZ),
         cardPhotoB: JSON.stringify(this.formObj.cardPhotoB),
         businessLicense: JSON.stringify(this.formObj.businessLicense),
         cateringLicense: JSON.stringify(this.formObj.cateringLicense)
       }
+
+      const data = Object.assign({}, this.formObj, photo)
 
       riderAdd(data).then(res => {
         if (res.code === 200) {
