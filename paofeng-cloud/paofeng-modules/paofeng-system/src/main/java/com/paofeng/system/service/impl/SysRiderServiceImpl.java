@@ -44,7 +44,7 @@ public class SysRiderServiceImpl implements ISysRiderService {
     @Override
     public int insertRider(SysRider rider) {
         // 如果没有rider角色就添加一个
-        if (SecurityUtils.getLoginUser().getRoles().stream().noneMatch(e -> e.equals(SysRoles.SHOP.getName()))) {
+        if (SecurityUtils.getLoginUser().getRoles().stream().noneMatch(e -> e.equals(SysRoles.RIDER.getName()))) {
             roleService.insertAuthUsers(SysRoles.SHOP.getId(), new Long[]{rider.getUserId()});
             LoginUser loginUser = SecurityUtils.getLoginUser();
             loginUser.getRoles().add(SysRoles.SHOP.getName());

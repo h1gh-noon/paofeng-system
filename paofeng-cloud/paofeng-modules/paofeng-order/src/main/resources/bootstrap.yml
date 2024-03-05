@@ -1,12 +1,12 @@
 # Tomcat
 server:
-  port: 19211
+  port: 19222
 
 # Spring
 spring:
   application:
     # 应用名称
-    name: paofeng-system
+    name: paofeng-order
   profiles:
     # 环境配置
     active: dev

@@ -19,12 +19,12 @@ public class RabbitConfig implements BeanPostProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(WebSocketService.class);
 
-    public static final String topic = UUID.randomUUID().toString().replaceAll("-", "");
+    public static final String topic = UUID.randomUUID().toString(true);
 
     @Value("${rabbitmq.exchange}")
     public String exchange;
 
-    public static final String routingKey = UUID.randomUUID().toString().replaceAll("-", "");
+    public static final String routingKey = UUID.randomUUID().toString(true);
 
     //初始化rabbitAdmin对象
     @Bean

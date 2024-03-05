@@ -9,6 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
+        <module>paofeng-order</module>
         <module>paofeng-system</module>
         <module>paofeng-gen</module>
         <module>paofeng-job</module>

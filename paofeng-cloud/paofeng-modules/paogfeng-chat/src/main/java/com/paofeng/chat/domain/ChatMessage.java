@@ -50,7 +50,7 @@ public class ChatMessage extends BaseEntity {
     /**
      * 类型 默认私聊
      */
-    @Excel(name = "类型 默认私聊")
+    @Excel(name = "类型 默认 1私聊 2系统消息 3订单状态消息")
     private String type;
 
     public void setId(Long id) {
