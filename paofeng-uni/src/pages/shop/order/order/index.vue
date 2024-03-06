@@ -7,19 +7,18 @@
         </a>
       </navigator>
       <h1 class="mui-title">订单管理</h1>
-      <a class="message link" data-link="../../html/enter/message.html">
-        <img src="@/static/image/shop/order/xiaoxi.png" alt="" />
-      </a>
+      <navigator url="/pages/shop/enter/message" hover-class="other-navigator-hover">
+        <a class="message link">
+          <img src="@/static/image/shop/order/xiaoxi.png" alt="" />
+        </a>
+      </navigator>
     </header>
     <div class="mui-content">
       <!--悬浮按钮-->
       <div class="xuanfu" id="xuanfu">
-        <img src="@/static/image/shop/order/tianjia.png" alt="" class="tianjia" />
-        <p class="quanBu"><img src="@/static/image/shop/order/quanbu.png" /><span>全部</span></p>
-        <p class="bianji link" data-link="order_msg_import.html"><img src="@/static/image/shop/order/bianji.png" /></p>
-        <p class="meituan"><img src="@/static/image/shop/order/meituan.png" /></p>
-        <p class="baidu"><img src="@/static/image/shop/order/baidu.png" /></p>
-        <p class="eleme"><img src="@/static/image/shop/order/eleme.png" /></p>
+        <navigator url="/pages/shop/order/orderAdd">
+          <img src="@/static/image/shop/order/tianjia.png" alt="" class="tianjia" />
+        </navigator>
       </div>
       <!--默认不显示，单机悬浮按钮的选项后进行显示相关内容-->
       <div id="slider" class="mui-slider mui-fullscreen" style="display: none;">
@@ -28,9 +27,6 @@
           <div class="mui-scroll">
             <a class="mui-control-item mui-active">
               待发布
-            </a>
-            <a class="mui-control-item">
-              待抢单
             </a>
             <a class="mui-control-item">
               待取货
@@ -57,10 +53,6 @@
                           <span>美团外卖</span>
                           <span class="mui-ellipsis">000000000000000</span>
                         </p>
-                        <p class="check"><img src="@/static/image/shop/order/xuankuang.png" class="wxz" /></p>
-                        <p class="link look" data-link="order_detail.html">
-                          查看详情
-                        </p>
                       </div>
                       <div class="two_list_two tel">
                         <p>配送地址:</p>
@@ -74,60 +66,13 @@
                         </p>
                       </div>
                       <div class="two_list_three">
-                        <ul>
-                          <li>
-                            <span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-                            <span>x1</span>
-                            <span>￥9</span>
-                          </li>
-                          <li>
-                            <span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-                            <span>x1</span>
-                            <span>￥9</span>
-                          </li>
-                          <li>
-                            <span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-                            <span>x1</span>
-                            <span>￥9</span>
-                          </li>
-                          <li>
-                            <span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-                            <span>x1</span>
-                            <span>￥9</span>
-                          </li>
-                          <li>
-                            <span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-                            <span>x1</span>
-                            <span>￥9</span>
-                          </li>
-                          <li>
-                            <span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-                            <span>x1</span>
-                            <span>￥9</span>
-                          </li>
-                          <li>
-                            <span>西红柿炒鸡蛋盖浇饭</span>
-                            <span>x1</span>
-                            <span>￥9</span>
-                          </li>
-                          <li>
-                            <span>西红柿炒鸡蛋盖浇饭</span>
-                            <span>x1</span>
-                            <span>￥9</span>
-                          </li>
-
-                        </ul>
-                        <p class="more">
-                          <span>展开更多</span>
-                          <img src="@/static/image/shop/order/xiala.png" alt="" />
-                        </p>
                         <div class="pay">
                           <p>
-                            <span>商品费</span>
+                            <span>商品金额</span>
                             <span>￥58</span>
                           </p>
                           <p>
-                            <span>商品费</span>
+                            <span>配送费</span>
                             <span>￥5</span>
                           </p>
                         </div>
@@ -138,432 +83,16 @@
                       </div>
                       <div class="two_list_five">
                         <p class="publish">发布订单</p>
-                        <!--添加小费成功后的状态，初始不显示-->
-                        <p class="added" style="display: none;">已添加5元小费</p>
-                        <!--添加小费成功后，追加小费不在显示-->
-                        <p class="add">追加小费</p>
+                        <p class="add">修改配送费</p>
                         <p class="cancel_order">取消订单</p>
                       </div>
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
-
           </div>
-          <!--<div id="item2mobile" class="mui-slider-item mui-control-content">
-						<div class="mui-scroll-wrapper">
-							<div class="mui-scroll">
-								<div class="main">
-									<div class="main_two">
-							    		<div class="main_two_list">
-							    			<div class="two_list_top">
-							    				<p><img src="@/static/image/shop/user/meituan.png"/></p>
-							    				<p>
-							    					<span>美团外卖</span>
-							    					<span class="mui-ellipsis">000000000000000</span>
-							    				</p>
-							    				<p class="link look" data-link="wait_order_detail.html">
-							    					查看详情
-							    				</p>							    				
-							    			</div>
-							    			<div class="two_list_two tel">
-						    					<p>配送地址:</p>
-						    					<p>
-						    						<span>
-						    							<i>小明</i>
-						    							<i>18000000000</i>
-						    							<a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
-						    						</span>
-						    						<span class="mui-ellipsis">中原国家广告产业园7号楼3层</span>
-						    					</p>
-							    			</div>
-							    			<div class="two_list_three">
-							    				<ul>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>		    					
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span>西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    				</ul>
-							    				<p class="more">
-							    					<span>展开更多</span>
-							    					<img src="@/static/image/shop/order/xiala.png" alt="" />
-							    				</p>
-							    				<div class="pay">
-							    					<p>
-							    						<span>商品费</span>
-							    						<span>￥58</span>
-							    					</p>
-							    					<p>
-							    						<span>商品费</span>
-							    						<span>￥5</span>
-							    					</p>
-							    				</div>
-							    				<div class="zongJi">
-							    					<span>总计：</span>
-							    					<span>￥61</span>
-							    				</div>
-							    			</div>
-							    		    <div class="two_list_five">
-							    		    	<p class="wait">等待抢单<span class="djs"></span></p>
-							    		    	<p class="add">追加小费</p>
-							    		    	<p class="cancel_order">取消订单</p>		    		    	
-							    		    </div>
-							    		</div>
-							    	</div>
-								</div>
-							</div>
-						</div>
-					</div>-->
-          <!--<div id="item3mobile" class="mui-slider-item mui-control-content">
-						<div class="mui-scroll-wrapper">
-							<div class="mui-scroll">
-								<div class="main">
-									<div class="main_two">
-							    		<div class="main_two_list">
-							    			<div class="two_list_top">
-							    				<p><img src="@/static/image/shop/user/meituan.png"/></p>
-							    				<p>
-							    					<span>美团外卖</span>
-							    					<span class="mui-ellipsis">000000000000000</span>
-							    				</p>
-							    				<p class="look link" data-link="dqh_order_detail.html">
-							    					查看详情
-							    				</p>
-							    			</div>
-							    			<div class="two_list_two tel">
-						    					<p>配送地址:</p>
-						    					<p>
-						    						<span>
-						    							<i>小明</i>
-						    							<i>18000000000</i>
-						    							<a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
-						    						</span>
-						    						<span class="mui-ellipsis">中原国家广告产业园7号楼3层</span>
-						    					</p>
-							    			</div>
-							    			<div class="two_list_three">
-							    				<ul>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>		    					
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span>西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    				</ul>
-							    				<p class="more">
-							    					<span>展开更多</span>
-							    					<img src="@/static/image/shop/order/xiala.png" alt="" />
-							    				</p>
-							    				<div class="pay">
-							    					<p>
-							    						<span>商品费</span>
-							    						<span>￥58</span>
-							    					</p>
-							    					<p>
-							    						<span>商品费</span>
-							    						<span>￥5</span>
-							    					</p>
-							    				</div>
-							    				<div class="zongJi">
-							    					<span>总计：</span>
-							    					<span>￥61</span>
-							    				</div>
-							    			</div>
-							    		    <div class="two_list_fore two_list_fore1">
-							    		    	<p>
-							    		    		<img src="@/static/image/shop/user/touxiang.png"/>
-							    		    	</p>
-							    		    	<p>
-							    		    		<span>于师傅 <b>已接单</b><i>18000000000</i></span>			    		    	   
-							    		    	</p>							    		    	
-							    		    	<p class="tel">
-							    		    		<a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
-							    		    	</p>
-							    		    	<div class="add_order">
-							    		    		<p class="link" data-link="qiShou_area.html">查看距离</p>
-							    		    		<p class="link" data-link="add_order.html">追加订单</p>
-							    		    	</div>
-							    		    </div>
-							    		    <div class="two_list_five">
-							    		    	<p class="cancel_order">取消订单</p>		    		    	
-							    		    </div>
-							    		</div>
-							    	</div>
-								</div>
-							</div>
-						</div>
-					</div>-->
-          <!--<div id="item4mobile" class="mui-slider-item mui-control-content">
-						<div class="mui-scroll-wrapper">
-							<div class="mui-scroll">
-								<div class="main">
-									<div class="main_two">
-							    		<div class="main_two_list" style="padding-bottom: 10px;">
-							    			<div class="two_list_top">
-							    				<p><img src="@/static/image/shop/user/meituan.png"/></p>
-							    				<p>
-							    					<span>美团外卖</span>
-							    					<span class="mui-ellipsis">000000000000000</span>
-							    				</p>
-							    				<p class="look link" data-link="psz_order_detail.html">
-							    					查看详情
-							    				</p>
-							    			</div>
-							    			<div class="two_list_two tel">
-						    					<p>配送地址:</p>
-						    					<p>
-						    						<span>
-						    							<i>小明</i>
-						    							<i>18000000000</i>
-						    							<a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
-						    						</span>
-						    						<span class="mui-ellipsis">中原国家广告产业园7号楼3层</span>
-						    					</p>
-							    			</div>
-							    			<div class="two_list_three">
-							    				<ul>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>		    					
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span>西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    				</ul>
-							    				<p class="more">
-							    					<span>展开更多</span>
-							    					<img src="@/static/image/shop/order/xiala.png" alt="" />
-							    				</p>
-							    				<div class="pay">
-							    					<p>
-							    						<span>商品费</span>
-							    						<span>￥58</span>
-							    					</p>
-							    					<p>
-							    						<span>商品费</span>
-							    						<span>￥5</span>
-							    					</p>
-							    				</div>
-							    				<div class="zongJi">
-							    					<span>总计：</span>
-							    					<span>￥61</span>
-							    				</div>
-							    			</div>
-							    		    <div class="two_list_fore">
-							    		    	<p>
-							    		    		<img src="@/static/image/shop/user/touxiang.png"/>
-							    		    	</p>
-							    		    	<p class="link" data-link="qiShou_area.html">
-							    		    		<span>于师傅 <i>18000000000</i></span>
-							    		    	    <span>配送中 <i>查看距离</i></span>
-							    		    	</p>
-							    		    	
-							    		    	<p class="tel">
-							    		    		<a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
-							    		    	</p>
-							    		    </div>							    		  
-							    		</div>
-							    	</div>
-								</div>
-							</div>
-						</div>
-					</div>-->
-          <!--<div id="item5mobile" class="mui-slider-item mui-control-content">
-						<div class="mui-scroll-wrapper">
-							<div class="mui-scroll">
-								<div class="main">
-									<div class="main_two" style="margin-bottom: 10px;">
-										<div class="two_one">
-							    			商户取消
-							    		</div>
-							    		<div class="main_two_list" style="padding-bottom: 10px;">							    			
-							    			<div class="two_list_top">
-							    				<p><img src="@/static/image/shop/user/meituan.png"/></p>
-							    				<p>
-							    					<span>美团外卖</span>
-							    					<span class="mui-ellipsis">000000000000000</span>
-							    				</p>
-							    				<p class="look link" data-link="ycd_detail.html">
-							    					查看详情
-							    				</p>
-							    			</div>
-							    			<div class="two_list_two tel">
-						    					<p>配送地址:</p>
-						    					<p>
-						    						<span>
-						    							<i>小明</i>
-						    							<i>18000000000</i>
-						    							<a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
-						    						</span>
-						    						<span class="mui-ellipsis">中原国家广告产业园7号楼3层</span>
-						    					</p>
-							    			</div>
-							    			<div class="two_list_three">
-							    				<ul>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>		    					
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span class="mui-ellipsis">西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    					<li>
-							    						<span>西红柿炒鸡蛋盖浇饭</span>
-							    						<span>x1</span>
-							    						<span>￥9</span>
-							    					</li>
-							    				</ul>
-							    				<p class="more">
-							    					<span>展开更多</span>
-							    					<img src="@/static/image/shop/order/xiala.png" alt="" />
-							    				</p>
-							    				<div class="pay">
-							    					<p>
-							    						<span>商品费</span>
-							    						<span>￥58</span>
-							    					</p>
-							    					<p>
-							    						<span>商品费</span>
-							    						<span>￥5</span>
-							    					</p>
-							    				</div>
-							    				<div class="zongJi" style="border-bottom: none;">
-							    					<span>总计：</span>
-							    					<span>￥61</span>
-							    				</div>
-							    			</div>							    		    							    		  
-							    		</div>
-							    	    <div class="two_three">
-							    	    	<p class="hulue">
-							    	    		<img src="@/static/image/shop/order/hulue.png"/>
-							    	    		<span>忽略此单</span>
-							    	    	</p>
-							    	    	<p class="begin">
-							    	    		<img src="@/static/image/shop/order/chongxin.png"/>
-							    	    		<span>重新发单</span>
-							    	    	</p>
-							    	    </div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>-->
-
         </div>
-        <p class="btn publish">一键发单</p>
       </div>
       <!--刚进来是没有数据的，默认显示-->
       <div class="none">
@@ -642,20 +171,6 @@
         </p>
       </div>
     </div>
-    <!--输入交易密码弹框-->
-    <div class="jiaoYi_pop" style="display: none;">
-      <div class="jiaoYi">
-        <p>
-          <img src="@/static/image/shop/user/xuanfen.png" alt="" />
-          <span>请输入交易密码</span>
-        </p>
-        <p><input type="text" class="jine" placeholder="请输入密码" /></p>
-        <p class="enter">
-          确定
-        </p>
-      </div>
-    </div>
-    <div class="zzc" style="display: none;"></div>
   </view>
 </template>
 
@@ -742,7 +257,7 @@ export default {
   min-width: 62px;
   min-height: 62px;
   position: absolute;
-  top: 44px;
+  bottom: 44px;
   left: 0px;
   z-index: 11;
 }

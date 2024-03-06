@@ -4,7 +4,7 @@ import com.paofeng.common.core.enums.SysRoles;
 import com.paofeng.common.security.service.TokenService;
 import com.paofeng.common.security.utils.SecurityUtils;
 import com.paofeng.system.api.model.LoginUser;
-import com.paofeng.system.domain.SysShop;
+import com.paofeng.system.api.domain.SysShop;
 import com.paofeng.system.mapper.SysShopMapper;
 import com.paofeng.system.service.ISysRoleService;
 import com.paofeng.system.service.ISysShopService;
@@ -38,7 +38,7 @@ public class SysShopServiceImpl implements ISysShopService {
 
     @Override
     public SysShop selectShopByUserId(Long userId) {
-        return null;
+        return shopMapper.selectShopByUserId(userId);
     }
 
     @Override

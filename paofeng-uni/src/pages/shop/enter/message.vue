@@ -1,7 +1,7 @@
 <template>
   <view>
     <header class="mui-bar mui-bar-nav">
-      <a class="mui-action-back" @click="uni.navigateBack()">
+      <a class="mui-action-back">
         <img src="@/static/image/shop/order/back.png" alt="" />
       </a>
       <h1 class="mui-title">消息</h1>

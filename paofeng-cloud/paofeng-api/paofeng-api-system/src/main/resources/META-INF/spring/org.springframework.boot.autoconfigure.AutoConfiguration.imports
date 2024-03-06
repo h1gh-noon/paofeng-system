@@ -1,3 +1,4 @@
 com.paofeng.system.api.factory.RemoteUserFallbackFactory
 com.paofeng.system.api.factory.RemoteLogFallbackFactory
 com.paofeng.system.api.factory.RemoteFileFallbackFactory
+com.paofeng.system.api.factory.RemoteShopFallbackFactory

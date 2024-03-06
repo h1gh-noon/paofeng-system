@@ -100,7 +100,7 @@
       <el-table-column label="当前骑手" align="center" prop="currentRiderName" />
       <el-table-column label="取货地址" align="center" prop="pickupAddress" />
       <el-table-column label="送货信息" align="center" prop="destination" />
-      <el-table-column label="状态" align="center" prop="type" />
+      <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="商品价值" align="center" prop="productMoney" />
       <el-table-column label="配送费" align="center" prop="deliveryFee" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
@@ -194,7 +194,7 @@ export default {
         currentRiderName: null,
         pickupAddress: null,
         destination: null,
-        type: null,
+        status: null,
         productMoney: null,
         deliveryFee: null,
         createTime: null
@@ -232,7 +232,7 @@ export default {
         currentRiderName: null,
         pickupAddress: null,
         destination: null,
-        type: null,
+        status: null,
         productMoney: null,
         deliveryFee: null,
         createTime: null

@@ -1,6 +1,7 @@
 package com.paofeng.order.controller;
 
 import com.paofeng.common.core.constant.HttpStatus;
+import com.paofeng.common.core.domain.Validation;
 import com.paofeng.common.core.exception.auth.NotPermissionException;
 import com.paofeng.common.core.utils.poi.ExcelUtil;
 import com.paofeng.common.core.web.controller.BaseController;
@@ -15,6 +16,7 @@ import com.paofeng.order.domain.Order;
 import com.paofeng.order.domain.OrderVo;
 import com.paofeng.order.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +38,7 @@ public class OrderController extends BaseController {
      */
     @RequiresPermissions("order:order:list")
     @GetMapping("/list")
-    public TableDataInfo list(OrderVo order) {
+    public TableDataInfo list(@RequestBody OrderVo order) {
         startPage();
         List<OrderVo> list = orderService.selectOrderList(order);
         return getDataTable(list);
@@ -46,7 +48,7 @@ public class OrderController extends BaseController {
      * 商家查询订单列表
      */
     @GetMapping("/shopList")
-    public TableDataInfo shopList(OrderVo order) {
+    public TableDataInfo shopList(@RequestBody OrderVo order) {
         order.setCreatId(SecurityUtils.getUserId());
         startPage();
         List<OrderVo> list = orderService.selectOrderList(order);
@@ -57,7 +59,7 @@ public class OrderController extends BaseController {
      * 骑手查询订单列表
      */
     @GetMapping("/riderList")
-    public TableDataInfo riderList(OrderVo order) {
+    public TableDataInfo riderList(@RequestBody OrderVo order) {
         order.setCurrentRider(SecurityUtils.getUserId());
         startPage();
         List<OrderVo> list = orderService.selectOrderList(order);
@@ -70,7 +72,7 @@ public class OrderController extends BaseController {
     @RequiresPermissions("order:order:export")
     @Log(title = "订单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, OrderVo order) {
+    public void export(HttpServletResponse response, @RequestBody OrderVo order) {
         List<OrderVo> list = orderService.selectOrderList(order);
         ExcelUtil<OrderVo> util = new ExcelUtil<OrderVo>(OrderVo.class);
         util.exportExcel(response, list, "订单数据");
@@ -81,7 +83,7 @@ public class OrderController extends BaseController {
      */
     @RequiresPermissions("order:order:query")
     @GetMapping(value = "/{orderId}")
-    public AjaxResult getInfo(@PathVariable("orderId") String orderId) {
+    public AjaxResult getInfo(@PathVariable("orderId") @RequestParam String orderId) {
         OrderVo orderVo = orderService.selectOrderByOrderId(orderId);
         Long currentUserId = SecurityUtils.getUserId();
         if (!AuthUtil.hasPermi("order:order:query")
@@ -98,7 +100,7 @@ public class OrderController extends BaseController {
      */
     @RequiresPermissions("order:order:add")
     @Log(title = "订单", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("/add")
     public AjaxResult add(@RequestBody Order order) {
         return toAjax(orderService.insertOrder(order));
     }
@@ -108,8 +110,8 @@ public class OrderController extends BaseController {
      */
     @RequiresPermissions("order:order:edit")
     @Log(title = "订单", businessType = BusinessType.UPDATE)
-    @PostMapping
-    public AjaxResult edit(@RequestBody Order order) {
+    @PostMapping("/edit")
+    public AjaxResult edit(@RequestBody @Validated(Validation.Update.class) Order order) {
         return toAjax(orderService.updateOrder(order));
     }
 
@@ -117,8 +119,8 @@ public class OrderController extends BaseController {
      * 修改订单
      */
     @Log(title = "发布订单", businessType = BusinessType.UPDATE)
-    @PostMapping
-    public AjaxResult subOrder(String orderId) {
+    @RequestMapping("/subOrder")
+    public AjaxResult subOrder(@RequestParam String orderId) {
         OrderVo orderVo = orderService.selectOrderByOrderId(orderId);
         Long currentUserId = SecurityUtils.getUserId();
         if (!AuthUtil.hasPermi("order:order:query")
@@ -129,7 +131,7 @@ public class OrderController extends BaseController {
 
         Order order = new Order();
         order.setOrderId(orderId);
-        order.setType(Order.TYPE_PUBLISH);
+        order.setStatus(Order.TYPE_PUBLISH);
         return toAjax(orderService.updateOrder(order));
     }
 
@@ -138,8 +140,8 @@ public class OrderController extends BaseController {
      */
     @RequiresPermissions("order:order:take")
     @Log(title = "骑手接单订单", businessType = BusinessType.UPDATE)
-    @PostMapping
-    public AjaxResult takeOrder(String orderId) {
+    @RequestMapping("/takeOrder")
+    public AjaxResult takeOrder(@RequestParam String orderId) {
         if (orderService.takeOrder(orderId) > 0) {
             return AjaxResult.success();
         } else {
@@ -152,8 +154,8 @@ public class OrderController extends BaseController {
      */
     @RequiresPermissions("order:order:take")
     @Log(title = "骑手送达订单", businessType = BusinessType.UPDATE)
-    @PostMapping
-    public AjaxResult successOrder(String orderId) {
+    @RequestMapping("/successOrder")
+    public AjaxResult successOrder(@RequestParam String orderId) {
         if (orderService.successOrder(orderId) > 0) {
             return AjaxResult.success();
         } else {
@@ -165,8 +167,8 @@ public class OrderController extends BaseController {
      * 修改订单
      */
     @Log(title = "取消订单", businessType = BusinessType.UPDATE)
-    @PostMapping
-    public AjaxResult cancelOrder(String orderId) {
+    @RequestMapping("/cancelOrder")
+    public AjaxResult cancelOrder(@RequestParam String orderId) {
         if (orderService.cancelOrder(orderId) > 0) {
             return AjaxResult.success();
         } else {

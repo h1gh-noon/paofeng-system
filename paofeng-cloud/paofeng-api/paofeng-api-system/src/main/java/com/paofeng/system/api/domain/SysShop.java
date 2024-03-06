@@ -1,4 +1,4 @@
-package com.paofeng.system.domain;
+package com.paofeng.system.api.domain;
 
 
 import com.paofeng.common.core.web.domain.BaseEntity;
@@ -23,6 +23,8 @@ public class SysShop extends BaseEntity {
     private String phonenumber;
     private Date createTime;
 
+    public static final String STATUS_ENABLE = "0";
+    public static final String STATUS_DISABLE = "1";
 
     public Date getCreateTime() {
         return createTime;

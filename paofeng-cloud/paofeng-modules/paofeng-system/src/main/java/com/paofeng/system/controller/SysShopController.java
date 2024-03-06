@@ -1,14 +1,16 @@
 package com.paofeng.system.controller;
 
+import com.paofeng.common.core.domain.R;
 import com.paofeng.common.core.web.controller.BaseController;
 import com.paofeng.common.core.web.domain.AjaxResult;
 import com.paofeng.common.core.web.page.TableDataInfo;
 import com.paofeng.common.log.annotation.Log;
 import com.paofeng.common.log.enums.BusinessType;
+import com.paofeng.common.security.annotation.InnerAuth;
 import com.paofeng.common.security.annotation.RequiresPermissions;
 import com.paofeng.common.security.auth.AuthUtil;
 import com.paofeng.common.security.utils.SecurityUtils;
-import com.paofeng.system.domain.SysShop;
+import com.paofeng.system.api.domain.SysShop;
 import com.paofeng.system.service.ISysShopService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +63,14 @@ public class SysShopController extends BaseController {
         } else {
             return error(sysShop.getStatus());
         }
+    }
+
+    // 根据userId查询店铺
+    @InnerAuth
+    @GetMapping("/info/{userId}")
+    public R<SysShop> getShopInfoByUserId(@PathVariable("userId") Long userId) {
+        // 检测是否可用
+        return R.ok(shopService.selectShopByUserId(userId));
     }
 
     @Log(title = "店铺管理", businessType = BusinessType.INSERT)

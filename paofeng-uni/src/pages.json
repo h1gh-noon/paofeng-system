@@ -53,6 +53,23 @@
 			}
 		},
 		{
+			"path": "pages/shop/order/payRole",
+			"style": {
+				"navigationBarTitleText": "收费规则",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
 			"path": "pages/shop/order/common",
 			"style": {
 				"navigationBarTitleText": "详情",

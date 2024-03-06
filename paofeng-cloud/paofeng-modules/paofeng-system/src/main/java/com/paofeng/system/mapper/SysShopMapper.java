@@ -1,6 +1,6 @@
 package com.paofeng.system.mapper;
 
-import com.paofeng.system.domain.SysShop;
+import com.paofeng.system.api.domain.SysShop;
 
 import java.util.List;
 

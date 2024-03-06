@@ -1,6 +1,9 @@
 package com.paofeng.order.service.impl;
 
+import com.paofeng.common.core.constant.SecurityConstants;
+import com.paofeng.common.core.domain.R;
 import com.paofeng.common.core.exception.CheckedException;
+import com.paofeng.common.core.exception.base.BaseException;
 import com.paofeng.common.core.utils.DateUtils;
 import com.paofeng.common.core.utils.uuid.UUID;
 import com.paofeng.common.security.utils.SecurityUtils;
@@ -8,10 +11,13 @@ import com.paofeng.order.domain.Order;
 import com.paofeng.order.domain.OrderVo;
 import com.paofeng.order.mapper.OrderMapper;
 import com.paofeng.order.service.IOrderService;
+import com.paofeng.system.api.RemoteShopService;
+import com.paofeng.system.api.domain.SysShop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -24,6 +30,9 @@ import java.util.List;
 public class OrderServiceImpl implements IOrderService {
     @Autowired
     private OrderMapper orderMapper;
+
+    @Resource
+    private RemoteShopService remoteShopService;
 
     /**
      * 查询订单
@@ -57,6 +66,18 @@ public class OrderServiceImpl implements IOrderService {
     public int insertOrder(Order order) {
         order.setOrderId(UUID.randomUUID().toString(true));
         order.setCreateTime(DateUtils.getNowDate());
+
+        R<SysShop> shopInfo = remoteShopService.getShopInfoByUserId(SecurityUtils.getUserId(),
+                SecurityConstants.INNER);
+        if (R.FAIL == shopInfo.getCode()) {
+            throw new BaseException("请联系管理员");
+        }
+        SysShop shop = shopInfo.getData();
+        if (!SysShop.STATUS_ENABLE.equals(shop.getStatus())) {
+            throw new CheckedException("店铺暂时不可用");
+        }
+
+        order.setPickupAddress(shop.getAddress());
         return orderMapper.insertOrder(order);
     }
 
@@ -75,7 +96,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public int takeOrder(String orderId) {
         OrderVo orderVo = selectOrderByOrderId(orderId);
-        if (!Order.TYPE_PUBLISH.equals(orderVo.getType())) {
+        if (!Order.TYPE_PUBLISH.equals(orderVo.getStatus())) {
             // 校验状态 只有已发布的才能接单
             throw new CheckedException("该订单已被获取");
         }
@@ -83,7 +104,7 @@ public class OrderServiceImpl implements IOrderService {
         Order order = new Order();
         order.setOrderId(orderId);
         order.setCurrentRider(SecurityUtils.getUserId());
-        order.setType(Order.TYPE_DELIVERING);
+        order.setStatus(Order.TYPE_DELIVERING);
         return updateOrder(order);
     }
 
@@ -99,7 +120,7 @@ public class OrderServiceImpl implements IOrderService {
         Order order = new Order();
         order.setOrderId(orderId);
         order.setCurrentRider(SecurityUtils.getUserId());
-        order.setType(Order.TYPE_DELIVERING);
+        order.setStatus(Order.TYPE_DELIVERING);
         return updateOrder(order);
     }
 
@@ -113,12 +134,12 @@ public class OrderServiceImpl implements IOrderService {
         // 根据userId判断是谁取消的订单
         if (userId.equals(orderVo.getCurrentRider())) {
             // 骑手取消
-            order.setType(Order.TYPE_CANCEL_RIDER);
+            order.setStatus(Order.TYPE_CANCEL_RIDER);
             return updateOrder(order);
         }
         if (userId.equals(orderVo.getCreatId())) {
             // 商家取消
-            order.setType(Order.TYPE_CANCEL_SHOP);
+            order.setStatus(Order.TYPE_CANCEL_SHOP);
             return updateOrder(order);
         }
 
