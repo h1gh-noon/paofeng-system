@@ -44,7 +44,7 @@
         </p>
       </div>
       <p class="btn">
-        <span class="link" @click="subHandler">完成录入</span>
+        <span class="link" @click="subHandler()">完成录入</span>
         <span class="link" @click="subHandler(1)">继续录入</span>
       </p>
     </div>
@@ -89,7 +89,6 @@ export default {
         })
         return
       }
-      console.log('s')
       try {
         const res = await orderAdd(this.formObj)
         if (res.code === 200) {

@@ -135,20 +135,20 @@
 
 <script>
 import { uniUploadImage } from "@/api/upload";
-import { shopAdd } from "@/api/shop";
-
+import { shopAdd, getShopInfo, shopUpdate } from "@/api/shop";
+const formDef = {
+  shopName: '',
+  address: '',
+  shopPhoto: [],
+  cardPhotoZ: [],
+  cardPhotoB: [],
+  businessLicense: [],
+  cateringLicense: [],
+}
 export default {
   data() {
     return {
-      formObj: {
-        shopName: '',
-        address: '',
-        shopPhoto: [],
-        cardPhotoZ: [],
-        cardPhotoB: [],
-        businessLicense: [],
-        cateringLicense: [],
-      },
+      formObj: JSON.parse(JSON.stringify(formDef)),
       pact: '',
       pactArr: [{
         text: '我已阅读并同意《捷速外卖平台商家协议》',
@@ -157,8 +157,22 @@ export default {
     }
   },
   onLoad() {
+    this.initHandler()
   },
   methods: {
+    initHandler() {
+      getShopInfo().then(res => {
+        if (res.code === 200 && res.data) {
+          const { data } = res
+          data.shopPhoto = JSON.parse(data.shopPhoto)
+          data.cardPhotoZ = JSON.parse(data.cardPhotoZ)
+          data.cardPhotoB = JSON.parse(data.cardPhotoB)
+          data.businessLicense = JSON.parse(data.businessLicense)
+          data.cateringLicense = JSON.parse(data.cateringLicense)
+          this.formObj = data
+        }
+      })
+    },
     selectFile(e, field) {
       console.log(e, field)
       const uploadArr = e.tempFilePaths.map(m => uniUploadImage(m))
@@ -176,8 +190,8 @@ export default {
         }, [])
       })
     },
-    subHandler() {
-      if (!Object.values(this.formObj).every(e => e.length)) {
+    async subHandler() {
+      if (!Object.keys(formDef).every(e => this.formObj[e].length)) {
         uni.showModal({
           title: '提示',
           content: '请检查未填内容',
@@ -205,17 +219,22 @@ export default {
         cateringLicense: JSON.stringify(this.formObj.cateringLicense)
       }
 
-      shopAdd(data).then(res => {
-        if (res.code === 200) {
-          uni.showToast({
-            title: '操作成功！',
-            duration: 2000,
-          });
-          setTimeout(() => {
-            uni.redirectTo({ url: '/pages/shop/enter/shopInfoProess' })
-          }, 1000);
-        }
-      })
+      let res
+      if (Object.hasOwn(this.formObj, 'shopId')) {
+        data.shopId = this.formObj.shopId
+        res = await shopUpdate(data)
+      } else {
+        res = await shopAdd(data)
+      }
+      if (res.code === 200) {
+        uni.showToast({
+          title: '操作成功！',
+          duration: 2000,
+        });
+        setTimeout(() => {
+          uni.redirectTo({ url: '/pages/shop/enter/shopInfoProess' })
+        }, 1000);
+      }
 
     }
   }

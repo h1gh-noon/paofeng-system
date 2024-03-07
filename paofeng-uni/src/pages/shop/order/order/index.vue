@@ -15,13 +15,13 @@
     </header>
     <div class="mui-content">
       <!--悬浮按钮-->
-      <div class="xuanfu" id="xuanfu">
+      <div class="xuanfu" id="xuanfu" v-if="checkPermission('order:order:add')">
         <navigator url="/pages/shop/order/orderAdd">
           <img src="@/static/image/shop/order/tianjia.png" alt="" class="tianjia" />
         </navigator>
       </div>
       <!--默认不显示，单机悬浮按钮的选项后进行显示相关内容-->
-      <div id="slider" class="mui-slider mui-fullscreen" style="display: none;">
+      <div id="slider" class="mui-slider mui-fullscreen" v-if="checkPermission('order:order:add')">
         <div id="sliderSegmentedControl"
           class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
           <div class="mui-scroll">
@@ -95,10 +95,9 @@
         </div>
       </div>
       <!--刚进来是没有数据的，默认显示-->
-      <div class="none">
+      <div class="none" v-else>
         <img src="@/static/image/shop/order/qishou.png" alt="" />
         <p class="none_tip">暂时没有数据</p>
-        <p class="btn yjfd" style="display: none;">一键发单</p>
       </div>
     </div>
     <!--异常单里的取消弹框-->
@@ -176,6 +175,8 @@
 
 <script>
 import { initHandler } from "./order";
+import { checkPermission } from "@/common/util";
+import { orderList } from "@/api/shop";
 //#ifdef H5  
 import $ from '@/static/js/jquery-1.7.2.js'
 //#endif
@@ -186,9 +187,18 @@ export default {
     }
   },
   onReady() {
-    initHandler()
+    if (checkPermission('order:order:add')) {
+      initHandler()
+      this.initList()
+    }
   },
   methods: {
+    checkPermission,
+    initList() {
+      orderList().then(res => {
+        console.log(res)
+      })
+    }
   }
 }
 </script>

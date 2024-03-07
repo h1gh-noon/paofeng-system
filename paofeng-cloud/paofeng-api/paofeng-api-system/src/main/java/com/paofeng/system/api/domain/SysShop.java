@@ -1,13 +1,16 @@
 package com.paofeng.system.api.domain;
 
 
+import com.paofeng.common.core.domain.Validation;
 import com.paofeng.common.core.web.domain.BaseEntity;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class SysShop extends BaseEntity {
 
+    @NotNull(groups = {Validation.Update.class})
     private Long shopId;
     private String shopName;
     private String address;

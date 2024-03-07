@@ -65,15 +65,16 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public int insertOrder(Order order) {
         order.setOrderId(UUID.randomUUID().toString(true));
+        order.setCreatId(SecurityUtils.getUserId());
         order.setCreateTime(DateUtils.getNowDate());
 
-        R<SysShop> shopInfo = remoteShopService.getShopInfoByUserId(SecurityUtils.getUserId(),
+        R<SysShop> shopInfo = remoteShopService.getShopInfoByUserId(order.getCreatId(),
                 SecurityConstants.INNER);
         if (R.FAIL == shopInfo.getCode()) {
             throw new BaseException("请联系管理员");
         }
         SysShop shop = shopInfo.getData();
-        if (!SysShop.STATUS_ENABLE.equals(shop.getStatus())) {
+        if (shop == null || !SysShop.STATUS_ENABLE.equals(shop.getStatus())) {
             throw new CheckedException("店铺暂时不可用");
         }
 

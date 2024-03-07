@@ -3,11 +3,14 @@ package com.paofeng.system.service.impl;
 import com.paofeng.common.core.enums.SysRoles;
 import com.paofeng.common.security.service.TokenService;
 import com.paofeng.common.security.utils.SecurityUtils;
-import com.paofeng.system.api.model.LoginUser;
 import com.paofeng.system.api.domain.SysShop;
+import com.paofeng.system.api.domain.SysUser;
+import com.paofeng.system.api.model.LoginUser;
 import com.paofeng.system.mapper.SysShopMapper;
+import com.paofeng.system.service.ISysPermissionService;
 import com.paofeng.system.service.ISysRoleService;
 import com.paofeng.system.service.ISysShopService;
+import com.paofeng.system.service.ISysUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,6 +28,11 @@ public class SysShopServiceImpl implements ISysShopService {
     @Resource
     private TokenService tokenService;
 
+    @Resource
+    private ISysPermissionService permissionService;
+
+    @Resource
+    private ISysUserService userService;
 
     @Override
     public List<SysShop> selectShopList(SysShop shop) {
@@ -48,6 +56,8 @@ public class SysShopServiceImpl implements ISysShopService {
             roleService.insertAuthUsers(SysRoles.SHOP.getId(), new Long[]{shop.getUserId()});
             LoginUser loginUser = SecurityUtils.getLoginUser();
             loginUser.getRoles().add(SysRoles.SHOP.getName());
+            SysUser sysUser = userService.selectUserByUserName(loginUser.getUsername());
+            loginUser.setPermissions(permissionService.getMenuPermission(sysUser));
             // 刷新redis
             tokenService.setLoginUser(loginUser);
         }

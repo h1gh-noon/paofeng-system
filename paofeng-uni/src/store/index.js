@@ -1,3 +1,5 @@
+import { getInfo } from "@/api/login";
+
 // #ifndef VUE3
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -22,7 +24,13 @@ const store = createStore({
 		leftWinActive: '/pages/component/view/view',
 		activeOpen: '',
 		menu: [],
-		univerifyErrorMsg: ''
+		univerifyErrorMsg: '',
+		token: uni.getStorageSync('auth_token'),
+    id: '',
+    name: '',
+    avatar: '',
+    roles: [],
+    permissions: []
 	},
 	mutations: {
 		login(state, provider) {
@@ -66,7 +74,28 @@ const store = createStore({
 		},
 		setUniverifyErrorMsg(state,payload = ''){
 			state.univerifyErrorMsg = payload
-		}
+		},
+		SET_TOKEN: (state, token) => {
+      state.token = token
+    },
+    SET_EXPIRES_IN: (state, time) => {
+      state.expires_in = time
+    },
+    SET_ID: (state, id) => {
+      state.id = id
+    },
+    SET_NAME: (state, name) => {
+      state.name = name
+    },
+    SET_AVATAR: (state, avatar) => {
+      state.avatar = avatar
+    },
+    SET_ROLES: (state, roles) => {
+      state.roles = roles
+    },
+    SET_PERMISSIONS: (state, permissions) => {
+      state.permissions = permissions
+    }
 	},
 	getters: {
 		currentColor(state) {
@@ -122,6 +151,28 @@ const store = createStore({
 						reject(res)
 					}
 				})
+			})
+		},
+		getUserInfo: function({
+			commit
+		}) {
+			return new Promise((resolve, reject) => {
+				getInfo().then(res => {
+          const user = res.user
+          const avatar = (user.avatar == "" || user.avatar == null) ? require("@/static/compass.png") : user.avatar;
+          if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', res.roles)
+            commit('SET_PERMISSIONS', res.permissions)
+          } else {
+            commit('SET_ROLES', ['ROLE_DEFAULT'])
+          }
+          commit('SET_ID', user.userId)
+          commit('SET_NAME', user.userName)
+          commit('SET_AVATAR', avatar)
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
 			})
 		}
 	}

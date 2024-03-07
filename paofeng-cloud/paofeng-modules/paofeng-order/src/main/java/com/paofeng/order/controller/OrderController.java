@@ -37,8 +37,8 @@ public class OrderController extends BaseController {
      * 查询订单列表
      */
     @RequiresPermissions("order:order:list")
-    @GetMapping("/list")
-    public TableDataInfo list(@RequestBody OrderVo order) {
+    @PostMapping("/list")
+    public TableDataInfo list(@RequestBody(required = false) OrderVo order) {
         startPage();
         List<OrderVo> list = orderService.selectOrderList(order);
         return getDataTable(list);
@@ -47,8 +47,11 @@ public class OrderController extends BaseController {
     /**
      * 商家查询订单列表
      */
-    @GetMapping("/shopList")
-    public TableDataInfo shopList(@RequestBody OrderVo order) {
+    @PostMapping("/shopList")
+    public TableDataInfo shopList(@RequestBody(required = false) OrderVo order) {
+        if (order == null) {
+            order = new OrderVo();
+        }
         order.setCreatId(SecurityUtils.getUserId());
         startPage();
         List<OrderVo> list = orderService.selectOrderList(order);
@@ -58,8 +61,11 @@ public class OrderController extends BaseController {
     /**
      * 骑手查询订单列表
      */
-    @GetMapping("/riderList")
-    public TableDataInfo riderList(@RequestBody OrderVo order) {
+    @PostMapping("/riderList")
+    public TableDataInfo riderList(@RequestBody(required = false) OrderVo order) {
+        if (order == null) {
+            order = new OrderVo();
+        }
         order.setCurrentRider(SecurityUtils.getUserId());
         startPage();
         List<OrderVo> list = orderService.selectOrderList(order);
@@ -72,7 +78,7 @@ public class OrderController extends BaseController {
     @RequiresPermissions("order:order:export")
     @Log(title = "订单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, @RequestBody OrderVo order) {
+    public void export(HttpServletResponse response, @RequestBody(required = false) OrderVo order) {
         List<OrderVo> list = orderService.selectOrderList(order);
         ExcelUtil<OrderVo> util = new ExcelUtil<OrderVo>(OrderVo.class);
         util.exportExcel(response, list, "订单数据");

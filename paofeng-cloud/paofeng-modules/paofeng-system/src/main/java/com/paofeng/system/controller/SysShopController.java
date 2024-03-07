@@ -1,6 +1,8 @@
 package com.paofeng.system.controller;
 
 import com.paofeng.common.core.domain.R;
+import com.paofeng.common.core.domain.Validation;
+import com.paofeng.common.core.exception.base.BaseException;
 import com.paofeng.common.core.web.controller.BaseController;
 import com.paofeng.common.core.web.domain.AjaxResult;
 import com.paofeng.common.core.web.page.TableDataInfo;
@@ -68,9 +70,14 @@ public class SysShopController extends BaseController {
     // 根据userId查询店铺
     @InnerAuth
     @GetMapping("/info/{userId}")
-    public R<SysShop> getShopInfoByUserId(@PathVariable("userId") Long userId) {
-        // 检测是否可用
+    public R<SysShop> getShopInfoByUserId(@PathVariable(value = "userId", required = false) Long userId) {
         return R.ok(shopService.selectShopByUserId(userId));
+    }
+
+    // 根据登录人userId查询店铺
+    @GetMapping("/getShopInfo")
+    public R<SysShop> getShopInfo() {
+        return R.ok(shopService.selectShopByUserId(SecurityUtils.getUserId()));
     }
 
     @Log(title = "店铺管理", businessType = BusinessType.INSERT)
@@ -88,14 +95,26 @@ public class SysShopController extends BaseController {
 
     @Log(title = "店铺管理", businessType = BusinessType.UPDATE)
     @PostMapping("/update")
-    public AjaxResult update(@Validated @RequestBody SysShop shop) {
-        return toAjax(shopService.updateShop(shop));
+    public AjaxResult update(@Validated(Validation.Update.class) @RequestBody SysShop shop) {
+        SysShop sysShop = shopService.selectShopById(shop.getShopId());
+        if (!SecurityUtils.getUserId().equals(sysShop.getUserId())) {
+            // 不是当前登陆人
+            throw new BaseException("401");
+        }
+        sysShop.setAddress(shop.getAddress());
+        sysShop.setShopName(shop.getShopName());
+        sysShop.setShopPhoto(shop.getShopPhoto());
+        sysShop.setBusinessLicense(shop.getBusinessLicense());
+        sysShop.setCardPhotoB(shop.getCardPhotoB());
+        sysShop.setCardPhotoZ(shop.getCardPhotoZ());
+        sysShop.setCateringLicense(shop.getCateringLicense());
+        return toAjax(shopService.updateShop(sysShop));
     }
 
     @RequiresPermissions("system:shop:edit")
     @Log(title = "店铺管理", businessType = BusinessType.UPDATE)
     @PostMapping("/updateByAdmin")
-    public AjaxResult updateByAdmin(@Validated @RequestBody SysShop shop) {
+    public AjaxResult updateByAdmin(@Validated(Validation.Update.class) @RequestBody SysShop shop) {
         return toAjax(shopService.updateShopByAdmin(shop));
     }
 

@@ -8,6 +8,7 @@
         <id property="shopId" column="shop_id"/>
         <result property="shopName" column="shop_name"/>
         <result property="address" column="address"/>
+        <result property="userId" column="user_id"/>
         <result property="shopPhoto" column="shop_photo"/>
         <result property="cardPhotoZ" column="card_photo_z"/>
         <result property="cardPhotoB" column="card_photo_b"/>
@@ -32,6 +33,7 @@
                s.shop_money,
                s.status,
                s.create_time,
+               s.user_id,
                u.nick_name,
                u.phonenumber
         from sys_shop s,
@@ -113,7 +115,7 @@
             <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b = #{cardPhotoB},</if>
             <if test="businessLicense != null and businessLicense != ''">business_license = #{businessLicense},</if>
             <if test="cateringLicense != null and cateringLicense != ''">catering_license = #{cateringLicense},</if>
-            status='0'
+            status='1'
         </set>
         where shop_id = #{shopId}
     </update>
@@ -128,7 +130,7 @@
             <if test="cardPhotoB != null and cardPhotoB != ''">card_photo_b = #{cardPhotoB},</if>
             <if test="businessLicense != null and businessLicense != ''">business_license = #{businessLicense},</if>
             <if test="cateringLicense != null and cateringLicense != ''">catering_license = #{cateringLicense},</if>
-            status='0'
+            status='1'
         </set>
         where shop_id = #{shopId}
     </update>

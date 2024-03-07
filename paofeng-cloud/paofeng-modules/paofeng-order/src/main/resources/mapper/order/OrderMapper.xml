@@ -37,39 +37,40 @@
     </resultMap>
 
     <sql id="selectOrderVo">
-        select order_id,
-               creat_id,
+        select o.order_id,
+               o.creat_id,
                u.user_name creat_name,
-               current_rider,
+               o.current_rider,
                n.user_name current_rider_name,
-               pickup_address,
-               customer_name,
-               customer_phone,
-               customer_address,
-               status,
-               product_money,
-               delivery_fee,
-               create_time,
-               remark
-        from pangfeng_order,
-             sys_user u,
-             sys_user n
+               o.pickup_address,
+               o.customer_name,
+               o.customer_phone,
+               o.customer_address,
+               o.status,
+               o.product_money,
+               o.delivery_fee,
+               o.create_time,
+               o.remark
+        from pangfeng_order o
+                 left join sys_user n on o.current_rider = n.user_id
+                 left join sys_user u on o.creat_id = u.user_id
+
     </sql>
 
     <select id="selectOrderList" parameterType="OrderVo" resultMap="OrderResultVo">
         <include refid="selectOrderVo"/>
         <where>
-            <if test="orderId != null  and orderId != ''">and order_id like concat('%', #{orderId}, '%')</if>
-            <if test="creatId != null ">and creat_id = #{creatId}</if>
+            <if test="orderId != null  and orderId != ''">and o.order_id like concat('%', #{orderId}, '%')</if>
+            <if test="creatId != null ">and o.creat_id = #{creatId}</if>
             <if test="creatName != null ">and u.user_name like concat('%', #{creatName}, '%')</if>
-            <if test="currentRider != null ">and current_rider = #{currentRider}</if>
+            <if test="currentRider != null ">and o.current_rider = #{currentRider}</if>
             <if test="currentRiderName != null ">and n.user_name like concat('%', #{currentRiderName}, '%')</if>
-            <if test="pickupAddress != null and pickupAddress != ''">and pickup_address like concat('%',
+            <if test="pickupAddress != null and pickupAddress != ''">and o.pickup_address like concat('%',
                 #{pickupAddress}, '%')
             </if>
-            <if test="customerPhone != null ">and customer_phone like concat('%', #{customerPhone}, '%')</if>
-            <if test="status != null  and status != ''">and status = #{status}</if>
-            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="customerPhone != null ">and o.customer_phone like concat('%', #{customerPhone}, '%')</if>
+            <if test="status != null  and status != ''">and o.status = #{status}</if>
+            <if test="createTime != null ">and o.create_time = #{createTime}</if>
         </where>
     </select>
 
@@ -88,7 +89,6 @@
             <if test="customerName != null">customer_name,</if>
             <if test="customerPhone != null">customer_phone,</if>
             <if test="customerAddress != null">customer_address,</if>
-            <if test="status != null">status,</if>
             <if test="productMoney != null">product_money,</if>
             <if test="deliveryFee != null">delivery_fee,</if>
             <if test="remark != null">remark,</if>
@@ -102,7 +102,6 @@
             <if test="customerName != null">#{customerName},</if>
             <if test="customerPhone != null">#{customerPhone},</if>
             <if test="customerAddress != null">#{customerAddress},</if>
-            <if test="status != null">#{status},</if>
             <if test="productMoney != null">#{productMoney},</if>
             <if test="deliveryFee != null">#{deliveryFee},</if>
             <if test="remark != null">#{remark},</if>
