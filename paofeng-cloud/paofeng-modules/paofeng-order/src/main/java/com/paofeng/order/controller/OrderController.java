@@ -124,13 +124,33 @@ public class OrderController extends BaseController {
     /**
      * 修改订单
      */
+    @Log(title = "商家修改配送费", businessType = BusinessType.UPDATE)
+    @PostMapping("/updateDeliveryFee")
+    public AjaxResult updateDeliveryFee(@RequestBody @Validated(Validation.Update.class) Order order) {
+        OrderVo orderVo = orderService.selectOrderByOrderId(order.getOrderId());
+        Long currentUserId = SecurityUtils.getUserId();
+        if (!AuthUtil.hasPermi("order:order:query")
+                && !currentUserId.equals(orderVo.getCreatId())) {
+            // 权限校验 客服 店铺
+            throw new NotPermissionException(HttpStatus.UNAUTHORIZED + "");
+        }
+        Order o = new Order();
+        o.setOrderId(order.getOrderId());
+        o.setDeliveryFee(order.getDeliveryFee());
+
+        return toAjax(orderService.updateOrder(o));
+    }
+
+    /**
+     * 修改订单
+     */
     @Log(title = "发布订单", businessType = BusinessType.UPDATE)
     @RequestMapping("/subOrder")
     public AjaxResult subOrder(@RequestParam String orderId) {
         OrderVo orderVo = orderService.selectOrderByOrderId(orderId);
         Long currentUserId = SecurityUtils.getUserId();
         if (!AuthUtil.hasPermi("order:order:query")
-                || !currentUserId.equals(orderVo.getCreatId())) {
+                && !currentUserId.equals(orderVo.getCreatId())) {
             // 权限校验 客服 店铺
             throw new NotPermissionException(HttpStatus.UNAUTHORIZED + "");
         }
@@ -149,6 +169,20 @@ public class OrderController extends BaseController {
     @RequestMapping("/takeOrder")
     public AjaxResult takeOrder(@RequestParam String orderId) {
         if (orderService.takeOrder(orderId) > 0) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
+    }
+
+    /**
+     * 修改订单
+     */
+    @RequiresPermissions("order:order:take")
+    @Log(title = "骑手接单订单", businessType = BusinessType.UPDATE)
+    @RequestMapping("/takeOrderGoods")
+    public AjaxResult takeOrderGoods(@RequestParam String orderId) {
+        if (orderService.takeOrderGoods(orderId) > 0) {
             return AjaxResult.success();
         } else {
             return AjaxResult.error();

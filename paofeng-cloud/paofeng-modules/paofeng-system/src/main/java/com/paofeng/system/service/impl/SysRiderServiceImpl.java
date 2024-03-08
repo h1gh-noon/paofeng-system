@@ -2,13 +2,15 @@ package com.paofeng.system.service.impl;
 
 import com.paofeng.common.core.enums.SysRoles;
 import com.paofeng.common.security.service.TokenService;
-import com.paofeng.common.security.utils.SecurityUtils;
-import com.paofeng.system.api.model.LoginUser;
+import com.paofeng.system.api.domain.SysShop;
 import com.paofeng.system.domain.SysRider;
 import com.paofeng.system.mapper.SysRiderMapper;
+import com.paofeng.system.service.ISysPermissionService;
 import com.paofeng.system.service.ISysRiderService;
 import com.paofeng.system.service.ISysRoleService;
+import com.paofeng.system.service.ISysUserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,6 +26,12 @@ public class SysRiderServiceImpl implements ISysRiderService {
 
     @Resource
     private TokenService tokenService;
+
+    @Resource
+    private ISysPermissionService permissionService;
+
+    @Resource
+    private ISysUserService userService;
 
 
     @Override
@@ -43,15 +51,6 @@ public class SysRiderServiceImpl implements ISysRiderService {
 
     @Override
     public int insertRider(SysRider rider) {
-        // 如果没有rider角色就添加一个
-        if (SecurityUtils.getLoginUser().getRoles().stream().noneMatch(e -> e.equals(SysRoles.RIDER.getName()))) {
-            roleService.insertAuthUsers(SysRoles.SHOP.getId(), new Long[]{rider.getUserId()});
-            LoginUser loginUser = SecurityUtils.getLoginUser();
-            loginUser.getRoles().add(SysRoles.SHOP.getName());
-            // 刷新redis
-            tokenService.setLoginUser(loginUser);
-        }
-
         return riderMapper.insertRider(rider);
     }
 
@@ -61,7 +60,16 @@ public class SysRiderServiceImpl implements ISysRiderService {
     }
 
     @Override
+    @Transactional
     public int updateRiderStatus(SysRider rider) {
+        SysRider sysRider = selectRiderById(rider.getRiderId());
+
+        if (SysShop.STATUS_ENABLE.equals(rider.getStatus())) { // 启用
+            roleService.insertAuthUsers(SysRoles.RIDER.getId(), new Long[]{sysRider.getUserId()});
+        } else {
+            roleService.deleteAuthUsers(SysRoles.RIDER.getId(), new Long[]{sysRider.getUserId()});
+        }
+
         return riderMapper.updateRiderStatus(rider);
     }
 

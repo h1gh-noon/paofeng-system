@@ -53,6 +53,14 @@ public interface IOrderService {
     public int takeOrder(String orderId);
 
     /**
+     * 骑手拿到商品
+     *
+     * @param orderId 订单id
+     * @return 结果
+     */
+    public int takeOrderGoods(String orderId);
+
+    /**
      * 骑手送达
      *
      * @param orderId 订单id

@@ -2,7 +2,9 @@
   <view>
     <header class="mui-bar mui-bar-nav">
       <a class="mui-action-back">
-        <img src="@/static/image/rider/enter/icon_back@2x.png" alt="" />
+        <navigator open-type="navigateBack">
+          <img src="@/static/image/rider/enter/icon_back@2x.png" alt="" />
+        </navigator>
       </a>
       <h1 class="mui-title">完善资料</h1>
     </header>

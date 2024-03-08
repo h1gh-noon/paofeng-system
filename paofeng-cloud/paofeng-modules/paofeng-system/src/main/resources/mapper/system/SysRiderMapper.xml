@@ -22,6 +22,7 @@
     <sql id="selectRiderVo">
         select r.rider_id,
                r.rider_name,
+               r.user_id,
                r.sex,
                r.card_id,
                r.second_phone,
@@ -64,14 +65,14 @@
     <select id="selectRiderById" parameterType="Long" resultMap="SysRiderResult">
         <include refid="selectRiderVo"/>
         <if test="riderId != null">
-            AND s.rider_id = #{riderId}
+            AND r.rider_id = #{riderId}
         </if>
     </select>
 
     <select id="selectRiderByUserId" parameterType="Long" resultMap="SysRiderResult">
         <include refid="selectRiderVo"/>
         <if test="userId != null">
-            AND s.user_id = #{userId}
+            AND r.user_id = #{userId}
         </if>
     </select>
 

@@ -25,14 +25,16 @@ public class Order extends BaseEntity {
     public static final String TYPE_DRAFT = "1";
     // 已发布
     public static final String TYPE_PUBLISH = "2";
+    // 骑手已接单 待取货
+    public static final String TYPE_DELIVERING_TAKING = "3";
     // 骑手已接单 配送中
-    public static final String TYPE_DELIVERING = "3";
+    public static final String TYPE_DELIVERING = "4";
     // 商家取消
-    public static final String TYPE_CANCEL_SHOP = "4";
+    public static final String TYPE_CANCEL_SHOP = "5";
     // 骑手取消
-    public static final String TYPE_CANCEL_RIDER = "5";
+    public static final String TYPE_CANCEL_RIDER = "6";
     // 成功送达结束
-    public static final String TYPE_SUCCESS = "6";
+    public static final String TYPE_SUCCESS = "9";
 
     /**
      * id

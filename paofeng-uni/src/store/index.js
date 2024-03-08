@@ -158,18 +158,21 @@ const store = createStore({
 		}) {
 			return new Promise((resolve, reject) => {
 				getInfo().then(res => {
-          const user = res.user
-          const avatar = (user.avatar == "" || user.avatar == null) ? require("@/static/compass.png") : user.avatar;
-          if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', res.roles)
-            commit('SET_PERMISSIONS', res.permissions)
-          } else {
-            commit('SET_ROLES', ['ROLE_DEFAULT'])
-          }
-          commit('SET_ID', user.userId)
-          commit('SET_NAME', user.userName)
-          commit('SET_AVATAR', avatar)
-          resolve(res)
+					if (res.code === 200) {
+						const user = res.user
+						const avatar = (user.avatar == "" || user.avatar == null) ? '' : user.avatar;
+						if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+							commit('SET_ROLES', res.roles)
+							commit('SET_PERMISSIONS', res.permissions)
+						} else {
+							commit('SET_ROLES', ['ROLE_DEFAULT'])
+						}
+						commit('SET_ID', user.userId)
+						commit('SET_NAME', user.userName)
+						commit('SET_AVATAR', avatar)
+						resolve(res)
+					}
+					reject(res)
         }).catch(error => {
           reject(error)
         })

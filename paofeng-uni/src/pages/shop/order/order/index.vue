@@ -25,16 +25,24 @@
         <div id="sliderSegmentedControl"
           class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
           <div class="mui-scroll">
-            <a class="mui-control-item mui-active">
+            <a class="mui-control-item mui-active" :class="queryParams.status === undefined ? 'mui-active' : ''"
+              @click="getStatusList()">
+              全部
+            </a>
+            <a class="mui-control-item" :class="queryParams.status === '1' ? 'mui-active' : ''"
+              @click="getStatusList('1')">
               待发布
             </a>
-            <a class="mui-control-item">
+            <a class="mui-control-item" :class="queryParams.status === '3' ? 'mui-active' : ''"
+              @click="getStatusList('3')">
               待取货
             </a>
-            <a class="mui-control-item">
+            <a class="mui-control-item" :class="queryParams.status === '4' ? 'mui-active' : ''"
+              @click="getStatusList('4')">
               配送中
             </a>
-            <a class="mui-control-item yc aa">
+            <a class="mui-control-item yc aa" :class="queryParams.status === '6' ? 'mui-active' : ''"
+              @click="getStatusList('6')">
               异常单 <b></b>
             </a>
           </div>
@@ -46,45 +54,45 @@
               <div class="mui-scroll">
                 <div class="main">
                   <div class="main_two">
-                    <div class="main_two_list">
+                    <div class="main_two_list" v-for="item in tableList" :key="item.orderId">
                       <div class="two_list_top">
                         <p><img src="@/static/image/shop/user/meituan.png" /></p>
                         <p>
-                          <span>美团外卖</span>
-                          <span class="mui-ellipsis">000000000000000</span>
+                          <span>订单号:</span>
+                          <span>{{ item.orderId }}</span>
+                          <span>状态:{{ statusText[item.status] }}</span>
                         </p>
                       </div>
                       <div class="two_list_two tel">
                         <p>配送地址:</p>
                         <p>
                           <span>
-                            <i>小明</i>
-                            <i>18000000000</i>
-                            <a href="tel:00000000000"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
+                            <i>{{ item.customerName }}</i>
+                            <i>{{ item.customerPhone }}</i>
+                            <a :href="`tel:${item.customerPhone}`"><img src="@/static/image/shop/order/iphone.png"
+                                alt="" /></a>
                           </span>
-                          <span class="mui-ellipsis">中原国家广告产业园7号楼3层</span>
+                          <span>{{ item.customerAddress }}</span>
                         </p>
                       </div>
                       <div class="two_list_three">
                         <div class="pay">
                           <p>
                             <span>商品金额</span>
-                            <span>￥58</span>
+                            <span>￥{{ item.productMoney }}</span>
                           </p>
                           <p>
                             <span>配送费</span>
-                            <span>￥5</span>
+                            <span>￥{{ item.deliveryFee }}</span>
                           </p>
-                        </div>
-                        <div class="zongJi">
-                          <span>总计：</span>
-                          <span>￥61</span>
                         </div>
                       </div>
                       <div class="two_list_five">
-                        <p class="publish">发布订单</p>
-                        <p class="add">修改配送费</p>
-                        <p class="cancel_order">取消订单</p>
+                        <p class="publish" v-if="item.status === '1'" @click="btnSubOrder(item)">发布订单</p>
+                        <p class="add" v-if="!['9', '5', '6'].includes(item.status)"
+                          @click="btnUpdateDeliveryFee(item)">修改配送费</p>
+                        <p class="cancel_order" v-if="['2', '3', '4'].includes(item.status)"
+                          @click="btnCancelOrder(item)">取消订单</p>
                       </div>
                     </div>
                   </div>
@@ -143,40 +151,25 @@
     <!--取消弹框-->
     <div class="quxiao_pop" style="display: none;">
       <div class="quxiao">
-        <p>确定订单取消将要扣取佣金</p>
+        <p>确定订单取消将要扣取部分佣金</p>
         <p>
           <a class="enter" style="color: #666;">确认</a>
           <a class="cancel">取消</a>
         </p>
       </div>
     </div>
-    <!--确认取消原因弹框-->
-    <div class="qxOrder_pop" style="display: none;">
-      <div class="qxOrder">
-        <p>请选择取消订单的原因</p>
-        <p class="qx">买家取消</p>
-        <p class="qx">商家自己配送</p>
-        <p class="qx">没有骑手接单</p>
-        <div class="finished">完成</div>
-      </div>
-    </div>
-    <!--追加小费弹框-->
-    <div class="addPay_pop" style="display: none;">
-      <div class="addPay">
-        <p>请输入小费金额</p>
-        <p><input type="text" class="jine" />元</p>
-        <p class="enter">
-          确定
-        </p>
-      </div>
-    </div>
+    <!--修改配送费弹框-->
+    <uni-popup ref="inputDialog" type="dialog">
+      <uni-popup-dialog ref="inputClose" mode="input" title="请输入配送费金额" :value="updateDeliveryFee.deliveryFee"
+        placeholder="请输入配送费金额" @confirm="dialogInputConfirm"></uni-popup-dialog>
+    </uni-popup>
   </view>
 </template>
 
 <script>
 import { initHandler } from "./order";
 import { checkPermission } from "@/common/util";
-import { orderList } from "@/api/shop";
+import { orderList, updateDeliveryFee, subOrder, cancelOrder } from "@/api/shop";
 //#ifdef H5  
 import $ from '@/static/js/jquery-1.7.2.js'
 //#endif
@@ -184,6 +177,23 @@ import $ from '@/static/js/jquery-1.7.2.js'
 export default {
   data() {
     return {
+      queryParams: {
+        status: undefined
+      },
+      tableList: [],
+      updateDeliveryFee: {
+        orderId: '',
+        deliveryFee: 4
+      },
+      statusText: {
+        '1': '待发布',
+        '2': '已发布',
+        '3': '待取货',
+        '4': '配送中',
+        '5': '商家取消',
+        '6': '骑手取消',
+        '9': '已完成'
+      }
     }
   },
   onReady() {
@@ -194,10 +204,97 @@ export default {
   },
   methods: {
     checkPermission,
+    getStatusList(e) {
+      this.queryParams.status = e
+      this.initList()
+    },
     initList() {
-      orderList().then(res => {
-        console.log(res)
+      orderList(this.queryParams).then(res => {
+        if (res.code === 200) {
+          this.tableList = res.rows
+        }
       })
+    },
+    btnUpdateDeliveryFee(e) {
+      this.updateDeliveryFee.orderId = e.orderId
+      this.updateDeliveryFee.deliveryFee = e.deliveryFee
+      this.$refs.inputDialog.open()
+    },
+    dialogInputConfirm(e) {
+      if (/^(([1-9]\d*)|\d)(\.\d{1,2})?$/.test(e)) {
+        this.updateDeliveryFee.deliveryFee = e
+        updateDeliveryFee(this.updateDeliveryFee).then(res => {
+          if (res.code === 200) {
+            uni.showToast({
+              title: '操作成功！',
+              duration: 2000,
+            });
+            this.tableList.find(t => t.orderId === this.updateDeliveryFee.orderId).deliveryFee = this.updateDeliveryFee.deliveryFee
+          } else {
+            uni.showModal({
+              title: '提示',
+              content: res.msg,
+              showCancel: false
+            })
+          }
+        })
+      } else {
+        uni.showModal({
+          title: '提示',
+          content: '请配送费是否正确',
+          showCancel: false
+        })
+      }
+    },
+    btnSubOrder(item) {
+      uni.showModal({
+        title: '确认',
+        content: '发布订单?',
+        success: (res) => {
+          if (res.confirm) {
+            subOrder({ orderId: item.orderId }).then(res => {
+              if (res.code === 200) {
+                uni.showToast({
+                  title: '操作成功！',
+                  duration: 2000,
+                });
+                this.initList()
+              } else {
+                uni.showModal({
+                  title: '提示',
+                  content: res.msg,
+                  showCancel: false
+                })
+              }
+            })
+          }
+        }
+      });
+    },
+    btnCancelOrder(item) {
+      uni.showModal({
+        title: '确认',
+        content: `取消订单?${['2', '3', '4'].includes(item.status) ? '会扣除部分费用!' : ''}`,
+        success: (res) => {
+          if (res.confirm) {
+            cancelOrder({ orderId: item.orderId }).then(res => {
+              if (res.code === 200) {
+                uni.showToast({
+                  title: '操作成功！',
+                  duration: 2000,
+                });
+                this.initList()
+              } else {
+                uni.showModal({
+                  title: '提示',
+                  content: res.msg,
+                  showCancel: false
+                })
+              }
+            })
+          }
+        }
+      });
     }
   }
 }
@@ -825,7 +922,6 @@ export default {
   bottom: 20px;
 }
 
-/*/////////////////////*/
 .main {
   margin-bottom: 20px;
   width: 100%;
@@ -833,10 +929,8 @@ export default {
   background: #f5f5f5;
 }
 
-/*//*/
 .main_two {
   width: 100%;
-  background: #fff;
   border-radius: 10px;
 }
 
@@ -851,7 +945,7 @@ export default {
 .two_list_top {
   padding: 12px 0px;
   width: 100%;
-  height: 56px;
+  height: 75px;
 }
 
 .two_list_top p {
@@ -1220,9 +1314,9 @@ export default {
 /*//////*/
 
 .two_list_five {
-  padding: 14px 0;
   width: 100%;
-  height: 52px;
+  overflow: hidden;
+  clear: both;
 }
 
 .two_list_five p {

@@ -3,6 +3,7 @@ package com.paofeng.order.service.impl;
 import com.paofeng.common.core.constant.SecurityConstants;
 import com.paofeng.common.core.domain.R;
 import com.paofeng.common.core.exception.CheckedException;
+import com.paofeng.common.core.exception.auth.NotPermissionException;
 import com.paofeng.common.core.exception.base.BaseException;
 import com.paofeng.common.core.utils.DateUtils;
 import com.paofeng.common.core.utils.uuid.UUID;
@@ -105,6 +106,26 @@ public class OrderServiceImpl implements IOrderService {
         Order order = new Order();
         order.setOrderId(orderId);
         order.setCurrentRider(SecurityUtils.getUserId());
+        order.setStatus(Order.TYPE_DELIVERING_TAKING);
+        return updateOrder(order);
+    }
+
+    @Transactional
+    @Override
+    public int takeOrderGoods(String orderId) {
+        OrderVo orderVo = selectOrderByOrderId(orderId);
+        Order order = new Order();
+        order.setOrderId(orderId);
+        order.setCurrentRider(SecurityUtils.getUserId());
+        if (!orderVo.getCurrentRider().equals(order.getCurrentRider())) {
+            // 校验只有骑手本人可以修改状态
+            throw new NotPermissionException("401");
+        }
+        if (!Order.TYPE_DELIVERING_TAKING.equals(orderVo.getStatus())) {
+            // 校验状态 只有已发布的才能接单
+            throw new CheckedException("该订单已取货");
+        }
+
         order.setStatus(Order.TYPE_DELIVERING);
         return updateOrder(order);
     }
@@ -116,6 +137,10 @@ public class OrderServiceImpl implements IOrderService {
         if (!SecurityUtils.getUserId().equals(orderVo.getCurrentRider())) {
             // 校验权限
             throw new CheckedException("401");
+        }
+        if(!Order.TYPE_DELIVERING.equals(orderVo.getStatus())){
+            // 校验订单状态
+            throw new CheckedException("订单异常");
         }
 
         Order order = new Order();

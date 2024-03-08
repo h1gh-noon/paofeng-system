@@ -10,6 +10,9 @@ import java.util.Date;
 
 public class SysShop extends BaseEntity {
 
+    public static final String STATUS_ENABLE = "0";
+    public static final String STATUS_DISABLE = "1";
+
     @NotNull(groups = {Validation.Update.class})
     private Long shopId;
     private String shopName;
@@ -25,9 +28,6 @@ public class SysShop extends BaseEntity {
     private String nickName;
     private String phonenumber;
     private Date createTime;
-
-    public static final String STATUS_ENABLE = "0";
-    public static final String STATUS_DISABLE = "1";
 
     public Date getCreateTime() {
         return createTime;

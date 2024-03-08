@@ -2,16 +2,14 @@ package com.paofeng.system.service.impl;
 
 import com.paofeng.common.core.enums.SysRoles;
 import com.paofeng.common.security.service.TokenService;
-import com.paofeng.common.security.utils.SecurityUtils;
 import com.paofeng.system.api.domain.SysShop;
-import com.paofeng.system.api.domain.SysUser;
-import com.paofeng.system.api.model.LoginUser;
 import com.paofeng.system.mapper.SysShopMapper;
 import com.paofeng.system.service.ISysPermissionService;
 import com.paofeng.system.service.ISysRoleService;
 import com.paofeng.system.service.ISysShopService;
 import com.paofeng.system.service.ISysUserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -51,17 +49,6 @@ public class SysShopServiceImpl implements ISysShopService {
 
     @Override
     public int insertShop(SysShop shop) {
-        // 如果没有shop角色就添加一个
-        if (SecurityUtils.getLoginUser().getRoles().stream().noneMatch(e -> e.equals(SysRoles.SHOP.getName()))) {
-            roleService.insertAuthUsers(SysRoles.SHOP.getId(), new Long[]{shop.getUserId()});
-            LoginUser loginUser = SecurityUtils.getLoginUser();
-            loginUser.getRoles().add(SysRoles.SHOP.getName());
-            SysUser sysUser = userService.selectUserByUserName(loginUser.getUsername());
-            loginUser.setPermissions(permissionService.getMenuPermission(sysUser));
-            // 刷新redis
-            tokenService.setLoginUser(loginUser);
-        }
-
         return shopMapper.insertShop(shop);
     }
 
@@ -71,7 +58,13 @@ public class SysShopServiceImpl implements ISysShopService {
     }
 
     @Override
+    @Transactional
     public int updateShopStatus(SysShop shop) {
+        if (SysShop.STATUS_ENABLE.equals(shop.getStatus())) { // 启用
+            roleService.insertAuthUsers(SysRoles.SHOP.getId(), new Long[]{shop.getUserId()});
+        } else {
+            roleService.deleteAuthUsers(SysRoles.SHOP.getId(), new Long[]{shop.getUserId()});
+        }
         return shopMapper.updateShopStatus(shop);
     }
 
