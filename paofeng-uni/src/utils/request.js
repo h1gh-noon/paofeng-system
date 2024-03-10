@@ -54,16 +54,26 @@ const httpRequest = {
       })
     })
   },
-  get: function (url, data) {
-    const allurl = this.geturl(url)
-    return this.request('GET', allurl, data)
+  get: function (url, params) {
+    const allurl = this.geturl(url) + this.getParams(params)
+    return this.request('GET', allurl)
   },
-  post: function (url, data) {
-    const allurl = this.geturl(url)
+  post: function (url, data, params) {
+    const allurl = this.geturl(url) + this.getParams(params)
     return this.request('POST', allurl, data)
   },
   geturl: function (url) {
     return baseConfig.server + url
+  },
+  getParams: params => {
+    if (params) {
+      let str = Object.keys(params).reduce(
+        (a, c) => (a += `${c}=${params[c]}&`),
+        '?'
+      )
+      return str.substring(0, str.length - 1)
+    }
+    return ''
   }
 }
 

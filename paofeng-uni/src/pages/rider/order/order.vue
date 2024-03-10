@@ -7,13 +7,13 @@
         </navigator>
       </a>
       <h1 class="mui-title">
-        <a class="mui-control-item b" style="border-bottom: 3px solid #6A4A23;">
+        <a class="mui-control-item b" :class="[{ 'item-actived': statusFlag === '1' }]" @click="initHandler('1')">
           新任务
         </a>
-        <a class="mui-control-item b">
+        <a class="mui-control-item b" :class="{ 'item-actived': statusFlag === '3' }" @click="initHandler('3')">
           待取货
         </a>
-        <a class="mui-control-item b">
+        <a class="mui-control-item b" :class="{ 'item-actived': statusFlag === '4' }" @click="initHandler('4')">
           配送中
         </a>
       </h1>
@@ -27,30 +27,36 @@
     <div class="mui-content" v-else>
       <div class="mui-slider">
         <div class="mui-slider-group">
-          <div class="list-item">
-            <!-- <div class="item1_main_one">
+          <div class="list-item" v-for="item in tableList" :key="item.orderId">
+            <div class="item1_main_one" v-if="statusFlag !== '1'">
               <div class="item1_one_top">
                 <p><img src="@/static/image/rider/order/logoxiao.png" /></p>
-                <p><span>订单号</span><span>00000000000000000</span></p>
+                <p><span>订单号</span><span>{{ item.orderId }}</span></p>
               </div>
-            </div> -->
+            </div>
             <div class="item1_main_one">
               <div class="item1_two_top">
                 <p>取</p>
-                <p><span>杨国福麻辣烫</span><span class="mui-ellipsis">中原国家产业园2号楼厚街店铺</span></p>
+                <p><span>{{ item.shopName }}</span><span class="mui-ellipsis">{{ item.pickupAddress }}</span></p>
                 <p></p>
               </div>
               <div class="item1_two_bot">
                 <p>送</p>
-                <p>中原国家产业园7号楼3层</p>
+                <p>{{ item.customerAddress }}</p>
                 <p></p>
               </div>
             </div>
             <div class="item1_main_three">
-              <p>配送费用 <strong>8.00元</strong></p>
+              <p>配送费用： <strong>{{ item.deliveryFee }}元</strong></p>
+            </div>
+            <div class="item1_main_three" v-if="item.status === '3'">
+              <p>接单时间：  <strong>{{ item.takeTime }}</strong></p>
+            </div>
+            <div class="item1_main_three" v-if="item.status === '4'">
+              <p>取货时间：  <strong>{{ item.pickupTime }}</strong></p>
             </div>
             <div class="item1_main_fore">
-              <p class="qiang">抢单</p>
+              <p class="qiang" @click="takeOrderHandler(item)">{{ getStr() }}</p>
             </div>
           </div>
         </div>
@@ -107,22 +113,106 @@
 
 <script>
 import { checkPermission } from "@/common/util";
+import { riderTakeOrderList, takeOrder, riderList, takeOrderGoods, successOrder } from "@/api/rider";
 
 export default {
   data() {
     return {
-      tableList: []
+      statusFlag: '1',
+      keyObj: {
+        '1': '抢单',
+        '3': '确认取货',
+        '4': '确认送达'
+      },
+      totalFlag: false,
+      total: 0,
+      tableList: [],
+      pages: { pageNum: 1, pageSize: 5 }
     }
   },
   onLoad() {
+    if (checkPermission('order:order:take')) {
+      this.initHandler()
+    }
+  },
+  onReachBottom() {
+    const allTotal = this.pages.pageNum * this.pages.pageSize
+    if (allTotal < this.total) {
+      this.totalFlag = false;
+      this.pages.pageNum++;
+      //加载次数递加
+      this.initHandler(); //请求更多数据列表
+    } else {
+      this.totalFlag = true;
+      console.log('已加载全部数据')
+    }
   },
   methods: {
-    checkPermission
+    checkPermission,
+    async initHandler(val) {
+      if (val) {
+        this.statusFlag = val
+        this.pages.pageNum = 1
+        this.totalFlag = false
+      }
+      if (this.totalFlag) {
+        return
+      }
+      let res
+      if (this.statusFlag === '1') {
+        res = await riderTakeOrderList(null, this.pages)
+      } else {
+        res = await riderList({ status: this.statusFlag }, this.pages)
+      }
+      if (res.code === 200) {
+        this.tableList = res.rows
+        this.total = res.total
+      }
+    },
+    getStr() {
+      return this.keyObj[this.statusFlag]
+    },
+    takeOrderHandler(item) {
+      uni.showModal({
+        title: '确认',
+        content: `确认${this.getStr()}?`,
+        success: async (res) => {
+          if (res.confirm) {
+            const data = { orderId: item.orderId }
+            let res
+            if (this.statusFlag === '1') {
+              res = await takeOrder(data)
+            } else if (this.statusFlag === '3') {
+              res = await takeOrderGoods(data)
+            } else {
+              res = await successOrder(data)
+            }
+            if (res.code === 200) {
+              uni.showToast({
+                title: '操作成功！',
+                duration: 2000,
+              });
+              this.tableList = this.tableList.filter(e => e.orderId !== data.orderId)
+            } else {
+              uni.showModal({
+                title: '提示',
+                content: res.msg || '系统异常!',
+                showCancel: false
+              })
+            }
+          }
+        }
+      });
+    }
   }
 }
 </script>
 
 <style scoped>
+.item-actived {
+  border-bottom: 3px solid #6A4A23;
+}
+
 .mui-bar {
   padding: 0 3.125%;
   height: 45px;
@@ -155,7 +245,6 @@ export default {
   width: 25%;
   color: #333;
   font-size: 15px;
-  border-bottom: 3px solid #fff;
 }
 
 .mui-content {

@@ -105,6 +105,7 @@ public class OrderServiceImpl implements IOrderService {
 
         Order order = new Order();
         order.setOrderId(orderId);
+        order.setTakeTime(DateUtils.getTime());
         order.setCurrentRider(SecurityUtils.getUserId());
         order.setStatus(Order.TYPE_DELIVERING_TAKING);
         return updateOrder(order);
@@ -116,6 +117,7 @@ public class OrderServiceImpl implements IOrderService {
         OrderVo orderVo = selectOrderByOrderId(orderId);
         Order order = new Order();
         order.setOrderId(orderId);
+        order.setPickupTime(DateUtils.getTime());
         order.setCurrentRider(SecurityUtils.getUserId());
         if (!orderVo.getCurrentRider().equals(order.getCurrentRider())) {
             // 校验只有骑手本人可以修改状态
@@ -145,8 +147,9 @@ public class OrderServiceImpl implements IOrderService {
 
         Order order = new Order();
         order.setOrderId(orderId);
+        order.setSuccessTime(DateUtils.getTime());
         order.setCurrentRider(SecurityUtils.getUserId());
-        order.setStatus(Order.TYPE_DELIVERING);
+        order.setStatus(Order.TYPE_SUCCESS);
         return updateOrder(order);
     }
 

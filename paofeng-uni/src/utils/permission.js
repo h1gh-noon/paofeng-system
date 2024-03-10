@@ -9,9 +9,6 @@ list.forEach(item => {
     // 页面跳转前进行拦截, invoke根据返回值进行判断是否继续执行跳转
     invoke(e) {
       const token = uni.getStorageSync('auth_token')
-      if (token && $store.state.id === '') {
-        $store.dispatch('getUserInfo')
-      }
       if (whiteList.includes(e.url)) {
         return true
       }
@@ -24,6 +21,9 @@ list.forEach(item => {
           url: '/pages/login/login'
         })
         return false
+      }
+      if (token && $store.getters.getId === '') {
+        $store.dispatch('getUserInfo')
       }
       return true
     }

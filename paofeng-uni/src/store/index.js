@@ -100,6 +100,24 @@ const store = createStore({
 	getters: {
 		currentColor(state) {
 			return state.colorList[state.colorIndex]
+		},
+		getId(state) {
+			return state.id
+		},
+		getName(state) {
+			return state.name
+		},
+		getAvatar(state) {
+			return state.avatar
+		},
+		getRoles(state) {
+			return state.roles
+		},
+		getRoles(state) {
+			return state.roles
+		},
+		getPermissions(state) {
+			return state.permissions
 		}
 	},
 	actions: {

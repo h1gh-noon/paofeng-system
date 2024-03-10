@@ -2,9 +2,7 @@
   <view>
     <header class="mui-bar mui-bar-nav">
       <a class="mui-action-back">
-        <navigator open-type="navigateBack">
-          <img src="@/static/image/rider/enter/icon_back@2x.png" alt="" />
-        </navigator>
+        <img src="@/static/image/rider/enter/icon_back@2x.png" alt="" @click="pushRoute('/pages/rider/order/order')" />
       </a>
       <h1 class="mui-title">个人中心</h1>
     </header>
@@ -76,6 +74,11 @@ export default {
   onLoad() {
   },
   methods: {
+    pushRoute(url) {
+      uni.reLaunch({
+        url
+      });
+    }
   }
 }
 </script>

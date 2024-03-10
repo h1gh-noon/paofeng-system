@@ -73,6 +73,19 @@ public class OrderController extends BaseController {
     }
 
     /**
+     * 骑手 订单列表
+     */
+    @RequiresPermissions("order:order:take")
+    @PostMapping("/riderTakeOrderList")
+    public TableDataInfo riderTakeOrderList() {
+        OrderVo order = new OrderVo();
+        order.setStatus(Order.TYPE_PUBLISH);
+        startPage();
+        List<OrderVo> list = orderService.selectOrderList(order);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出订单列表
      */
     @RequiresPermissions("order:order:export")
@@ -165,7 +178,7 @@ public class OrderController extends BaseController {
      * 修改订单
      */
     @RequiresPermissions("order:order:take")
-    @Log(title = "骑手接单订单", businessType = BusinessType.UPDATE)
+    @Log(title = "骑手接单", businessType = BusinessType.UPDATE)
     @RequestMapping("/takeOrder")
     public AjaxResult takeOrder(@RequestParam String orderId) {
         if (orderService.takeOrder(orderId) > 0) {
@@ -179,7 +192,7 @@ public class OrderController extends BaseController {
      * 修改订单
      */
     @RequiresPermissions("order:order:take")
-    @Log(title = "骑手接单订单", businessType = BusinessType.UPDATE)
+    @Log(title = "骑手取到货物", businessType = BusinessType.UPDATE)
     @RequestMapping("/takeOrderGoods")
     public AjaxResult takeOrderGoods(@RequestParam String orderId) {
         if (orderService.takeOrderGoods(orderId) > 0) {

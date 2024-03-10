@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function listOrder(query) {
   return request({
     url: '/order/order/list',
-    method: 'get',
+    method: 'post',
     params: query
   })
 }

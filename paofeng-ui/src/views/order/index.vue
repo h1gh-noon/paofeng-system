@@ -98,6 +98,9 @@
       <el-table-column label="订单号" align="center" prop="orderId" />
       <el-table-column label="创建者" align="center" prop="creatName" />
       <el-table-column label="当前骑手" align="center" prop="currentRiderName" />
+      <el-table-column label="骑手接单时间" align="center" prop="takeTime" />
+      <el-table-column label="骑手取货时间" align="center" prop="pickupTime" />
+      <el-table-column label="送达时间" align="center" prop="successTime" />
       <el-table-column label="取货地址" align="center" prop="pickupAddress" />
       <el-table-column label="送货信息" align="center" prop="destination" />
       <el-table-column label="状态" align="center" prop="status" />

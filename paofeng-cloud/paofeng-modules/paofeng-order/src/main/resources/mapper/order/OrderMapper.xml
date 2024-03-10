@@ -7,10 +7,14 @@
     <resultMap type="OrderVo" id="OrderResultVo">
         <result property="orderId" column="order_id"/>
         <result property="creatId" column="creat_id"/>
+        <result property="shopName" column="shop_name"/>
         <result property="creatName" column="creat_name"/>
         <result property="currentRider" column="current_rider"/>
         <result property="currentRiderName" column="current_rider_name"/>
         <result property="pickupAddress" column="pickup_address"/>
+        <result property="takeTime" column="take_time"/>
+        <result property="pickupTime" column="pickup_time"/>
+        <result property="successTime" column="success_time"/>
         <result property="customerName" column="customer_name"/>
         <result property="customerPhone" column="customer_phone"/>
         <result property="customerAddress" column="customer_address"/>
@@ -24,8 +28,12 @@
     <resultMap type="Order" id="OrderResult">
         <result property="orderId" column="order_id"/>
         <result property="creatId" column="creat_id"/>
+        <result property="shopName" column="shop_name"/>
         <result property="currentRider" column="current_rider"/>
         <result property="pickupAddress" column="pickup_address"/>
+        <result property="takeTime" column="take_time"/>
+        <result property="pickupTime" column="pickup_time"/>
+        <result property="successTime" column="success_time"/>
         <result property="customerName" column="customer_name"/>
         <result property="customerPhone" column="customer_phone"/>
         <result property="customerAddress" column="customer_address"/>
@@ -39,6 +47,10 @@
     <sql id="selectOrderVo">
         select o.order_id,
                o.creat_id,
+               o.shop_name,
+               o.take_time,
+               o.pickup_time,
+               o.success_time,
                u.user_name creat_name,
                o.current_rider,
                n.user_name current_rider_name,
@@ -70,13 +82,20 @@
             </if>
             <if test="customerPhone != null ">and o.customer_phone like concat('%', #{customerPhone}, '%')</if>
             <if test="status != null  and status != ''">and o.status = #{status}</if>
-            <if test="createTime != null ">and o.create_time = #{createTime}</if>
+            <if test="params != null">
+                <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                    AND date_format(o.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                </if>
+                <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                    AND date_format(o.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                </if>
+            </if>
         </where>
     </select>
 
     <select id="selectOrderByOrderId" parameterType="String" resultMap="OrderResultVo">
         <include refid="selectOrderVo"/>
-        where order_id = #{orderId}
+        where o.order_id = #{orderId}
     </select>
 
     <insert id="insertOrder" parameterType="Order">
@@ -84,6 +103,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null">order_id,</if>
             <if test="creatId != null">creat_id,</if>
+            <if test="shopName != null">shop_name,</if>
             <if test="currentRider != null">current_rider,</if>
             <if test="pickupAddress != null">pickup_address,</if>
             <if test="customerName != null">customer_name,</if>
@@ -97,6 +117,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
             <if test="creatId != null">#{creatId},</if>
+            <if test="shopName != null">#{shopName},</if>
             <if test="currentRider != null">#{currentRider},</if>
             <if test="pickupAddress != null">#{pickupAddress},</if>
             <if test="customerName != null">#{customerName},</if>
@@ -116,6 +137,9 @@
             <if test="currentRider != null">current_rider = #{currentRider},</if>
             <if test="pickupAddress != null">pickup_address = #{pickupAddress},</if>
             <if test="customerName != null">customer_name = #{customerName},</if>
+            <if test="takeTime != null">take_time = #{takeTime},</if>
+            <if test="pickupTime != null">pickup_time = #{pickupTime},</if>
+            <if test="successTime != null">success_time = #{successTime},</if>
             <if test="customerPhone != null">customer_phone = #{customerPhone},</if>
             <if test="customerAddress != null">customer_address = #{customerAddress},</if>
             <if test="status != null">status = #{status},</if>

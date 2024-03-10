@@ -49,6 +49,18 @@ public class Order extends BaseEntity {
     @Excel(name = "创建者")
     private Long creatId;
 
+    @Excel(name = "店铺名称")
+    private String shopName;
+
+    @Excel(name = "骑手接单时间")
+    private String takeTime;
+
+    @Excel(name = "取货时间")
+    private String pickupTime;
+
+    @Excel(name = "送达时间")
+    private String successTime;
+
     /**
      * 当前骑手
      */
