@@ -50,13 +50,15 @@
               <p>配送费用： <strong>{{ item.deliveryFee }}元</strong></p>
             </div>
             <div class="item1_main_three" v-if="item.status === '3'">
-              <p>接单时间：  <strong>{{ item.takeTime }}</strong></p>
+              <p>接单时间： <strong>{{ item.takeTime }}</strong></p>
             </div>
             <div class="item1_main_three" v-if="item.status === '4'">
-              <p>取货时间：  <strong>{{ item.pickupTime }}</strong></p>
+              <p>取货时间： <strong>{{ item.pickupTime }}</strong></p>
             </div>
             <div class="item1_main_fore">
-              <p class="qiang" @click="takeOrderHandler(item)">{{ getStr() }}</p>
+              <span v-if="statusFlag === '1'"></span>
+              <span v-else class="btn" @click="btnCancelOrder(item)">取消订单</span>
+              <span class="btn btn-succ" @click="takeOrderHandler(item)">{{ getStr() }}</span>
             </div>
           </div>
         </div>
@@ -154,6 +156,7 @@ export default {
         this.statusFlag = val
         this.pages.pageNum = 1
         this.totalFlag = false
+        this.tableList = []
       }
       if (this.totalFlag) {
         return
@@ -165,7 +168,7 @@ export default {
         res = await riderList({ status: this.statusFlag }, this.pages)
       }
       if (res.code === 200) {
-        this.tableList = res.rows
+        this.tableList.push(...res.rows)
         this.total = res.total
       }
     },
@@ -200,6 +203,31 @@ export default {
                 showCancel: false
               })
             }
+          }
+        }
+      });
+    },
+    btnCancelOrder(item) {
+      uni.showModal({
+        title: '确认',
+        content: `取消订单?${['4'].includes(item.status) ? '会扣除部分费用!' : ''}`,
+        success: (res) => {
+          if (res.confirm) {
+            cancelOrder({ orderId: item.orderId }).then(res => {
+              if (res.code === 200) {
+                uni.showToast({
+                  title: '操作成功！',
+                  duration: 2000,
+                });
+                this.tableList = this.tableList.filter(e => e.orderId !== item.orderId)
+              } else {
+                uni.showModal({
+                  title: '提示',
+                  content: res.msg,
+                  showCancel: false
+                })
+              }
+            })
           }
         }
       });
@@ -608,17 +636,24 @@ export default {
 .item1_main_fore {
   padding-top: 8px;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
-.item1_main_fore p {
-  width: 100%;
+.item1_main_fore .btn {
+  width: 120px;
   height: 33px;
+  display: inline-block;
   text-align: center;
   line-height: 33px;
   color: #fff;
   font-size: 15px;
-  background: #6A4A23;
+  background: #cfc4c4;
   border-radius: 30px;
+}
+
+.item1_main_fore .btn-succ {
+  background: #6A4A23;
 }
 
 /*下拉提示*/

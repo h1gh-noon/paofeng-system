@@ -44,6 +44,7 @@ export function initHandler() {
         oDiv.ontouchend = null
       })
       // ev.preventDefault()
+      ev.stopPropagation()
     },
     false
   )

@@ -78,7 +78,7 @@ public class OrderServiceImpl implements IOrderService {
         if (shop == null || !SysShop.STATUS_ENABLE.equals(shop.getStatus())) {
             throw new CheckedException("店铺暂时不可用");
         }
-
+        order.setShopName(shop.getShopName());
         order.setPickupAddress(shop.getAddress());
         return orderMapper.insertOrder(order);
     }

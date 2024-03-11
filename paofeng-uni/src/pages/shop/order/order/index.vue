@@ -14,18 +14,18 @@
       </navigator>
     </header>
     <div class="mui-content">
-      <!--悬浮按钮-->
       <div class="xuanfu" id="xuanfu" v-if="checkPermission('order:order:add')">
         <navigator url="/pages/shop/order/orderAdd">
           <img src="@/static/image/shop/order/tianjia.png" alt="" class="tianjia" />
         </navigator>
       </div>
+      <!--悬浮按钮-->
       <!--默认不显示，单机悬浮按钮的选项后进行显示相关内容-->
-      <div id="slider" class="mui-slider mui-fullscreen" v-if="checkPermission('order:order:add')">
+      <div id="slider" class="mui-slider" v-if="checkPermission('order:order:add')">
         <div id="sliderSegmentedControl"
           class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
           <div class="mui-scroll">
-            <a class="mui-control-item mui-active" :class="queryParams.status === undefined ? 'mui-active' : ''"
+            <a class="mui-control-item" :class="queryParams.status === undefined ? 'mui-active' : ''"
               @click="getStatusList()">
               全部
             </a>
@@ -41,65 +41,61 @@
               @click="getStatusList('4')">
               配送中
             </a>
-            <a class="mui-control-item yc aa" :class="queryParams.status === '6' ? 'mui-active' : ''"
+            <!-- yc aa -->
+            <a class="mui-control-item" :class="queryParams.status === '6' ? 'mui-active' : ''"
               @click="getStatusList('6')">
               异常单 <b></b>
             </a>
           </div>
         </div>
 
-        <div class="mui-slider-group">
-          <div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
-            <div id="scroll1" class="mui-scroll-wrapper">
-              <div class="mui-scroll">
-                <div class="main">
-                  <div class="main_two">
-                    <div class="main_two_list" v-for="item in tableList" :key="item.orderId">
-                      <div class="two_list_top">
-                        <p><img src="@/static/image/shop/user/meituan.png" /></p>
-                        <p>
-                          <span>订单号:</span>
-                          <span>{{ item.orderId }}</span>
-                          <span>状态:{{ statusText[item.status] }}</span>
-                        </p>
-                      </div>
-                      <div class="two_list_two tel">
-                        <p>配送地址:</p>
-                        <p>
-                          <span>
-                            <i>{{ item.customerName }}</i>
-                            <i>{{ item.customerPhone }}</i>
-                            <a :href="`tel:${item.customerPhone}`"><img src="@/static/image/shop/order/iphone.png"
-                                alt="" /></a>
-                          </span>
-                          <span>{{ item.customerAddress }}</span>
-                        </p>
-                      </div>
-                      <div class="two_list_three">
-                        <div class="pay">
-                          <p>
-                            <span>商品金额</span>
-                            <span>￥{{ item.productMoney }}</span>
-                          </p>
-                          <p>
-                            <span>配送费</span>
-                            <span>￥{{ item.deliveryFee }}</span>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="two_list_five">
-                        <p class="publish" v-if="item.status === '1'" @click="btnSubOrder(item)">发布订单</p>
-                        <p class="add" v-if="!['9', '5', '6'].includes(item.status)"
-                          @click="btnUpdateDeliveryFee(item)">修改配送费</p>
-                        <p class="cancel_order" v-if="['2', '3', '4'].includes(item.status)"
-                          @click="btnCancelOrder(item)">取消订单</p>
-                      </div>
-                    </div>
-                  </div>
+        <div class="main" v-if="tableList.length">
+          <div class="main_two">
+            <div class="main_two_list" v-for="item in tableList" :key="item.orderId">
+              <div class="two_list_top">
+                <p><img src="@/static/image/shop/user/meituan.png" /></p>
+                <p>
+                  <span>订单号:</span>
+                  <span>{{ item.orderId }}</span>
+                  <span>状态:{{ statusText[item.status] }}</span>
+                </p>
+              </div>
+              <div class="two_list_two tel">
+                <p>配送地址:</p>
+                <p>
+                  <span>
+                    <i>{{ item.customerName }}</i>
+                    <i>{{ item.customerPhone }}</i>
+                    <a :href="`tel:${item.customerPhone}`"><img src="@/static/image/shop/order/iphone.png" alt="" /></a>
+                  </span>
+                  <span>{{ item.customerAddress }}</span>
+                </p>
+              </div>
+              <div class="two_list_three">
+                <div class="pay">
+                  <p>
+                    <span>商品金额</span>
+                    <span>￥{{ item.productMoney }}</span>
+                  </p>
+                  <p>
+                    <span>配送费</span>
+                    <span>￥{{ item.deliveryFee }}</span>
+                  </p>
                 </div>
+              </div>
+              <div class="two_list_five">
+                <p class="publish" v-if="item.status === '1'" @click="btnSubOrder(item)">发布订单</p>
+                <p class="add" v-if="!['9', '5', '6'].includes(item.status)" @click="btnUpdateDeliveryFee(item)">修改配送费
+                </p>
+                <p class="cancel_order" v-if="['2', '3', '4'].includes(item.status)" @click="btnCancelOrder(item)">
+                  取消订单</p>
               </div>
             </div>
           </div>
+        </div>
+        <div class="none-list" v-else>
+          <img src="@/static/image/shop/order/qishou.png" alt="" />
+          <p class="none_tip">暂时没有数据</p>
         </div>
       </div>
       <!--刚进来是没有数据的，默认显示-->
@@ -193,7 +189,10 @@ export default {
         '5': '商家取消',
         '6': '骑手取消',
         '9': '已完成'
-      }
+      },
+      totalFlag: false,
+      total: 0,
+      pages: { pageNum: 1, pageSize: 5 }
     }
   },
   onReady() {
@@ -202,16 +201,36 @@ export default {
       this.initList()
     }
   },
+  onReachBottom() {
+    const allTotal = this.pages.pageNum * this.pages.pageSize
+    console.log(allTotal, this.pages)
+    if (allTotal < this.total) {
+      this.totalFlag = false;
+      this.pages.pageNum++;
+      //加载次数递加
+      this.initList(); //请求更多数据列表
+    } else {
+      this.totalFlag = true;
+      console.log('已加载全部数据')
+    }
+  },
   methods: {
     checkPermission,
     getStatusList(e) {
       this.queryParams.status = e
+      this.pages.pageNum = 1
+      this.totalFlag = false
+      this.tableList = []
       this.initList()
     },
     initList() {
-      orderList(this.queryParams).then(res => {
+      if (this.totalFlag) {
+        return
+      }
+      orderList(this.queryParams, this.pages).then(res => {
         if (res.code === 200) {
-          this.tableList = res.rows
+          this.total = res.total
+          this.tableList.push(...res.rows)
         }
       })
     },
@@ -258,7 +277,11 @@ export default {
                   title: '操作成功！',
                   duration: 2000,
                 });
-                this.initList()
+                if (this.queryParams.status) {
+                  this.tableList = this.tableList.filter(e => e.orderId !== item.orderId)
+                } else {
+                  this.tableList.find(e => e.orderId === item.orderId).status = '2'
+                }
               } else {
                 uni.showModal({
                   title: '提示',
@@ -274,7 +297,7 @@ export default {
     btnCancelOrder(item) {
       uni.showModal({
         title: '确认',
-        content: `取消订单?${['2', '3', '4'].includes(item.status) ? '会扣除部分费用!' : ''}`,
+        content: `取消订单?${['3', '4'].includes(item.status) ? '会扣除部分费用!' : ''}`,
         success: (res) => {
           if (res.confirm) {
             cancelOrder({ orderId: item.orderId }).then(res => {
@@ -283,7 +306,11 @@ export default {
                   title: '操作成功！',
                   duration: 2000,
                 });
-                this.initList()
+                if (this.queryParams.status) {
+                  this.tableList = this.tableList.filter(e => e.orderId !== item.orderId)
+                } else {
+                  this.tableList.find(e => e.orderId === item.orderId).status = '5'
+                }
               } else {
                 uni.showModal({
                   title: '提示',
@@ -301,6 +328,11 @@ export default {
 </script>
 
 <style scoped>
+#sliderSegmentedControl {
+  position: fixed;
+  top: 40px;
+}
+
 .mui-bar {
   padding: 0 15px !important;
   height: 44px;
@@ -363,7 +395,7 @@ export default {
 .xuanfu {
   min-width: 62px;
   min-height: 62px;
-  position: absolute;
+  position: fixed;
   bottom: 44px;
   left: 0px;
   z-index: 11;
@@ -885,7 +917,8 @@ export default {
   z-index: 9;
 }
 
-.none img {
+.none img,
+.none-list img {
   width: 162.5px;
   height: 116.5px;
   position: absolute;
@@ -895,7 +928,8 @@ export default {
   -webkit-transform: translateX(-50%);
 }
 
-.none p.none_tip {
+.none p.none_tip,
+.none-list p.none_tip {
   width: 100%;
   height: 45px;
   text-align: center;
@@ -923,13 +957,15 @@ export default {
 }
 
 .main {
-  margin-bottom: 20px;
+  height: 100%;
+  overflow: auto;
   width: 100%;
   padding: 10px;
   background: #f5f5f5;
 }
 
 .main_two {
+  margin: 40px 0;
   width: 100%;
   border-radius: 10px;
 }

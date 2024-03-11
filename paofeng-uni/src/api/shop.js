@@ -13,7 +13,8 @@ export const subOrder = params =>
 export const cancelOrder = params =>
   request.post(`/api/order/order/cancelOrder?orderId=${params.orderId}`, params)
 
-export const orderList = data => request.post('/api/order/order/shopList', data)
+export const orderList = (data, params) =>
+  request.post('/api/order/order/shopList', data, params)
 
 export const successOrder = params =>
   request.post(

@@ -31,6 +31,7 @@
 			"path": "pages/shop/order/order/index",
 			"style": {
 				"navigationBarTitleText": "订单管理",
+				"enablePullDownRefresh": true,
 				"app-plus": {
 					"bounce": "vertical",
 					"titleNView": {
