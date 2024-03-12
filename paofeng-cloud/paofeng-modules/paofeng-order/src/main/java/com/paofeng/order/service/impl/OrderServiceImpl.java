@@ -1,6 +1,7 @@
 package com.paofeng.order.service.impl;
 
 import com.paofeng.common.core.constant.SecurityConstants;
+import com.paofeng.common.core.domain.MQMessage;
 import com.paofeng.common.core.domain.R;
 import com.paofeng.common.core.exception.CheckedException;
 import com.paofeng.common.core.exception.auth.NotPermissionException;
@@ -12,14 +13,19 @@ import com.paofeng.order.domain.Order;
 import com.paofeng.order.domain.OrderVo;
 import com.paofeng.order.mapper.OrderMapper;
 import com.paofeng.order.service.IOrderService;
+import com.paofeng.order.service.RabbitMQService;
 import com.paofeng.system.api.RemoteShopService;
 import com.paofeng.system.api.domain.SysShop;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单Service业务层处理
@@ -29,11 +35,20 @@ import java.util.List;
  */
 @Service
 public class OrderServiceImpl implements IOrderService {
-    @Autowired
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
+
+    @Resource
     private OrderMapper orderMapper;
 
     @Resource
     private RemoteShopService remoteShopService;
+
+    @Resource
+    private RabbitMQService rabbitMQService;
+
+    @Value("${rabbitmq.chatTopic}")
+    public String chatTopic;
+
 
     /**
      * 查询订单
@@ -108,7 +123,19 @@ public class OrderServiceImpl implements IOrderService {
         order.setTakeTime(DateUtils.getTime());
         order.setCurrentRider(SecurityUtils.getUserId());
         order.setStatus(Order.TYPE_DELIVERING_TAKING);
-        return updateOrder(order);
+
+        int n = updateOrder(order);
+        if (n > 0) {
+            // 通过mq传递消息
+            Map<String, Object> map = new HashMap<>();
+            map.put("currentRiderId", order.getCurrentRider());
+            map.put("shopUserId", orderVo.getCreatId());
+            MQMessage<Map<String, Object>> mqMessage = new MQMessage<>();
+            mqMessage.setType("1");
+            mqMessage.setData(map);
+            rabbitMQService.sendMessage(chatTopic, mqMessage);
+        }
+        return n;
     }
 
     @Transactional
@@ -140,7 +167,7 @@ public class OrderServiceImpl implements IOrderService {
             // 校验权限
             throw new CheckedException("401");
         }
-        if(!Order.TYPE_DELIVERING.equals(orderVo.getStatus())){
+        if (!Order.TYPE_DELIVERING.equals(orderVo.getStatus())) {
             // 校验订单状态
             throw new CheckedException("订单异常");
         }
@@ -163,16 +190,25 @@ public class OrderServiceImpl implements IOrderService {
         // 根据userId判断是谁取消的订单
         if (userId.equals(orderVo.getCurrentRider())) {
             // 骑手取消
-            order.setStatus(Order.TYPE_CANCEL_RIDER);
-            return updateOrder(order);
-        }
-        if (userId.equals(orderVo.getCreatId())) {
+            if (orderVo.getStatus().equals(Order.TYPE_DELIVERING_TAKING)) {
+                // 如果 订单还没取货 那么订单改为已发布状态
+                order.setStatus(Order.TYPE_PUBLISH);
+            } else {
+                // 已经取货 状态改为骑手取消
+                order.setStatus(Order.TYPE_CANCEL_RIDER);
+            }
+        } else {
             // 商家取消
-            order.setStatus(Order.TYPE_CANCEL_SHOP);
-            return updateOrder(order);
+            if (orderVo.getStatus().equals(Order.TYPE_DELIVERING_TAKING)) {
+                // 如果 订单还没取货 那么订单改为已发布状态
+                order.setStatus(Order.TYPE_PUBLISH);
+            } else {
+                // 已经取货 状态改为商家取消
+                order.setStatus(Order.TYPE_CANCEL_SHOP);
+            }
         }
 
-        return 0;
+        return updateOrder(order);
     }
 
     /**

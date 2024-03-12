@@ -29,18 +29,21 @@ public class WebSocketService {
     private static final Logger log = LoggerFactory.getLogger(WebSocketService.class);
 
     private static RedisService redisService;
+
     @Resource
     public void setRedisService(RedisService redisService) {
         WebSocketService.redisService = redisService;
     }
 
     private static RabbitMQService rabbitMQService;
+
     @Resource
     public void setRabbitMQService(RabbitMQService rabbitMQService) {
         WebSocketService.rabbitMQService = rabbitMQService;
     }
 
     private static IChatMessageService chatMessageService;
+
     @Resource
     public void setChatMessageService(IChatMessageService chatMessageService) {
         WebSocketService.chatMessageService = chatMessageService;
@@ -124,34 +127,45 @@ public class WebSocketService {
             return;
         }
         ChatMessage chatMessage = JSON.parseObject(message, ChatMessage.class);
-        chatMessage.setParams(null);
-        chatMessage.setSenderId(loginUser.getUserid());
-        chatMessageService.insertChatMessage(chatMessage);
-        log.info("====={}",chatMessage);
-        Long targetId = chatMessage.getTargetId();
-        // 检查用户关系 检查对方(接收者)是否有发送者好友
-        if (checkUserFriends(targetId, this.userId)) {
-            if (webSocketMap.containsKey(targetId)) {
-                // 消息接收用户连接在此服务
-                sendMessage(targetId, SendMessage.getResult(chatMessage));
-            } else {
-                // 不在此服务 查询redis
-                String userRoutingKey = getUserRoutingKey(targetId);
-                if (Strings.isNotBlank(userRoutingKey)) {
-                    // 目标用户连接在其他服务 通过mq传递消息
-                    log.info("userRoutingKey={},", userRoutingKey);
-                    rabbitMQService.sendMessage(userRoutingKey, JSON.toJSONString(chatMessage));
-                }
+        if (chatMessage.getType() != null) {
+            if (chatMessage.getType().equals(ChatMessage.OPTION_GET_FRIEND)) {
+                // 请求联系人信息
+
             }
         } else {
-            sendMessage(AjaxResult.error());
+            chatMessage.setSenderId(loginUser.getUserid());
+            chatMessageService.insertChatMessage(chatMessage);
+            log.info("====={}", chatMessage);
+            // Long targetId = chatMessage.getTargetId();
+            // 检查用户关系 检查对方(接收者)是否有发送者好友
+            // if (checkUserFriends(targetId, this.userId)) {
+            sendCheckHandler(chatMessage);
+            // } else {
+            //     sendMessage(AjaxResult.error());
+            // }
         }
+
     }
 
     @OnError
     public void onError(Session session, Throwable error) {
         log.error("error:{},msg:{}", userName, error.getMessage());
         error.printStackTrace();
+    }
+
+    public void sendCheckHandler(ChatMessage chatMessage) throws IOException {
+        if (webSocketMap.containsKey(chatMessage.getTargetId())) {
+            // 消息接收用户连接在此服务
+            sendMessage(chatMessage.getTargetId(), SendMessage.getResult(chatMessage));
+        } else {
+            // 不在此服务 查询redis
+            String userRoutingKey = getUserRoutingKey(chatMessage.getTargetId());
+            if (Strings.isNotBlank(userRoutingKey)) {
+                // 目标用户连接在其他服务 通过mq传递消息
+                log.info("userRoutingKey={},", userRoutingKey);
+                rabbitMQService.sendMessage(userRoutingKey, JSON.toJSONString(chatMessage));
+            }
+        }
     }
 
     /**

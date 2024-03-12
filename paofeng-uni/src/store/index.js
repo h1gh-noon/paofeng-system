@@ -1,4 +1,5 @@
 import { getInfo } from "@/api/login";
+import { OPTION_GET_FRIEND } from "@/pages/component/popup-message/option";
 
 // #ifndef VUE3
 import Vue from 'vue'
@@ -30,7 +31,8 @@ const store = createStore({
     name: '',
     avatar: '',
     roles: [],
-    permissions: []
+    permissions: [],
+		message: []
 	},
 	mutations: {
 		login(state, provider) {
@@ -95,11 +97,42 @@ const store = createStore({
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
-    }
+    },
+    SET_MESSAGE: (state, message) => {
+      state.message = message
+    },
+		PUSH_MESSAGE: (state, message) => {
+			if (message.type === '4') {
+        // 创建聊天窗口
+				state.message.push(message)
+      } else if (message.type === OPTION_GET_FRIEND) {
+				// 获取联系人信息
+				
+
+      } else {
+        const chatItem = this.getMessages.find(e => e.senderId === message.senderId)
+        if (chatItem) {
+          if (chatItem.data) {
+            chatItem.data.push(message)
+          } else {
+            chatItem.data = [message]
+          }
+        } else {
+					const data = {
+						senderId: message.senderId,
+						data: message
+					}
+					state.message.push(data)
+        }
+      }
+		}
 	},
 	getters: {
 		currentColor(state) {
 			return state.colorList[state.colorIndex]
+		},
+		getToken(state) {
+			return state.token
 		},
 		getId(state) {
 			return state.id
@@ -118,6 +151,9 @@ const store = createStore({
 		},
 		getPermissions(state) {
 			return state.permissions
+		},
+		getMessages(state) {
+			return state.message
 		}
 	},
 	actions: {

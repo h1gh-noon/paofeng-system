@@ -115,7 +115,7 @@
 
 <script>
 import { checkPermission } from "@/common/util";
-import { riderTakeOrderList, takeOrder, riderList, takeOrderGoods, successOrder } from "@/api/rider";
+import { riderTakeOrderList, takeOrder, riderList, takeOrderGoods, successOrder, cancelOrder } from "@/api/rider";
 
 export default {
   data() {

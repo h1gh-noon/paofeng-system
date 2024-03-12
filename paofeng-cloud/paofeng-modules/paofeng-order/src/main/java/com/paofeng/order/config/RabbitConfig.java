@@ -1,8 +1,5 @@
-package com.paofeng.chat.config;
+package com.paofeng.order.config;
 
-import com.paofeng.common.core.utils.uuid.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -16,14 +13,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig implements BeanPostProcessor {
 
-    private static final Logger log = LoggerFactory.getLogger(RabbitConfig.class);
-
-    public static final String topic = UUID.randomUUID().toString(true);
+    @Value("${rabbitmq.chatTopic}")
+    public String topic;
 
     @Value("${rabbitmq.exchange}")
     public String exchange;
 
-    public static final String routingKey = UUID.randomUUID().toString(true);
+    public static final String routingKey = "chat";
 
     //初始化rabbitAdmin对象
     @Bean
@@ -45,7 +41,6 @@ public class RabbitConfig implements BeanPostProcessor {
 
     @Bean
     public Binding bindDirect() {
-        log.info("=======topic={},routingKey={}=============", topic, routingKey);
         //链式写法，绑定交换机和队列，并设置匹配键
         return BindingBuilder
                 //绑定队列

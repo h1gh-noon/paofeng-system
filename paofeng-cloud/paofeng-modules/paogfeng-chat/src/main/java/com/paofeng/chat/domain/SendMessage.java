@@ -4,6 +4,8 @@ import com.paofeng.common.core.annotation.Excel;
 import com.paofeng.common.core.utils.bean.BeanUtils;
 import com.paofeng.common.core.web.domain.AjaxResult;
 
+import java.util.Date;
+
 public class SendMessage {
 
     /**
@@ -35,6 +37,9 @@ public class SendMessage {
      */
     @Excel(name = "类型 默认 1私聊 2系统消息 3订单状态消息")
     private String type;
+
+    @Excel(name = "时间")
+    private Date createTime;
 
 
     public Long getId() {
@@ -78,6 +83,14 @@ public class SendMessage {
         this.targetId = targetId;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
     @Override
     public String toString() {
         return "SendMessage{" +
@@ -85,12 +98,14 @@ public class SendMessage {
                 ", senderId=" + senderId +
                 ", content='" + content + '\'' +
                 ", type='" + type + '\'' +
+                ", createTime='" + createTime + '\'' +
                 '}';
     }
 
     public static AjaxResult getResult(ChatMessage message){
         SendMessage sendMessage = new SendMessage();
         BeanUtils.copyBeanProp(sendMessage, message);
+        sendMessage.setTargetId(null);
         return AjaxResult.successCode(sendMessage);
     }
 }

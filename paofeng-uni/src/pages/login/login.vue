@@ -67,6 +67,7 @@ export default {
             title: '登录成功！',
             duration: 2000,
           });
+          this.$PopupMessage()
           setTimeout(() => {
             uni.redirectTo({ url: '/pages/shop/order/order/index' })
           }, 1000);

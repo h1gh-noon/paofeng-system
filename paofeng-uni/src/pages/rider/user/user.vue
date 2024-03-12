@@ -44,10 +44,12 @@
           <img src="@/static/image/rider/user/Menu@2x.png" style="width: 15px;" />
           <span>骑手排行</span>
         </p>
-        <p class="link" data-link="message.html">
-          <img src="@/static/image/rider/user/Comment@2x.png" style="width: 21px;" />
-          <span>消息通知</span>
-        </p>
+        <navigator url="/pages/rider/user/message">
+          <p>
+            <img src="@/static/image/rider/user/Comment@2x.png" style="width: 21px;" />
+            <span>消息通知</span>
+          </p>
+        </navigator>
         <p class="link" data-link="zaiXian_keFu.html">
           <img src="@/static/image/rider/user/Comment-(alt)@2x.png" style="width: 21px;" />
           <span>在线客服</span>

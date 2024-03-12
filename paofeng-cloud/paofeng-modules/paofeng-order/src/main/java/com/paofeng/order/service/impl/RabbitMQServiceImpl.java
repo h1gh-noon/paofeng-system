@@ -1,6 +1,7 @@
-package com.paofeng.chat.service.impl;
+package com.paofeng.order.service.impl;
 
-import com.paofeng.chat.service.RabbitMQService;
+import com.alibaba.fastjson.JSON;
+import com.paofeng.order.service.RabbitMQService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,11 @@ public class RabbitMQServiceImpl implements RabbitMQService {
     public String exchange;
 
     @Override
-    public void sendMessage(String routing, String msg) {
-        rabbitTemplate.convertAndSend(exchange, routing, msg);
+    public <T> void sendMessage(String routing, T msg) {
+        if (msg instanceof String) {
+            rabbitTemplate.convertAndSend(exchange, routing, msg);
+        } else {
+            rabbitTemplate.convertAndSend(exchange, routing, JSON.toJSONString(msg));
+        }
     }
 }

@@ -57,23 +57,9 @@ export default {
     }
   },
   onLoad() {
-    this.initWebsocket()
   },
   methods: {
-    initWebsocket() {
-      uni.connectSocket({
-        url: 'ws://localhost:18080/chat/websocket',
-        protocols: [uni.getStorageSync('auth_token')]
-      });
-      uni.onSocketMessage(function (res) {
-        console.log('websocket：' + res.data);
-        const msgData = JSON.parse(res.data)
-        if (msgData.code === 200) {
-
-        } else {
-          console.log('err')
-        }
-      });
+    sendWebsocket() {
     }
   }
 }

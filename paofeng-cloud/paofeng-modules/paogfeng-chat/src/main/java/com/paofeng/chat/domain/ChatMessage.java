@@ -16,6 +16,20 @@ import java.util.Date;
 public class ChatMessage extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+    // 1私聊
+    public static final String TYPE_CHAT = "1";
+
+    // 2系统消息
+    public static final String TYPE_SYS = "2";
+
+    // 3订单状态消息
+    public static final String TYPE_ORDER = "3";
+
+    // 4创建聊天框
+    public static final String TYPE_CHAT_WINDOW = "4";
+
+    // 客户端请求联系人信息
+    public static final String OPTION_GET_FRIEND = "getFriend";
 
     /**
      * id
@@ -50,7 +64,7 @@ public class ChatMessage extends BaseEntity {
     /**
      * 类型 默认私聊
      */
-    @Excel(name = "类型 默认 1私聊 2系统消息 3订单状态消息")
+    @Excel(name = "类型 默认 1私聊 2系统消息 3订单状态消息 4创建聊天框")
     private String type;
 
     public void setId(Long id) {

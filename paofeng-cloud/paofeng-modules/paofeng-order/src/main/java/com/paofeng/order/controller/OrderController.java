@@ -15,10 +15,12 @@ import com.paofeng.common.security.utils.SecurityUtils;
 import com.paofeng.order.domain.Order;
 import com.paofeng.order.domain.OrderVo;
 import com.paofeng.order.service.IOrderService;
+import com.paofeng.order.service.RabbitMQService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -32,6 +34,10 @@ import java.util.List;
 public class OrderController extends BaseController {
     @Autowired
     private IOrderService orderService;
+
+    @Resource
+    private RabbitMQService rabbitMQService;
+
 
     /**
      * 查询订单列表
@@ -227,6 +233,12 @@ public class OrderController extends BaseController {
         } else {
             return AjaxResult.error();
         }
+    }
+
+    @RequestMapping("/test")
+    public AjaxResult test() {
+        rabbitMQService.sendMessage("null", "ss");
+        return AjaxResult.success();
     }
 
     // /**
