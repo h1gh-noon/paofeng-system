@@ -2,6 +2,23 @@
 	"pages": [
 		// pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/shop/user/user",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
 			"path": "pages/component/chat/chat"
 		},
 		{
@@ -38,23 +55,6 @@
 			"style": {
 				"navigationBarTitleText": "订单管理",
 				"enablePullDownRefresh": true,
-				"app-plus": {
-					"bounce": "vertical",
-					"titleNView": {
-						"buttons": [{
-							"text": "\ue534",
-							"fontSrc": "/static/uni.ttf",
-							"fontSize": "22px",
-							"color": "#FFFFFF"
-						}]
-					}
-				}
-			}
-		},
-		{
-			"path": "pages/shop/user/user",
-			"style": {
-				"navigationBarTitleText": "我的",
 				"app-plus": {
 					"bounce": "vertical",
 					"titleNView": {

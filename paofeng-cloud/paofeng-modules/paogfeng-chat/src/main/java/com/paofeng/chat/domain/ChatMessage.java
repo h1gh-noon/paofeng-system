@@ -13,7 +13,7 @@ import java.util.Date;
  * @author paofeng
  * @date 2024-02-22
  */
-public class ChatMessage extends BaseEntity {
+public class ChatMessage<T> extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     // 1私聊
@@ -30,6 +30,9 @@ public class ChatMessage extends BaseEntity {
 
     // 客户端请求联系人信息
     public static final String OPTION_GET_FRIEND = "getFriend";
+
+    // 服务器响应消息发送成功
+    public static final String TYPE_REPLY = "reply";
 
     /**
      * id
@@ -54,6 +57,12 @@ public class ChatMessage extends BaseEntity {
      */
     @Excel(name = "内容")
     private String content;
+
+    /**
+     * 数据
+     */
+    @Excel(name = "数据")
+    private T data;
 
     /**
      * 内容
@@ -117,11 +126,20 @@ public class ChatMessage extends BaseEntity {
         this.createTime = createTime;
     }
 
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("content", getContent())
+                .append("data", getData())
                 .append("senderId", getSenderId())
                 .append("targetId", getTargetId())
                 .append("createTime", getCreateTime())

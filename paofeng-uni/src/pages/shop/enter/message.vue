@@ -7,7 +7,21 @@
       <h1 class="mui-title">消息</h1>
     </header>
     <div class="mui-content">
-      <div class="list">
+      <div class="list-item" v-for="item in getMessages" :key="item.userId || item.id"
+        @click="pushMessage(item.userId)">
+        <div class="item-left">
+          <img :src="item.avatar" />
+          <div class="item-content">
+            <span>骑手: {{ item.riderName }}</span>
+            <span class="mui-ellipsis">{{ getLastMsgHandler(item) }}</span>
+          </div>
+        </div>
+        <div class="item-right">
+          <span class="time">{{ getTimeHandler(item) }}</span>
+          <span class="unread-num" v-show="item.unReadNum > 0">{{ item.unReadNum > 99 ? '99+' : item.unReadNum }}</span>
+        </div>
+      </div>
+      <!-- <div class="list-item">
         <p>
           <img src="@/static/image/shop/enter/xiaoxi_1.png" />
         </p>
@@ -20,7 +34,7 @@
           <span>09:56</span>
         </p>
       </div>
-      <div class="list">
+      <div class="list-item">
         <p>
           <img src="@/static/image/shop/enter/xiaoxi_2.png" />
         </p>
@@ -33,7 +47,7 @@
           <span>09:56</span>
         </p>
       </div>
-      <div class="list">
+      <div class="list-item">
         <p>
           <img src="@/static/image/shop/enter/xiaoxi_3.png" />
         </p>
@@ -45,21 +59,40 @@
           <span>05-22</span>
           <span>09:56</span>
         </p>
-      </div>
+      </div> -->
     </div>
   </view>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
     }
   },
+  computed: {
+    ...mapGetters(['getMessages'])
+  },
   onLoad() {
   },
   methods: {
     sendWebsocket() {
+    },
+    getTimeHandler(item) {
+      if (item.data && item.data.length) {
+        return item.data[item.data.length - 1].createTime
+      }
+      return ''
+    },
+    getLastMsgHandler(item) {
+      if (item.data && item.data.length) {
+        return item.data[item.data.length - 1].content
+      }
+      return ''
+    },
+    pushMessage(userId) {
+      uni.navigateTo({ url: `/pages/component/chat/chat?userId=${userId}` })
     }
   }
 }
@@ -102,65 +135,60 @@ header img {
 
 /**/
 
-.list {
-  padding: 15px 0;
+.list-item {
   width: 100%;
   height: 63px;
   border-bottom: 1px dotted #dbdbdb;
   background: #fff;
-}
-
-.mui-content .list:last-child {
-  border-bottom: none;
-}
-
-.list p:nth-child(1) {
-  float: left;
-}
-
-.list p:nth-child(1) img {
-  margin-top: 2px;
-  margin-right: 8px;
-  width: 30px;
-  height: 30px;
-}
-
-.list p:nth-child(2) {
-  float: left;
-  width: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: relative;
 }
 
-.list p:nth-child(2) span {
-  display: block;
-  height: 15px;
-  line-height: 15px;
-  position: absolute;
+.mui-content .list-item:last-child {
+  border-bottom: none;
 }
 
-.list p:nth-child(2) span:nth-child(1) {
+
+.list-item img {
+  margin-top: 2px;
+  margin-right: 8px;
+  width: 48px;
+  height: 48px;
+}
+
+.item-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 5px;
+}
+
+.item-left {
+  display: flex;
+
+}
+
+.unread-num {
+  border-radius: 50%;
+  background-color: red;
+  color: #fff;
   display: inline-block;
-  width: 100%;
-  color: #333333;
-  font-size: 14px;
-  top: 0px;
-  left: 0;
+  height: 23px;
+  width: 23px;
+  line-height: 23px;
+  text-align: center;
+  font-size: 12px;
 }
 
-.list p:nth-child(2) span:nth-child(2) {
-  display: inline-block;
-  width: 100%;
-  color: #666;
-  font-size: 13px;
-  top: 22px;
-  left: 0;
-}
-
-.list p:nth-child(3) {
-  float: right;
+.list-item .time {
   height: 13px;
   line-height: 13px;
   color: #999;
   font-size: 13px;
+  position: absolute;
+  top: 10px;
+  right: 20px;
 }
 </style>

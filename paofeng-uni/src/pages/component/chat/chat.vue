@@ -4,42 +4,86 @@
       <navigator open-type="navigateBack">
         <img src="@/static/image/rider/enter/icon_back@2x.png" alt="" />
       </navigator>
-      <h1 class="mui-title">消息</h1>
+      <h1 class="mui-title" v-if="chatUser">{{ chatUser.role === '1' ? '店铺: ' + chatUser.shopName : '骑手: ' +
+        chatUser.riderName }}</h1>
     </header>
     <div class="mui-content">
-      <div class="chat-item-line">
-        <img class="chat-avatar" src="@/static/image/rider/user/tx.png" alt="">
-        <div class="chat-border">
-          <div class="chat-border-triangle"></div>
-          广泛大使馆犯得上方法烦烦烦烦烦烦烦烦烦是顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶烦烦烦烦烦烦是顶顶顶顶顶顶顶顶顶顶顶顶
-          广泛大使馆犯得上方法烦烦烦烦烦烦烦烦烦是顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶烦烦烦烦烦烦是顶顶顶顶顶顶顶顶顶顶顶顶
-        </div>
-      </div>
-      <div class="chat-item-line chat-item-me">
-        <img class="chat-avatar" src="@/static/image/rider/user/tx.png" alt="">
-        <div class="chat-border">
-          <div class="chat-border-triangle"></div>
-          广泛大使馆犯得上方法烦烦烦烦烦烦烦烦烦是顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶烦烦烦烦烦烦是顶顶顶顶顶顶顶顶顶顶顶顶
-          广泛大使馆犯得上方法烦烦烦烦烦烦烦烦烦是顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶烦烦烦烦烦烦是顶顶顶顶顶顶顶顶顶顶顶顶
-        </div>
+      <div v-if="userId && chatUser">
+        <template v-for="item in chatUser.data">
+          <div class="chat-item-line" :key="item.id" :class="{ 'chat-item-me': item.senderId === getId }">
+            <img class="chat-avatar" :src="item.senderId === getId ? getAvatar : chatUser.avatar" alt="">
+            <div class="chat-border">
+              <div class="chat-border-triangle"></div>
+              {{ item.content }}
+            </div>
+          </div>
+        </template>
       </div>
     </div>
     <div class="message-input-box">
-      <input type="text" class="msg-input">
-      <div class="send-btn">发送</div>
+      <input type="text" class="msg-input" v-model="msg">
+      <div class="send-btn" @click="sendHandler" @key.enter="sendHandler">发送</div>
     </div>
   </view>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   data() {
     return {
+      userId: null,
+      msg: ''
     }
   },
-  onLoad() {
+  computed: {
+    ...mapGetters(['getMessages', 'getId', 'getAvatar']),
+    chatUser() {
+      if (this.userId && this.getMessages.length) {
+        const item = this.getMessages.find(e => e.userId === this.userId)
+        if (item) {
+          return item
+        }
+      }
+      return null
+    },
+    chatArr() {
+      if (this.chatUser) {
+        console.log(this.chatUser)
+        return this.chatUser.data
+      }
+      return []
+    }
+  },
+  onLoad(val) {
+    this.userId = parseInt(val.userId)
   },
   methods: {
+    sendHandler() {
+      if (this.msg.length) {
+        const msgData = {
+          id: new Date().getTime(),
+          targetId: this.userId,
+          content: this.msg
+        }
+        const data = JSON.stringify(msgData)
+        msgData.senderId = this.getId
+        this.msg = ''
+        this.$store.dispatch('pushMessage', msgData).then(() => {
+          // 定位到页面底部
+        })
+        uni.sendSocketMessage({
+          data
+        });
+      } else {
+        uni.showToast({
+          title: '请输入发送内容!',
+          icon: 'none',
+          duration: 2000
+        });
+      }
+    }
   }
 }
 </script>
@@ -90,6 +134,7 @@ header img {
 .chat-avatar {
   width: 50px;
   height: 50px;
+  border-radius: 50%;
 }
 
 .chat-border {
@@ -126,7 +171,9 @@ header img {
   width: 100%;
   height: 36px;
   align-items: center;
+  background-color: #fff;
 }
+
 .msg-input {
   flex: 1;
   margin: 5px;
@@ -134,6 +181,7 @@ header img {
   border-radius: 5px;
   padding: 0 5px;
 }
+
 .send-btn {
   border-radius: 6px;
   width: 66px;

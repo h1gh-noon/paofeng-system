@@ -121,4 +121,22 @@
         where rider_id = #{riderId}
     </update>
 
+
+    <resultMap type="UserRelation" id="UserRelationResult">
+        <result property="riderId" column="rider_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="avatar" column="avatar"/>
+        <result property="riderName" column="rider_name"/>
+        <result property="phonenumber" column="phonenumber"/>
+    </resultMap>
+
+    <select id="getRelationInfo" parameterType="Long" resultMap="UserRelationResult">
+        select u.user_id, u.user_name, u.avatar, u.phonenumber, r.rider_id, r.rider_name
+        from sys_user u, sys_rider r
+        where u.user_id=r.user_id and u.user_id in
+        <foreach collection="array" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </select>
 </mapper> 

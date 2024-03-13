@@ -2,14 +2,23 @@
   <view>
     <uni-popup ref="popup" type="message" class="global-popup">
       <!-- sss -->
-      <uni-popup-message type="info" :duration="200000">{{ message.content }}</uni-popup-message>
+      <uni-popup-message type="info" :duration="3000">
+        <div class="item-left">
+          <img class="img-avatar" :src="message.avatar" />
+          <div class="item-content">
+            <div>{{ message.role === '1' ? '店铺: ' + message.shopName : '骑手: ' +
+        message.riderName }}</div>
+            <div class="mui-ellipsis">{{ message.content }}</div>
+          </div>
+        </div>
+      </uni-popup-message>
     </uni-popup>
   </view>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { OPTION_GET_FRIEND } from './option';
+import { OPTION_GET_FRIEND } from './type';
 export default {
   data() {
     return {
@@ -19,7 +28,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'getMessages'
+      'getMessages',
+      'getId'
     ])
   },
   methods: {
@@ -40,7 +50,7 @@ export default {
       });
       uni.onSocketOpen(() => {
         const d = {
-          option: OPTION_GET_FRIEND
+          type: OPTION_GET_FRIEND
         }
         this.sendMessage(d)
       });
@@ -48,7 +58,7 @@ export default {
         const msgData = JSON.parse(res.data)
         console.log(msgData)
         if (msgData.code === 200) {
-          this.pushMessage(msgData.data)
+          this.$store.dispatch('pushMessage', msgData.data).then(this.pushMessage)
         } else {
           console.log('err')
         }
@@ -61,9 +71,11 @@ export default {
       });
     },
     pushMessage(val) {
-      this.message = val
-      this.$refs.popup.open()
-      this.$store.commit('PUSH_MESSAGE', val)
+      if (val) {
+        // 判断当前页面
+        this.message = val
+        this.$refs.popup.open()
+      }
     },
     sendMessage(msg) {
       uni.sendSocketMessage({
@@ -80,5 +92,27 @@ export default {
   width: calc(100% - 20px);
   overflow: hidden;
   margin: auto;
+}
+
+.global-popup ::v-deep .uni-popup-message__box {
+  padding: 5px 10px;
+}
+
+.item-content {
+  margin-left: 10px;
+  width: 100%;
+}
+
+.item-left {
+  display: flex;
+}
+
+.img-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.mui-ellipsis {
+  width: calc(100vw - 100px);
 }
 </style>

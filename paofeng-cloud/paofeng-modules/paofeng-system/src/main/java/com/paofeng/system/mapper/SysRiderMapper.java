@@ -1,5 +1,6 @@
 package com.paofeng.system.mapper;
 
+import com.paofeng.system.api.domain.UserRelation;
 import com.paofeng.system.domain.SysRider;
 
 import java.util.List;
@@ -74,4 +75,6 @@ public interface SysRiderMapper {
      */
     int updateRiderStatus(SysRider rider);
 
+    // 根据user_id批量查询联系人信息
+    List<UserRelation> getRelationInfo(Long[] ids);
 }

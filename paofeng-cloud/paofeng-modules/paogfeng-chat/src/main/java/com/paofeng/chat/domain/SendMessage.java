@@ -6,7 +6,7 @@ import com.paofeng.common.core.web.domain.AjaxResult;
 
 import java.util.Date;
 
-public class SendMessage {
+public class SendMessage<T> {
 
     /**
      * id
@@ -31,6 +31,14 @@ public class SendMessage {
      */
     @Excel(name = "内容")
     private String content;
+
+
+    /**
+     * 数据
+     */
+    @Excel(name = "数据")
+    private T data;
+
 
     /**
      * 类型 默认私聊
@@ -91,21 +99,39 @@ public class SendMessage {
         this.createTime = createTime;
     }
 
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
     @Override
     public String toString() {
         return "SendMessage{" +
                 "id=" + id +
                 ", senderId=" + senderId +
                 ", content='" + content + '\'' +
+                ", data='" + data + '\'' +
                 ", type='" + type + '\'' +
                 ", createTime='" + createTime + '\'' +
                 '}';
     }
 
-    public static AjaxResult getResult(ChatMessage message){
+    public static AjaxResult getResult(ChatMessage message) {
         SendMessage sendMessage = new SendMessage();
         BeanUtils.copyBeanProp(sendMessage, message);
         sendMessage.setTargetId(null);
+        return AjaxResult.successCode(sendMessage);
+    }
+
+    public static AjaxResult getReply(Long oldId, ChatMessage message) {
+        SendMessage<Long> sendMessage = new SendMessage<>();
+        sendMessage.setId(message.getId());
+        sendMessage.setData(oldId);
+        sendMessage.setCreateTime(message.getCreateTime());
+        sendMessage.setType(ChatMessage.TYPE_REPLY);
         return AjaxResult.successCode(sendMessage);
     }
 }

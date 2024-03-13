@@ -7,7 +7,21 @@
       <h1 class="mui-title">消息</h1>
     </header>
     <div class="mui-content">
-      <div class="list link" data-link="message_1.html">
+      <div class="list-item" v-for="item in getMessages" :key="item.userId || item.id"
+        @click="pushMessage(item.userId)">
+        <div class="item-left">
+          <img :src="item.avatar" />
+          <div class="item-content">
+            <span>店铺: {{ item.shopName }}</span>
+            <span class="mui-ellipsis">{{ getLastMsgHandler(item) }}</span>
+          </div>
+        </div>
+        <div class="item-right">
+          <span class="time">{{ getTimeHandler(item) }}</span>
+          <span class="unread-num" v-show="item.unReadNum > 0">{{ item.unReadNum > 99 ? '99+' : item.unReadNum }}</span>
+        </div>
+      </div>
+      <!-- <div class="list-item">
         <p>
           <img src="@/static/image/rider/user/tip1.png" alt="" />
           <span>订单状态</span>
@@ -15,29 +29,48 @@
         </p>
         <p class="mui-ellipsis">您有新的订单状态，点击查看</p>
       </div>
-      <div class="list link" data-link="message_1.html">
+      <div class="list-item">
         <p>
           <img src="@/static/image/rider/user/tip2.png" alt="" />
           <span>天气预警</span>
           <i>2017-06-19</i>
         </p>
         <p class="mui-ellipsis">暴雨蓝色预警！郑州市明天将有局部暴雨，请广大市民做好转杯等等等等</p>
-      </div>
+      </div> -->
     </div>
   </view>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   data() {
     return {
     }
   },
+  computed: {
+    ...mapGetters(['getMessages'])
+  },
   onLoad() {
-      // this.$PopupMessage('aa')
   },
   methods: {
-    
+    getTimeHandler(item) {
+      if (item.data && item.data.length) {
+        return item.data[item.data.length - 1].createTime
+      }
+      return ''
+    },
+    getLastMsgHandler(item) {
+      if (item.data && item.data.length) {
+        return item.data[item.data.length - 1].content
+      }
+      return ''
+    },
+    pushMessage(userId) {
+      console.log(userId)
+      uni.navigateTo({ url: `/pages/component/chat/chat?userId=${userId}` })
+    }
   }
 }
 </script>
@@ -77,53 +110,56 @@ header img {
 }
 
 /**/
-.list {
-  padding: 0 12px;
+.list-item {
+  padding: 5px 12px;
   width: 100%;
-  height: 65px;
   background: #fff;
   border-radius: 10px;
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
 }
 
-.list p:nth-child(1) {
-
-  width: 100%;
-  height: 36px;
+.list-item img {
+  margin-top: 2px;
+  margin-right: 8px;
+  width: 48px;
+  height: 48px;
 }
 
-.list p:nth-child(1) img {
-  float: left;
-  margin-right: 10px;
-  margin-top: 11px;
-  width: 13px;
+.item-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 5px;
 }
 
-.list p:nth-child(1) span {
-  float: left;
+.item-left {
+  display: flex;
+
+}
+
+.unread-num {
+  border-radius: 50%;
+  background-color: red;
+  color: #fff;
   display: inline-block;
-  height: 36px;
-  line-height: 36px;
-  color: #333333;
-  font-size: 15px;
+  height: 23px;
+  width: 23px;
+  line-height: 23px;
+  text-align: center;
+  font-size: 12px;
 }
 
-.list p:nth-child(1) i {
-  float: right;
-  display: inline-block;
-  height: 36px;
-  line-height: 36px;
+.list-item .time {
+  height: 13px;
+  line-height: 13px;
   color: #999;
-  font-size: 12px;
-  font-style: normal;
-}
-
-.list p:nth-child(2) {
-  width: 100%;
-  height: 21px;
-  line-height: 21px;
-  color: #333333;
-  font-size: 12px;
-
+  font-size: 13px;
+  position: absolute;
+  top: 10px;
+  right: 40px;
 }
 </style>

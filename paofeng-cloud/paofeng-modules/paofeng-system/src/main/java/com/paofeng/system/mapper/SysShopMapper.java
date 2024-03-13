@@ -1,6 +1,7 @@
 package com.paofeng.system.mapper;
 
 import com.paofeng.system.api.domain.SysShop;
+import com.paofeng.system.api.domain.UserRelation;
 
 import java.util.List;
 
@@ -74,4 +75,6 @@ public interface SysShopMapper {
      */
     int updateShopStatus(SysShop shop);
 
+    // 根据user_id批量查询联系人信息
+    List<UserRelation> getRelationInfo(Long[] ids);
 }

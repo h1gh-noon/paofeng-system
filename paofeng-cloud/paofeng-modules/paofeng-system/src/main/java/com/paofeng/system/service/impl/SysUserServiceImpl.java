@@ -9,6 +9,7 @@ import com.paofeng.common.datascope.annotation.DataScope;
 import com.paofeng.common.security.utils.SecurityUtils;
 import com.paofeng.system.api.domain.SysRole;
 import com.paofeng.system.api.domain.SysUser;
+import com.paofeng.system.api.domain.UserRelation;
 import com.paofeng.system.domain.SysPost;
 import com.paofeng.system.domain.SysUserPost;
 import com.paofeng.system.domain.SysUserRole;
@@ -38,6 +39,12 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Autowired
     private SysUserMapper userMapper;
+
+    @Autowired
+    private SysShopMapper shopMapper;
+
+    @Autowired
+    private SysRiderMapper riderMapper;
 
     @Autowired
     private SysRoleMapper roleMapper;
@@ -494,6 +501,21 @@ public class SysUserServiceImpl implements ISysUserService {
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    @Override
+    public List<UserRelation> getRelationInfo(Long[] ids) {
+        List<UserRelation> relationInfoList = shopMapper.getRelationInfo(ids);
+        List<UserRelation> riderRelationInfoList = riderMapper.getRelationInfo(ids);
+
+        // 店铺
+        relationInfoList.forEach(e -> e.setRole(UserRelation.isShop));
+        // 骑手
+        riderRelationInfoList.forEach(e -> e.setRole(UserRelation.isRider));
+
+        relationInfoList.addAll(riderRelationInfoList);
+
+        return relationInfoList;
     }
 
 }

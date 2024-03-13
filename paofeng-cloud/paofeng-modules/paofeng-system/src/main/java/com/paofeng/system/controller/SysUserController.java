@@ -14,6 +14,7 @@ import com.paofeng.common.security.utils.SecurityUtils;
 import com.paofeng.system.api.domain.SysDept;
 import com.paofeng.system.api.domain.SysRole;
 import com.paofeng.system.api.domain.SysUser;
+import com.paofeng.system.api.domain.UserRelation;
 import com.paofeng.system.api.model.LoginUser;
 import com.paofeng.system.service.*;
 import org.apache.commons.lang3.ArrayUtils;
@@ -150,6 +151,15 @@ public class SysUserController extends BaseController {
             return R.fail("保存用户'" + sysUser.getPhonenumber() + "'失败，注册手机号已存在");
         }
         return R.ok(userService.registerUser(sysUser));
+    }
+
+    /**
+     * 联系人信息
+     */
+    @InnerAuth
+    @PostMapping("/getRelationInfo")
+    public R<List<UserRelation>> getRelationInfo(@RequestBody Long[] ids) {
+        return R.ok(userService.getRelationInfo(ids));
     }
 
     /**

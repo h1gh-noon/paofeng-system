@@ -1,6 +1,7 @@
 package com.paofeng.system.service;
 
 import com.paofeng.system.api.domain.SysUser;
+import com.paofeng.system.api.domain.UserRelation;
 
 import java.util.List;
 
@@ -211,4 +212,6 @@ public interface ISysUserService {
      * @return 结果
      */
     String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
+
+    List<UserRelation> getRelationInfo(Long[] ids);
 }

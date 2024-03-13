@@ -154,4 +154,23 @@
         where shop_id = #{shopId}
     </update>
 
+
+    <resultMap type="UserRelation" id="UserRelationResult">
+        <result property="shopId" column="shop_id"/>
+        <result property="address" column="address"/>
+        <result property="shopName" column="shop_name"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="avatar" column="avatar"/>
+        <result property="phonenumber" column="phonenumber"/>
+    </resultMap>
+
+    <select id="getRelationInfo" parameterType="Long" resultMap="UserRelationResult">
+        select u.user_id, u.user_name, u.avatar, u.phonenumber, s.shop_name, s.address, s.shop_id
+        from sys_user u, sys_shop s
+        where u.user_id=s.user_id and u.user_id in
+        <foreach collection="array" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </select>
 </mapper> 

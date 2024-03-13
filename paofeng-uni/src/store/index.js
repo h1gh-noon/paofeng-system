@@ -1,5 +1,5 @@
 import { getInfo } from "@/api/login";
-import { OPTION_GET_FRIEND } from "@/pages/component/popup-message/option";
+import { OPTION_GET_FRIEND, TYPE_REPLY } from "@/pages/component/popup-message/type";
 
 // #ifndef VUE3
 import Vue from 'vue'
@@ -102,29 +102,7 @@ const store = createStore({
       state.message = message
     },
 		PUSH_MESSAGE: (state, message) => {
-			if (message.type === '4') {
-        // 创建聊天窗口
-				state.message.push(message)
-      } else if (message.type === OPTION_GET_FRIEND) {
-				// 获取联系人信息
-				
-
-      } else {
-        const chatItem = this.getMessages.find(e => e.senderId === message.senderId)
-        if (chatItem) {
-          if (chatItem.data) {
-            chatItem.data.push(message)
-          } else {
-            chatItem.data = [message]
-          }
-        } else {
-					const data = {
-						senderId: message.senderId,
-						data: message
-					}
-					state.message.push(data)
-        }
-      }
+			state.message.push(message)
 		}
 	},
 	getters: {
@@ -230,6 +208,75 @@ const store = createStore({
         }).catch(error => {
           reject(error)
         })
+			})
+		},
+		pushMessage: function({
+			commit,
+			state
+		}, message) {
+			return new Promise((resolve, reject) => {
+					const msgArr = state.message
+					if (['4', OPTION_GET_FRIEND].includes(message.type)) {
+						const list = message.data
+						// 获取联系人信息
+						if(list && Array.isArray(list)) {
+							list.forEach(item => {
+								item.type = '1'
+								item.unReadNum = 0
+								item.data = []
+								const index =	msgArr.findIndex(e => e.type==='1' && e.userId === item.userId)
+								if(index > -1){
+									item.data = msgArr[index].data
+									msgArr[index] = item
+								} else {
+									console.log(item)
+									commit('PUSH_MESSAGE', item)
+								}
+							})
+						}
+					} else if(message.type === TYPE_REPLY) {
+						// 响应消息发送成功
+						for (let index = 0; index < msgArr.length; index++) {
+							const element = msgArr[index];
+							const item = element.data.find(e => e.id === message.data)
+							if (item) {
+								// 替换id 真实的接收时间createTime
+								item.id = message.id
+								item.createTime = message.createTime
+								break
+							}
+						}
+
+					} else {
+						const chatItem = msgArr.find(e => e.userId === message.senderId || e.userId === message.targetId)
+						if (chatItem) {
+							if (chatItem.data) {
+								chatItem.data.push(message)
+							} else {
+								chatItem.data = [message]
+							}
+							if(message.senderId !== state.id) {
+								chatItem.unReadNum++
+								resolve({
+									userId: chatItem.userId,
+									content: message.content,
+									avatar: chatItem.avatar,
+									role: chatItem.role,
+									userName: chatItem.userName,
+									riderName: chatItem.riderName
+								})
+								return
+							}
+						} else {
+							const data = {
+								userId: message.senderId,
+								data: message,
+								item: unReadNum = 1
+							}
+							commit('PUSH_MESSAGE', data)
+						}
+					}
+					resolve(null)
 			})
 		}
 	}

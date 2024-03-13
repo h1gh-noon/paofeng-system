@@ -7,8 +7,12 @@ import com.paofeng.chat.config.WebSocketConfig;
 import com.paofeng.chat.domain.ChatMessage;
 import com.paofeng.chat.domain.SendMessage;
 import com.paofeng.chat.domain.SocketClient;
+import com.paofeng.common.core.constant.SecurityConstants;
+import com.paofeng.common.core.domain.R;
 import com.paofeng.common.core.web.domain.AjaxResult;
 import com.paofeng.common.redis.service.RedisService;
+import com.paofeng.system.api.RemoteUserService;
+import com.paofeng.system.api.domain.UserRelation;
 import com.paofeng.system.api.model.LoginUser;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
@@ -20,6 +24,7 @@ import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -40,6 +45,13 @@ public class WebSocketService {
     @Resource
     public void setRabbitMQService(RabbitMQService rabbitMQService) {
         WebSocketService.rabbitMQService = rabbitMQService;
+    }
+
+    private static RemoteUserService remoteUserService;
+
+    @Resource
+    public void setRemoteUserService(RemoteUserService remoteUserService) {
+        WebSocketService.remoteUserService = remoteUserService;
     }
 
     private static IChatMessageService chatMessageService;
@@ -130,15 +142,17 @@ public class WebSocketService {
         if (chatMessage.getType() != null) {
             if (chatMessage.getType().equals(ChatMessage.OPTION_GET_FRIEND)) {
                 // 请求联系人信息
-
+                getRelation();
             }
         } else {
             chatMessage.setSenderId(loginUser.getUserid());
+            Long oldId = chatMessage.getId();
             chatMessageService.insertChatMessage(chatMessage);
             log.info("====={}", chatMessage);
             // Long targetId = chatMessage.getTargetId();
             // 检查用户关系 检查对方(接收者)是否有发送者好友
             // if (checkUserFriends(targetId, this.userId)) {
+            sendMessage(SendMessage.getReply(oldId, chatMessage));
             sendCheckHandler(chatMessage);
             // } else {
             //     sendMessage(AjaxResult.error());
@@ -147,13 +161,29 @@ public class WebSocketService {
 
     }
 
+    private void getRelation() throws IOException {
+        Set<Long> userFriends = getUserFriends(userId);
+        ChatMessage<List<UserRelation>> chatMessage = new ChatMessage<>();
+        chatMessage.setType(ChatMessage.OPTION_GET_FRIEND);
+        if (userFriends != null && !userFriends.isEmpty()) {
+            R<List<UserRelation>> relationInfoRes = remoteUserService.getRelationInfo(userFriends.toArray(new Long[]{}),
+                    SecurityConstants.INNER);
+            if (R.isSuccess(relationInfoRes)) {
+                List<UserRelation> data = relationInfoRes.getData();
+                chatMessage.setData(data);
+            }
+        }
+
+        sendMessage(userId, SendMessage.getResult(chatMessage));
+    }
+
     @OnError
     public void onError(Session session, Throwable error) {
         log.error("error:{},msg:{}", userName, error.getMessage());
         error.printStackTrace();
     }
 
-    public void sendCheckHandler(ChatMessage chatMessage) throws IOException {
+    public static void sendCheckHandler(ChatMessage chatMessage) throws IOException {
         if (webSocketMap.containsKey(chatMessage.getTargetId())) {
             // 消息接收用户连接在此服务
             sendMessage(chatMessage.getTargetId(), SendMessage.getResult(chatMessage));
@@ -221,19 +251,32 @@ public class WebSocketService {
         redisService.deleteObject(USER_ROUTING_KEY + ":USER_ID_" + userId);
     }
 
-    private String getUserRoutingKey(Long userId) {
+    public static String getUserRoutingKey(Long userId) {
         return redisService.getCacheObject(USER_ROUTING_KEY + ":USER_ID_" + userId);
     }
 
-    private List<Long> getUserFriends(Long userId) {
-        return redisService.getCacheList(USER_FRIENDS + ":USER_ID_" + userId);
+    public static Set<Long> getUserFriends(Long userId) {
+        return redisService.getCacheSet(USER_FRIENDS + ":USER_ID_" + userId);
     }
 
-    private boolean checkUserFriends(Long userId, Long friendId) {
+    public static boolean checkUserFriends(Long userId, Long friendId) {
         if (userId == null || friendId == null) {
             return false;
         }
-        List<Long> userFriends = getUserFriends(userId);
-        return userFriends.stream().anyMatch(friendId::equals);
+        Set<Long> userFriends = getUserFriends(userId);
+        return userFriends.contains(friendId);
+    }
+
+    public static void setUserFriends(Long userId, Long friendId) {
+        if (userId == null || friendId == null) {
+            return;
+        }
+        Set<Long> userFriendsSet = getUserFriends(userId);
+        userFriendsSet.add(friendId);
+        redisService.setCacheSet(USER_FRIENDS + ":USER_ID_" + userId, userFriendsSet);
+
+        Set<Long> friendsSet = getUserFriends(friendId);
+        friendsSet.add(userId);
+        redisService.setCacheSet(USER_FRIENDS + ":USER_ID_" + friendId, friendsSet);
     }
 }

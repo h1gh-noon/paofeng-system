@@ -1,13 +1,16 @@
 package com.paofeng.system.api.factory;
 
+import com.paofeng.common.core.domain.R;
+import com.paofeng.system.api.RemoteUserService;
+import com.paofeng.system.api.domain.SysUser;
+import com.paofeng.system.api.domain.UserRelation;
+import com.paofeng.system.api.model.LoginUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
-import com.paofeng.common.core.domain.R;
-import com.paofeng.system.api.RemoteUserService;
-import com.paofeng.system.api.domain.SysUser;
-import com.paofeng.system.api.model.LoginUser;
+
+import java.util.List;
 
 /**
  * 用户服务降级处理
@@ -34,6 +37,11 @@ public class RemoteUserFallbackFactory implements FallbackFactory<RemoteUserServ
 
             @Override
             public R<Boolean> registerUserInfo(SysUser sysUser, String source) {
+                return R.fail("注册用户失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<List<UserRelation>> getRelationInfo(Long [] ids, String source) {
                 return R.fail("注册用户失败:" + throwable.getMessage());
             }
         };
