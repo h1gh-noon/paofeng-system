@@ -68,9 +68,19 @@ export default {
             duration: 2000,
           });
           this.$PopupMessage()
-          setTimeout(() => {
-            uni.redirectTo({ url: '/pages/shop/order/order/index' })
-          }, 1000);
+          this.$store.dispatch('getUserInfo').then(r => {
+            let url = 'pages/test'
+            if (r.code === 200 && r.roles) {
+              if (r.roles.includes('rider')) {
+                // 骑手身份
+                url = 'pages/rider/order/order'
+              } else if (r.roles.includes('shop') || r.roles.includes('admin')) {
+                url = 'pages/shop/order/order/index'
+              }
+            }
+            console.log(url)
+            uni.redirectTo({ url })
+          })
 
         } else {
           uni.showModal({

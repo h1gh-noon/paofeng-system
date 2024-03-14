@@ -43,8 +43,8 @@ export function initHandler() {
         oDiv.ontouchmove = null
         oDiv.ontouchend = null
       })
-      // ev.preventDefault()
-      ev.stopPropagation()
+      ev.preventDefault()
+      // ev.stopPropagation()
     },
     false
   )

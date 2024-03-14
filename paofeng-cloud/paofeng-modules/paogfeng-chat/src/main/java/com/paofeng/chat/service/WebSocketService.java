@@ -33,6 +33,13 @@ public class WebSocketService {
 
     private static final Logger log = LoggerFactory.getLogger(WebSocketService.class);
 
+    private static IChatMessageService chatMessageService;
+
+    @Resource
+    public void setIChatMessageService(IChatMessageService chatMessageService) {
+        WebSocketService.chatMessageService = chatMessageService;
+    }
+
     private static RedisService redisService;
 
     @Resource
@@ -52,13 +59,6 @@ public class WebSocketService {
     @Resource
     public void setRemoteUserService(RemoteUserService remoteUserService) {
         WebSocketService.remoteUserService = remoteUserService;
-    }
-
-    private static IChatMessageService chatMessageService;
-
-    @Resource
-    public void setChatMessageService(IChatMessageService chatMessageService) {
-        WebSocketService.chatMessageService = chatMessageService;
     }
 
     public static final String USER_ROUTING_KEY = "UserRoutingKey";
@@ -128,37 +128,45 @@ public class WebSocketService {
      * @param message 客户端发送过来的消息
      */
     @OnMessage
-    public void onMessage(String message, Session session) throws IOException {
-        LoginUser loginUser = getLoginUser(session);
-        if (loginUser == null) {
-            session.close();
-            return;
-        }
-        log.info("收到{}消息:{}", userName, message);
-        if (!JSON.isValidObject(message)) {
-            return;
-        }
-        ChatMessage chatMessage = JSON.parseObject(message, ChatMessage.class);
-        if (chatMessage.getType() != null) {
-            if (chatMessage.getType().equals(ChatMessage.OPTION_GET_FRIEND)) {
-                // 请求联系人信息
-                getRelation();
+    public void onMessage(String message, Session session) {
+        try {
+            LoginUser loginUser = getLoginUser(session);
+            if (loginUser == null) {
+                session.close();
+                return;
             }
-        } else {
+            log.info("收到{}消息:{}", userName, message);
+            if (!JSON.isValidObject(message)) {
+                return;
+            }
+            ChatMessage chatMessage = JSON.parseObject(message, ChatMessage.class);
             chatMessage.setSenderId(loginUser.getUserid());
-            Long oldId = chatMessage.getId();
-            chatMessageService.insertChatMessage(chatMessage);
-            log.info("====={}", chatMessage);
-            // Long targetId = chatMessage.getTargetId();
-            // 检查用户关系 检查对方(接收者)是否有发送者好友
-            // if (checkUserFriends(targetId, this.userId)) {
-            sendMessage(SendMessage.getReply(oldId, chatMessage));
-            sendCheckHandler(chatMessage);
-            // } else {
-            //     sendMessage(AjaxResult.error());
-            // }
+            String options = chatMessage.getType();
+            if (options != null) {
+                if (options.equals(ChatMessage.OPTION_GET_FRIEND)) {
+                    // 请求联系人信息
+                    getRelation();
+                } else if (options.equals(ChatMessage.TYPE_SYNC_CHAT)) {
+                    // 同步聊天记录
+                    List<SendMessage> chatMessages = chatMessageService.selectChatMessageListByUser(chatMessage);
+                    sendMessage(SendMessage.getSync(chatMessages));
+                }
+            } else {
+                Long oldId = chatMessage.getId();
+                chatMessageService.insertChatMessage(chatMessage);
+                log.info("====={}", chatMessage);
+                // Long targetId = chatMessage.getTargetId();
+                // 检查用户关系 检查对方(接收者)是否有发送者好友
+                // if (checkUserFriends(targetId, this.userId)) {
+                sendMessage(SendMessage.getReply(oldId, chatMessage));
+                sendCheckHandler(chatMessage);
+                // } else {
+                //     sendMessage(AjaxResult.error());
+                // }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 
     private void getRelation() throws IOException {
@@ -166,8 +174,9 @@ public class WebSocketService {
         ChatMessage<List<UserRelation>> chatMessage = new ChatMessage<>();
         chatMessage.setType(ChatMessage.OPTION_GET_FRIEND);
         if (userFriends != null && !userFriends.isEmpty()) {
-            R<List<UserRelation>> relationInfoRes = remoteUserService.getRelationInfo(userFriends.toArray(new Long[]{}),
-                    SecurityConstants.INNER);
+            R<List<UserRelation>> relationInfoRes =
+                    remoteUserService.getRelationInfo(userFriends.toArray(new Long[]{}),
+                            SecurityConstants.INNER);
             if (R.isSuccess(relationInfoRes)) {
                 List<UserRelation> data = relationInfoRes.getData();
                 chatMessage.setData(data);

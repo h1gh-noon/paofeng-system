@@ -2,6 +2,7 @@ package com.paofeng.chat.service;
 
 import com.paofeng.chat.domain.ChatMessage;
 import com.paofeng.chat.domain.ChatMessageVo;
+import com.paofeng.chat.domain.SendMessage;
 
 import java.util.List;
 
@@ -60,4 +61,11 @@ public interface IChatMessageService
      * @return 结果
      */
     public int deleteChatMessageById(String id);
+
+    /**
+     * 用户同步数据
+     *
+     * @param chatMessage senderId
+     */
+    List<SendMessage> selectChatMessageListByUser(ChatMessage chatMessage);
 }

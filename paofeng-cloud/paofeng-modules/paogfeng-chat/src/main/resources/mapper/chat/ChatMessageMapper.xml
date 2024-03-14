@@ -98,4 +98,18 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectChatMessageListByUser" parameterType="ChatMessage" resultMap="ChatMessageResult">
+        select c.id,
+        c.content,
+        c.sender_id,
+        c.target_id,
+        c.create_time,
+        c.type
+        from chat_message c
+        where (c.sender_id = #{senderId} or c.target_id = #{senderId})
+        <if test="params.beginCreateTime != null and params.endCreateTime != null">
+            and c.create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+        </if>
+    </select>
 </mapper>

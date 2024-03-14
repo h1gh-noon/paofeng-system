@@ -34,6 +34,9 @@ public class ChatMessage<T> extends BaseEntity {
     // 服务器响应消息发送成功
     public static final String TYPE_REPLY = "reply";
 
+    // 同步聊天记录
+    public static final String TYPE_SYNC_CHAT = "syncChat";
+
     /**
      * id
      */

@@ -1,24 +1,28 @@
 <template>
   <view>
-    <uni-popup ref="popup" type="message" class="global-popup">
-      <!-- sss -->
-      <uni-popup-message type="info" :duration="3000">
-        <div class="item-left">
-          <img class="img-avatar" :src="message.avatar" />
-          <div class="item-content">
-            <div>{{ message.role === '1' ? '店铺: ' + message.shopName : '骑手: ' +
-        message.riderName }}</div>
-            <div class="mui-ellipsis">{{ message.content }}</div>
+    <div @click="pushRoute">
+      <uni-popup ref="popup" type="message" class="global-popup">
+        <!-- sss -->
+        <uni-popup-message type="info" :duration="3000">
+          <div class="item-left">
+            <img class="img-avatar" :src="message.avatar" />
+            <div class="item-content">
+              <div>{{
+      message.role === '1'
+        ? '店铺: ' + message.shopName
+        : '骑手: ' + message.riderName }}</div>
+              <div class="mui-ellipsis">{{ message.content }}</div>
+            </div>
           </div>
-        </div>
-      </uni-popup-message>
-    </uni-popup>
+        </uni-popup-message>
+      </uni-popup>
+    </div>
   </view>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { OPTION_GET_FRIEND } from './type';
+import { OPTION_GET_FRIEND, TYPE_SYNC_CHAT } from './type';
 export default {
   data() {
     return {
@@ -53,6 +57,10 @@ export default {
           type: OPTION_GET_FRIEND
         }
         this.sendMessage(d)
+        this.$store.dispatch('setMsgTimer')
+        // 同步聊天数据
+        d.type = TYPE_SYNC_CHAT
+        this.sendMessage(d)
       });
       uni.onSocketMessage((res) => {
         const msgData = JSON.parse(res.data)
@@ -72,7 +80,14 @@ export default {
     },
     pushMessage(val) {
       if (val) {
-        // 判断当前页面
+        const routes = getCurrentPages(); // 获取当前打开过的页面路由数组
+        const curRoute = routes[routes.length - 1].route //获取当前页面路由
+        const curParam = routes[routes.length - 1].options; //获取路由参数
+        if (curRoute === 'pages/component/chat/chat' && parseInt(curParam.userId, 10) === val.userId) {
+          // 判断当前页面
+          // 在聊天页面 不需要弹窗
+          return
+        }
         this.message = val
         this.$refs.popup.open()
       }
@@ -80,6 +95,12 @@ export default {
     sendMessage(msg) {
       uni.sendSocketMessage({
         data: JSON.stringify(msg)
+      });
+    },
+    pushRoute() {
+      this.$refs.popup.close()
+      uni.navigateTo({
+        url: `/pages/component/chat/chat?userId=${this.message.userId}`
       });
     }
   }
@@ -112,6 +133,7 @@ export default {
   height: 40px;
   border-radius: 50%;
 }
+
 .mui-ellipsis {
   width: calc(100vw - 100px);
 }

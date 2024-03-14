@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="item-right">
-          <span class="time">{{ getTimeHandler(item) }}</span>
+          <span class="time">{{ item.lastChatTimeStr }}</span>
           <span class="unread-num" v-show="item.unReadNum > 0">{{ item.unReadNum > 99 ? '99+' : item.unReadNum }}</span>
         </div>
       </div>
@@ -66,25 +66,17 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { dateUtils } from '@/common/util';
 export default {
   data() {
     return {
+      timer: null
     }
   },
   computed: {
     ...mapGetters(['getMessages'])
   },
-  onLoad() {
-  },
   methods: {
-    sendWebsocket() {
-    },
-    getTimeHandler(item) {
-      if (item.data && item.data.length) {
-        return item.data[item.data.length - 1].createTime
-      }
-      return ''
-    },
     getLastMsgHandler(item) {
       if (item.data && item.data.length) {
         return item.data[item.data.length - 1].content

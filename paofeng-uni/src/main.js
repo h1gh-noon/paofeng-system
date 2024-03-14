@@ -16,7 +16,7 @@ const addH5component = function (url, name) {
       'PopupMessage_new_custom_' +
       new Date().getTime() +
       '_' +
-      parseInt(Math.random() * 1000)
+      parseInt(Math.random() * 1000, 10)
     const customComponent = url.default
     const customComponentCom = Vue.component('PopupMessage', customComponent) // 创建组件
     const customComponentComNew = new customComponentCom() // 创建组件实例（可以传递参数 { propsData: props }）

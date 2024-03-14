@@ -7,7 +7,7 @@
       <h1 class="mui-title" v-if="chatUser">{{ chatUser.role === '1' ? '店铺: ' + chatUser.shopName : '骑手: ' +
         chatUser.riderName }}</h1>
     </header>
-    <div class="mui-content">
+    <div class="mui-content" ref="msgBox">
       <div v-if="userId && chatUser">
         <template v-for="item in chatUser.data">
           <div class="chat-item-line" :key="item.id" :class="{ 'chat-item-me': item.senderId === getId }">
@@ -21,8 +21,8 @@
       </div>
     </div>
     <div class="message-input-box">
-      <input type="text" class="msg-input" v-model="msg">
-      <div class="send-btn" @click="sendHandler" @key.enter="sendHandler">发送</div>
+      <input type="text" ref="msgInput" id="msg-input" v-model="msg" @confirm="sendHandler">
+      <div class="send-btn" @click="sendHandler">发送</div>
     </div>
   </view>
 </template>
@@ -50,14 +50,18 @@ export default {
     },
     chatArr() {
       if (this.chatUser) {
-        console.log(this.chatUser)
         return this.chatUser.data
       }
       return []
     }
   },
   onLoad(val) {
-    this.userId = parseInt(val.userId)
+    this.userId = parseInt(val.userId, 10)
+    this.$store.commit('SET_UNREAD_NUM', this.userId)
+    this.$nextTick(() => {
+      this.$refs.msgBox.scrollIntoView(false)
+      this.setInputFocus()
+    })
   },
   methods: {
     sendHandler() {
@@ -72,6 +76,8 @@ export default {
         this.msg = ''
         this.$store.dispatch('pushMessage', msgData).then(() => {
           // 定位到页面底部
+          this.$refs.msgBox.scrollIntoView(false)
+          this.setInputFocus()
         })
         uni.sendSocketMessage({
           data
@@ -83,6 +89,13 @@ export default {
           duration: 2000
         });
       }
+    },
+    setInputFocus() {
+      // 设置input为焦点
+      this.$nextTick(() => {
+        // this.$refs.msgInput.$el.focus()
+        document.querySelector('#msg-input input').focus()
+      })
     }
   }
 }
@@ -174,7 +187,7 @@ header img {
   background-color: #fff;
 }
 
-.msg-input {
+#msg-input {
   flex: 1;
   margin: 5px;
   border: 1px solid #ccc;

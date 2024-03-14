@@ -2,13 +2,18 @@ package com.paofeng.chat.service.impl;
 
 import com.paofeng.chat.domain.ChatMessage;
 import com.paofeng.chat.domain.ChatMessageVo;
+import com.paofeng.chat.domain.SendMessage;
 import com.paofeng.chat.mapper.ChatMessageMapper;
 import com.paofeng.chat.service.IChatMessageService;
 import com.paofeng.common.core.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 聊天Service业务层处理
@@ -18,7 +23,8 @@ import java.util.List;
  */
 @Service
 public class ChatMessageServiceImpl implements IChatMessageService {
-    @Autowired
+
+    @Resource
     private ChatMessageMapper chatMessageMapper;
 
     /**
@@ -86,5 +92,26 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     @Override
     public int deleteChatMessageById(String id) {
         return chatMessageMapper.deleteChatMessageById(id);
+    }
+
+    /**
+     * 用户同步数据
+     *
+     * @param chatMessage senderId
+     */
+    @Override
+    public List<SendMessage> selectChatMessageListByUser(ChatMessage chatMessage) {
+        // 最多支持查询 七天之内的记录
+        Date nowDate = DateUtils.addDays(DateUtils.getNowDate(), -7);
+        Date selectDate = chatMessage.getCreateTime();
+        if (selectDate == null || nowDate.after(selectDate)) {
+            selectDate = nowDate;
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("beginCreateTime", new Timestamp(selectDate.getTime()));
+        map.put("endCreateTime", new Timestamp(new Date().getTime()));
+        chatMessage.setParams(map);
+
+        return chatMessageMapper.selectChatMessageListByUser(chatMessage);
     }
 }

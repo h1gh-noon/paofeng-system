@@ -1,5 +1,6 @@
 import { getInfo } from "@/api/login";
-import { OPTION_GET_FRIEND, TYPE_REPLY } from "@/pages/component/popup-message/type";
+import { OPTION_GET_FRIEND, TYPE_REPLY, TYPE_SYNC_CHAT } from "@/pages/component/popup-message/type";
+import { dateUtils } from '@/common/util';
 
 // #ifndef VUE3
 import Vue from 'vue'
@@ -32,7 +33,8 @@ const store = createStore({
     avatar: '',
     roles: [],
     permissions: [],
-		message: []
+		message: [],
+		msgTimer: null
 	},
 	mutations: {
 		login(state, provider) {
@@ -103,6 +105,26 @@ const store = createStore({
     },
 		PUSH_MESSAGE: (state, message) => {
 			state.message.push(message)
+		},
+		SET_UNREAD_NUM: (state, userId) => {
+			 const item = state.message.find(e => e.userId === userId)
+			 if (item) {
+					item.unReadNum = 0
+			 }
+		},
+		SET_MSG_TIMER: (state, msgTimer) => {
+			 state.msgTimer = msgTimer
+		},
+		UPDATE_LAST_MSG_TIME: (state) => {
+			 state.message.forEach(item => {
+					let t
+					if(item.data && item.data.length) {
+						t = item.data[item.data.length - 1].createTime
+					} else if (item.createTime) {
+						t = createTime
+					}
+					item.lastChatTimeStr = t ? dateUtils.format(t) : ''
+			 })
 		}
 	},
 	getters: {
@@ -202,9 +224,8 @@ const store = createStore({
 						commit('SET_ID', user.userId)
 						commit('SET_NAME', user.userName)
 						commit('SET_AVATAR', avatar)
-						resolve(res)
 					}
-					reject(res)
+					resolve(res)
         }).catch(error => {
           reject(error)
         })
@@ -223,6 +244,7 @@ const store = createStore({
 							list.forEach(item => {
 								item.type = '1'
 								item.unReadNum = 0
+								item.lastChatTimeStr = ''
 								item.data = []
 								const index =	msgArr.findIndex(e => e.type==='1' && e.userId === item.userId)
 								if(index > -1){
@@ -243,10 +265,32 @@ const store = createStore({
 								// 替换id 真实的接收时间createTime
 								item.id = message.id
 								item.createTime = message.createTime
+								// 更新联系人的最后通讯时间
+								element.lastChatTimeStr = dateUtils.format(item.createTime)
 								break
 							}
 						}
-
+					}	else if(message.type === TYPE_SYNC_CHAT) {
+							// 同步聊天记录
+							// 数据组装
+							if (message.data) {
+								message.data.forEach(item => {
+										if (item.type === '1') {
+											// 私聊
+											const msgItem =msgArr.find(e => e.userId === item.senderId || e.userId === item.targetId)
+											if(msgItem) {
+												if (msgItem.data) {
+													msgItem.data.push(item)
+												} else {
+													msgItem.data = [item]
+												}
+											}
+										} else {
+											// 其他2系统消息、3订单状态消息
+										}
+								})
+								commit('UPDATE_LAST_MSG_TIME')
+							}
 					} else {
 						const chatItem = msgArr.find(e => e.userId === message.senderId || e.userId === message.targetId)
 						if (chatItem) {
@@ -256,13 +300,26 @@ const store = createStore({
 								chatItem.data = [message]
 							}
 							if(message.senderId !== state.id) {
+								// 更新联系人的最后通讯时间
+								chatItem.lastChatTimeStr = dateUtils.format(message.createTime)
+																
+								const routes = getCurrentPages(); // 获取当前打开过的页面路由数组
+								const curRoute = routes[routes.length - 1].route //获取当前页面路由
+								const curParam = routes[routes.length - 1].options; //获取路由参数
+								if (curRoute === 'pages/component/chat/chat' && parseInt(curParam.userId, 10) === message.senderId) {
+									// 判断当前页面
+									// 在聊天页面 不需要增加未读数
+									return
+								}
 								chatItem.unReadNum++
+
 								resolve({
 									userId: chatItem.userId,
 									content: message.content,
 									avatar: chatItem.avatar,
 									role: chatItem.role,
 									userName: chatItem.userName,
+									shopName: chatItem.shopName,
 									riderName: chatItem.riderName
 								})
 								return
@@ -271,13 +328,36 @@ const store = createStore({
 							const data = {
 								userId: message.senderId,
 								data: message,
-								item: unReadNum = 1
+								item: unReadNum = 1,
+								type: '1',
+								unReadNum: 0,
+								lastChatTimeStr: dateUtils.format(message.createTime)
 							}
 							commit('PUSH_MESSAGE', data)
 						}
 					}
+
 					resolve(null)
 			})
+		},
+		setMsgTimer: function ({
+			commit, state
+		}) {
+			if (!state.msgTimer) {
+				// 防止重复开定时器
+				const msgTimer = setInterval(() => {
+					commit('UPDATE_LAST_MSG_TIME')
+				}, 1000 * 60);
+				commit('SET_MSG_TIMER', msgTimer)
+			}
+		},
+		destroyMsgTimer: function ({
+			commit,
+			state
+		}) {
+			// 销毁定时器
+			clearInterval(state.msgTimer)
+			commit('SET_MSG_TIMER', null)
 		}
 	}
 })

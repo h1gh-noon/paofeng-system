@@ -5,6 +5,7 @@ import com.paofeng.common.core.utils.bean.BeanUtils;
 import com.paofeng.common.core.web.domain.AjaxResult;
 
 import java.util.Date;
+import java.util.List;
 
 public class SendMessage<T> {
 
@@ -132,6 +133,12 @@ public class SendMessage<T> {
         sendMessage.setData(oldId);
         sendMessage.setCreateTime(message.getCreateTime());
         sendMessage.setType(ChatMessage.TYPE_REPLY);
+        return AjaxResult.successCode(sendMessage);
+    }
+    public static AjaxResult getSync(List<SendMessage> messages) {
+        SendMessage<List<SendMessage>> sendMessage = new SendMessage<>();
+        sendMessage.setData(messages);
+        sendMessage.setType(ChatMessage.TYPE_SYNC_CHAT);
         return AjaxResult.successCode(sendMessage);
     }
 }

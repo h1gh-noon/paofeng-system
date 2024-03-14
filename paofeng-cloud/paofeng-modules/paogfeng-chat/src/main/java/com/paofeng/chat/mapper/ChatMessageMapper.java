@@ -2,6 +2,7 @@ package com.paofeng.chat.mapper;
 
 import com.paofeng.chat.domain.ChatMessage;
 import com.paofeng.chat.domain.ChatMessageVo;
+import com.paofeng.chat.domain.SendMessage;
 
 import java.util.List;
 
@@ -59,4 +60,11 @@ public interface ChatMessageMapper {
      * @return 结果
      */
     public int deleteChatMessageByIds(String[] ids);
+
+    /**
+     * 用户同步数据
+     *
+     * @param chatMessage senderId
+     */
+    public List<SendMessage> selectChatMessageListByUser(ChatMessage chatMessage);
 }
