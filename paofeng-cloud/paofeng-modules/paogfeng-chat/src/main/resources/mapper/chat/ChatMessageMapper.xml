@@ -24,6 +24,15 @@
         <result property="type" column="type"/>
     </resultMap>
 
+    <resultMap type="SendMessage" id="SendMessageResult">
+        <result property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="senderId" column="sender_id"/>
+        <result property="targetId" column="target_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="type" column="type"/>
+    </resultMap>
+
     <sql id="selectChatMessageVo">
         select c.id,
                c.content,
@@ -99,7 +108,7 @@
         </foreach>
     </delete>
 
-    <select id="selectChatMessageListByUser" parameterType="ChatMessage" resultMap="ChatMessageResult">
+    <select id="selectChatMessageListByUser" parameterType="ChatMessage" resultMap="SendMessageResult">
         select c.id,
         c.content,
         c.sender_id,

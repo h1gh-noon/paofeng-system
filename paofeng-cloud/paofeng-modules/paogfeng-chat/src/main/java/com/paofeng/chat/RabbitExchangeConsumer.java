@@ -5,7 +5,8 @@ import com.alibaba.fastjson2.TypeReference;
 import com.paofeng.chat.config.RabbitConfig;
 import com.paofeng.chat.domain.ChatMessage;
 import com.paofeng.chat.domain.SendMessage;
-import com.paofeng.chat.service.WebSocketService;
+import com.paofeng.chat.service.BaseWebsocketService;
+import com.paofeng.chat.service.impl.ChatMedalService;
 import com.paofeng.common.core.constant.SecurityConstants;
 import com.paofeng.common.core.domain.MQMessage;
 import com.paofeng.common.core.domain.R;
@@ -29,6 +30,9 @@ public class RabbitExchangeConsumer {
     @Resource
     private RemoteUserService remoteUserService;
 
+    @Resource
+    private ChatMedalService chatMedalService;
+
 
     @Bean
     public Queue queue() {
@@ -42,7 +46,7 @@ public class RabbitExchangeConsumer {
         System.out.println("mq收到消息：" + message);
         ChatMessage chatMessage = JSON.parseObject(message, ChatMessage.class);
 
-        WebSocketService.sendMessage(chatMessage.getTargetId(), SendMessage.getResult(chatMessage));
+        BaseWebsocketService.sendMessage(chatMessage.getTargetId(), SendMessage.getResult(chatMessage));
 
     }
 
@@ -63,7 +67,7 @@ public class RabbitExchangeConsumer {
                 Long shopUserId = Long.valueOf(data.get("shopUserId").toString());
                 Long currentRiderId = Long.valueOf(data.get("currentRiderId").toString());
                 // 添加好友关系
-                WebSocketService.setUserFriends(shopUserId, currentRiderId);
+                chatMedalService.setUserFriends(shopUserId, currentRiderId);
 
                 R<List<UserRelation>> relationInfoRes =
                         remoteUserService.getRelationInfo(new Long[]{shopUserId, currentRiderId},
@@ -72,11 +76,11 @@ public class RabbitExchangeConsumer {
                     List<UserRelation> UserRelationList = relationInfoRes.getData();
                     chatMessage.setTargetId(shopUserId);
                     chatMessage.setData(UserRelationList.stream().filter(e -> e.getUserId().equals(currentRiderId)).collect(Collectors.toList()));
-                    WebSocketService.sendCheckHandler(chatMessage);
+                    chatMedalService.sendCheckHandler(chatMessage);
 
                     chatMessage.setTargetId(currentRiderId);
                     chatMessage.setData(UserRelationList.stream().filter(e -> e.getUserId().equals(shopUserId)).collect(Collectors.toList()));
-                    WebSocketService.sendCheckHandler(chatMessage);
+                    chatMedalService.sendCheckHandler(chatMessage);
                 }
             }
 

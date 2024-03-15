@@ -62,23 +62,22 @@ export default {
 
       loginByPhone(this.requestForm).then(res => {
         if (res.code === 200) {
-          uni.setStorageSync('auth_token', res.data.access_token)
+          this.$store.commit('SET_TOKEN', res.data.access_token)
           uni.showToast({
             title: '登录成功！',
             duration: 2000,
           });
-          this.$PopupMessage()
-          this.$store.dispatch('getUserInfo').then(r => {
-            let url = 'pages/test'
+          this.$store.dispatch('getUserInfo').then(async (r) => {
+            await this.$PopupMessage()
+            let url = '/pages/test'
             if (r.code === 200 && r.roles) {
               if (r.roles.includes('rider')) {
                 // 骑手身份
-                url = 'pages/rider/order/order'
+                url = '/pages/rider/order/order'
               } else if (r.roles.includes('shop') || r.roles.includes('admin')) {
-                url = 'pages/shop/order/order/index'
+                url = '/pages/shop/order/order/index'
               }
             }
-            console.log(url)
             uni.redirectTo({ url })
           })
 

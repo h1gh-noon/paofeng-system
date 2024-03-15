@@ -80,6 +80,7 @@ const store = createStore({
 			state.univerifyErrorMsg = payload
 		},
 		SET_TOKEN: (state, token) => {
+			uni.setStorageSync('auth_token', token)
       state.token = token
     },
     SET_EXPIRES_IN: (state, time) => {

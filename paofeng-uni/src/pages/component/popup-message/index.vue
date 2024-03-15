@@ -27,7 +27,8 @@ export default {
   data() {
     return {
       message: {},
-      tryNum: 0
+      tryNum: 0,
+      isOnline: false
     }
   },
   computed: {
@@ -44,15 +45,17 @@ export default {
         return
       }
       this.tryNum++
-      if (this.tryNum > 5) {
+      if (this.tryNum > 5 || this.isOnline) {
         return
       }
 
+      console.log('connect')
       uni.connectSocket({
         url: 'ws://localhost:18080/chat/websocket',
         protocols: [token]
       });
       uni.onSocketOpen(() => {
+        this.isOnline = true
         const d = {
           type: OPTION_GET_FRIEND
         }
@@ -76,6 +79,10 @@ export default {
         setTimeout(() => {
           this.initWebsocket()
         }, 3000);
+      });
+      uni.onSocketClose(function (res) {
+        console.log('WebSocket 已关闭！');
+        this.isOnline = false
       });
     },
     pushMessage(val) {

@@ -39,7 +39,8 @@ Vue.prototype.$PopupMessage = async function (obj) {
       require('@/pages/component/popup-message/index.vue'),
       'PopupMessage'
     )
-    console.log(this)
+  }
+  if (!this.$refs.PopupMessage.isOnline) {
     this.$refs.PopupMessage.initWebsocket()
   }
   if (obj) {
