@@ -63,7 +63,6 @@ public class WebSocketService {
             session.close();
             return;
         }
-        this.session = session;
         // log.info("token={}",token);
         this.userName = loginUser.getUsername();
         this.userId = loginUser.getUserid();
