@@ -28,6 +28,7 @@ const store = createStore({
 		menu: [],
 		univerifyErrorMsg: '',
 		token: uni.getStorageSync('auth_token'),
+    userInfo: {},
     id: '',
     name: '',
     avatar: '',
@@ -86,6 +87,9 @@ const store = createStore({
     SET_EXPIRES_IN: (state, time) => {
       state.expires_in = time
     },
+    SET_USER_INFO: (state, userInfo) => {
+      state.userInfo = userInfo
+    },
     SET_ID: (state, id) => {
       state.id = id
     },
@@ -135,6 +139,7 @@ const store = createStore({
 		getToken(state) {
 			return state.token
 		},
+		getUserInfo: (state) => state.userInfo,
 		getId(state) {
 			return state.id
 		},
@@ -215,6 +220,7 @@ const store = createStore({
 				getInfo().then(res => {
 					if (res.code === 200) {
 						const user = res.user
+						commit('SET_USER_INFO', res.user)
 						const avatar = (user.avatar == "" || user.avatar == null) ? '' : user.avatar;
 						if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
 							commit('SET_ROLES', res.roles)
@@ -267,7 +273,7 @@ const store = createStore({
 								item.id = message.id
 								item.createTime = message.createTime
 								// 更新联系人的最后通讯时间
-								element.lastChatTimeStr = dateUtils.format(item.createTime)
+								element.lastChatTimeStr = message.createTime ? dateUtils.format(message.createTime) : ''
 								break
 							}
 						}
@@ -302,7 +308,7 @@ const store = createStore({
 							}
 							if(message.senderId !== state.id) {
 								// 更新联系人的最后通讯时间
-								chatItem.lastChatTimeStr = dateUtils.format(message.createTime)
+								chatItem.lastChatTimeStr = message.createTime ? dateUtils.format(message.createTime) : ''
 																
 								const routes = getCurrentPages(); // 获取当前打开过的页面路由数组
 								const curRoute = routes[routes.length - 1].route //获取当前页面路由
@@ -329,10 +335,10 @@ const store = createStore({
 							const data = {
 								userId: message.senderId,
 								data: message,
-								item: unReadNum = 1,
+								unReadNum: 1,
 								type: '1',
 								unReadNum: 0,
-								lastChatTimeStr: dateUtils.format(message.createTime)
+								lastChatTimeStr: message.createTime ? dateUtils.format(message.createTime) : ''
 							}
 							commit('PUSH_MESSAGE', data)
 						}

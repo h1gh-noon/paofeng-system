@@ -21,7 +21,7 @@
       </div>
       <!--悬浮按钮-->
       <!--默认不显示，单机悬浮按钮的选项后进行显示相关内容-->
-      <div id="slider" class="mui-slider" v-if="checkPermission('order:order:add')">
+      <div class="mui-slider" v-if="checkPermission('order:order:add')" style="overflow: visible;">
         <div id="sliderSegmentedControl"
           class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
           <div class="mui-scroll">

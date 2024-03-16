@@ -1,6 +1,6 @@
 package com.paofeng.order.mapper;
 
-import com.paofeng.order.domain.Order;
+import com.paofeng.common.core.domain.Order;
 import com.paofeng.order.domain.OrderVo;
 
 import java.util.List;

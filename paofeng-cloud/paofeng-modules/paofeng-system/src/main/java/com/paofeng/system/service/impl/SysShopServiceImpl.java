@@ -1,13 +1,10 @@
 package com.paofeng.system.service.impl;
 
 import com.paofeng.common.core.enums.SysRoles;
-import com.paofeng.common.security.service.TokenService;
 import com.paofeng.system.api.domain.SysShop;
 import com.paofeng.system.mapper.SysShopMapper;
-import com.paofeng.system.service.ISysPermissionService;
 import com.paofeng.system.service.ISysRoleService;
 import com.paofeng.system.service.ISysShopService;
-import com.paofeng.system.service.ISysUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,15 +19,6 @@ public class SysShopServiceImpl implements ISysShopService {
 
     @Resource
     private ISysRoleService roleService;
-
-    @Resource
-    private TokenService tokenService;
-
-    @Resource
-    private ISysPermissionService permissionService;
-
-    @Resource
-    private ISysUserService userService;
 
     @Override
     public List<SysShop> selectShopList(SysShop shop) {

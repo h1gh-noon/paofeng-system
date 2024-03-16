@@ -9,40 +9,21 @@
     <div class="mui-content">
       <div class="main_one">
         <p>
-          <img src="@/static/image/rider/enter/logo.png" />
-          <img src="@/static/image/rider/user/Write@2x.png" />
-          <input type="file" id="file1" name="file1" />
+          <img class="avatar-img" :src="getAvatar" />
+          <!-- <img src="@/static/image/rider/user/Write@2x.png" />
+          <input type="file" id="file1" name="file1" /> -->
         </p>
-        <p>
+        <p style="line-height: 22px;">
           <img src="@/static/image/rider/user/qs.png" alt="" />
-          <span>张先生</span>
+          <span>{{ userInfo.riderName || '' }}</span>
         </p>
         <p>
-          18000000000
+          {{ getUserInfo.phonenumber }}
         </p>
-      </div>
-      <div class="main_two">
-        <p class="link" data-link="zhangHu_yuE.html">
-          <span>￥6000.00</span>
-          <span>账户余额</span>
-        </p>
-        <p class="dairenzheng">
-          <!--进行显示登陆的用户是否已经认证过还是没有认证过.默认待认证显示-->
-          <span class="dai link" data-link="@/static/image/rider/enter/wanShan_ziLiao.html">待认证</span>
-          <!--已认证不显示-->
-          <span class="yi link" data-link="renZheng_ziLiao.html" style="display: none;">已认证</span> <!---->
-          <span>签约状态</span>
-        </p>
-
       </div>
       <div class="main_three">
         <p class="link" data-link="youJiang_tuiJian.html">
-          <img src="@/static/image/rider/user/Share@2x.png" style="width: 20px;" />
-          <span>有奖推荐</span>
-        </p>
-        <p class="link" data-link="qiShou_paiHang.html">
-          <img src="@/static/image/rider/user/Menu@2x.png" style="width: 15px;" />
-          <span>骑手排行</span>
+          账户余额:{{ userInfo.riderMoney || 0 }}(元)
         </p>
         <navigator url="/pages/rider/user/message">
           <p>
@@ -50,10 +31,6 @@
             <span>消息通知</span>
           </p>
         </navigator>
-        <p class="link" data-link="zaiXian_keFu.html">
-          <img src="@/static/image/rider/user/Comment-(alt)@2x.png" style="width: 21px;" />
-          <span>在线客服</span>
-        </p>
         <p class="link" data-link="wanCheng_order.html">
           <img src="@/static/image/rider/user/Newspaper@2x.png" style="width: 20px;" />
           <span>完成订单</span>
@@ -68,24 +45,43 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import { selectRiderByUserId } from "@/api/rider";
+
 export default {
   data() {
     return {
+      userInfo: {}
     }
   },
+  computed: {
+    ...mapGetters(['getName', 'getAvatar', 'getUserInfo'])
+  },
   onLoad() {
+    this.getRiderInfo()
   },
   methods: {
     pushRoute(url) {
       uni.reLaunch({
         url
       });
+    },
+    getRiderInfo() {
+      selectRiderByUserId().then(res => {
+        if (res.code === 200) {
+          this.userInfo = res.data
+        }
+      })
     }
   }
 }
 </script>
 
 <style scoped>
+.avatar-img {
+  border-radius: 50%;
+}
+
 .mui-bar {
   height: 44px;
   line-height: 44px;
@@ -161,7 +157,7 @@ header img {
 }
 
 .main_one p:nth-child(2) img {
-  margin-right: 3px;
+  margin: auto;
   width: 28px;
 }
 
@@ -260,6 +256,7 @@ header img {
 
 .main_three p:nth-child(odd) {
   float: left;
+  margin-left: 4px;
 }
 
 .main_three p:nth-child(even) {

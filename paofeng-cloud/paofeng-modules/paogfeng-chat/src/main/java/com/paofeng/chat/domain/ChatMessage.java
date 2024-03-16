@@ -1,11 +1,12 @@
 package com.paofeng.chat.domain;
 
 import com.paofeng.common.core.annotation.Excel;
-import com.paofeng.common.core.web.domain.BaseEntity;
+import com.paofeng.common.core.web.domain.AjaxResult;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 聊天对象 chat_message
@@ -13,7 +14,7 @@ import java.util.Date;
  * @author paofeng
  * @date 2024-02-22
  */
-public class ChatMessage<T> extends BaseEntity {
+public class ChatMessage<T> {
     private static final long serialVersionUID = 1L;
 
     // 1私聊
@@ -119,12 +120,10 @@ public class ChatMessage<T> extends BaseEntity {
         this.targetId = targetId;
     }
 
-    @Override
     public Date getCreateTime() {
         return createTime;
     }
 
-    @Override
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
@@ -148,5 +147,25 @@ public class ChatMessage<T> extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("type", getType())
                 .toString();
+    }
+
+    public static AjaxResult getResult(ChatMessage message) {
+        message.setTargetId(null);
+        return AjaxResult.successCode(message);
+    }
+
+    public static AjaxResult getReply(Long oldId, ChatMessage message) {
+        ChatMessage<Long> sendMessage = new ChatMessage<>();
+        sendMessage.setId(message.getId());
+        sendMessage.setData(oldId);
+        sendMessage.setCreateTime(message.getCreateTime());
+        sendMessage.setType(ChatMessage.TYPE_REPLY);
+        return AjaxResult.successCode(sendMessage);
+    }
+    public static AjaxResult getSync(List<ChatMessage> messages) {
+        ChatMessage<List<ChatMessage>> chatMessage = new ChatMessage<>();
+        chatMessage.setData(messages);
+        chatMessage.setType(ChatMessage.TYPE_SYNC_CHAT);
+        return AjaxResult.successCode(chatMessage);
     }
 }

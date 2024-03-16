@@ -1,6 +1,6 @@
 import $store from '@/store'
 
-const whiteList = ['/pages/login/login', '/pages/home/home']
+const whiteList = ['/pages/login/login', '/pages/home/home', '/pages/login/register']
 
 const list = ['navigateTo', 'redirectTo', 'reLaunch', 'switchTab']
 

@@ -25,7 +25,7 @@
         <result property="createTime" column="create_time"/>
     </resultMap>
 
-    <resultMap type="Order" id="OrderResult">
+    <resultMap type="com.paofeng.common.core.domain.Order" id="OrderResult">
         <result property="orderId" column="order_id"/>
         <result property="creatId" column="creat_id"/>
         <result property="shopName" column="shop_name"/>
@@ -98,7 +98,7 @@
         where o.order_id = #{orderId}
     </select>
 
-    <insert id="insertOrder" parameterType="Order">
+    <insert id="insertOrder" parameterType="com.paofeng.common.core.domain.Order">
         insert into pangfeng_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null">order_id,</if>
@@ -130,7 +130,7 @@
         </trim>
     </insert>
 
-    <update id="updateOrder" parameterType="Order">
+    <update id="updateOrder" parameterType="com.paofeng.common.core.domain.Order">
         update pangfeng_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="creatId != null">creat_id = #{creatId},</if>

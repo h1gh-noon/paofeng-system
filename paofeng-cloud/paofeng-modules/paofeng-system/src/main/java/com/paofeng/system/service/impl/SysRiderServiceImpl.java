@@ -46,7 +46,7 @@ public class SysRiderServiceImpl implements ISysRiderService {
 
     @Override
     public SysRider selectRiderByUserId(Long userId) {
-        return null;
+        return riderMapper.selectRiderByUserId(userId);
     }
 
     @Override

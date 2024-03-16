@@ -1,7 +1,6 @@
 package com.paofeng.chat.service.impl;
 
 import com.paofeng.chat.domain.ChatMessage;
-import com.paofeng.chat.domain.SendMessage;
 import com.paofeng.chat.service.BaseWebsocketService;
 import com.paofeng.common.core.constant.SecurityConstants;
 import com.paofeng.common.core.domain.R;
@@ -44,7 +43,7 @@ public class GetFriendMedalService extends BaseWebsocketService {
         }
 
         try {
-            sendMessage(userId, SendMessage.getResult(chatMessages));
+            sendMessage(userId, ChatMessage.getResult(chatMessages));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -25,7 +25,7 @@
       <p>暂无订单</p>
     </div> -->
     <div class="mui-content" v-else>
-      <div class="mui-slider">
+      <div class="mui-slider" v-if="tableList.length">
         <div class="mui-slider-group">
           <div class="list-item" v-for="item in tableList" :key="item.orderId">
             <div class="item1_main_one" v-if="statusFlag !== '1'">
@@ -63,38 +63,11 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <!--抢单出现的弹框2，形式二-->
-    <div class="qiangdan_pop1">
-      <div class="qiangdan1">
-        <p>确认抢单？</p>
-        <p>
-          <a class="enter"><i>确定</i></a>
-          <a class="cancel"><i>取消</i></a>
-        </p>
+      <div class="wkg" v-else>
+        <p>暂无订单</p>
       </div>
     </div>
-    <!--已送达出现的弹框-->
-    <div class="ysd_pop">
-      <div class="ysd">
-        <p>确定送达？</p>
-        <p>
-          <!--当客户没有支付餐费的时候显示-->
-          <!--餐费未支付,记得向客户收取。-->
 
-
-
-          <!--当客户已支付餐费的时候显示-->
-          记得向客户说：祝您生活愉快！
-        </p>
-
-        <p>
-          <a class="cancel"><i>取消</i></a>
-          <a class="enter"><i>确定</i></a>
-        </p>
-      </div>
-    </div>
     <!--取消出现的弹框-->
     <div class="quxiao_pop">
       <div class="quxiao">

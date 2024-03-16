@@ -55,13 +55,18 @@ export default {
       return []
     }
   },
+  watch: {
+    chatArr() {
+      this.$nextTick(() => {
+        this.$refs.msgBox.scrollIntoView(false)
+      })
+    }
+  },
   onLoad(val) {
     this.userId = parseInt(val.userId, 10)
     this.$store.commit('SET_UNREAD_NUM', this.userId)
-    this.$nextTick(() => {
-      this.$refs.msgBox.scrollIntoView(false)
-      this.setInputFocus()
-    })
+    this.$refs.msgBox.scrollIntoView(false)
+    this.setInputFocus()
   },
   methods: {
     sendHandler() {
@@ -76,7 +81,6 @@ export default {
         this.msg = ''
         this.$store.dispatch('pushMessage', msgData).then(() => {
           // 定位到页面底部
-          this.$refs.msgBox.scrollIntoView(false)
           this.setInputFocus()
         })
         uni.sendSocketMessage({
@@ -93,7 +97,6 @@ export default {
     setInputFocus() {
       // 设置input为焦点
       this.$nextTick(() => {
-        // this.$refs.msgInput.$el.focus()
         document.querySelector('#msg-input input').focus()
       })
     }

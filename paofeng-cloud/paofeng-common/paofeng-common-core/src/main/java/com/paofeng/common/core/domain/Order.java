@@ -1,7 +1,6 @@
-package com.paofeng.order.domain;
+package com.paofeng.common.core.domain;
 
 import com.paofeng.common.core.annotation.Excel;
-import com.paofeng.common.core.domain.Validation;
 import com.paofeng.common.core.web.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -2,7 +2,6 @@ package com.paofeng.chat.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.paofeng.chat.domain.ChatMessage;
-import com.paofeng.chat.domain.SendMessage;
 import com.paofeng.chat.service.BaseWebsocketService;
 import com.paofeng.chat.service.IChatMessageService;
 import com.paofeng.chat.service.RabbitMQService;
@@ -42,7 +41,7 @@ public class ChatMedalService extends BaseWebsocketService {
             Long targetId = chatMessage.getTargetId();
             // 检查用户关系 检查对方(接收者)是否有发送者好友
             if (checkUserFriends(targetId, getLoginUser(session).getUserid())) {
-                sendMessage(session, SendMessage.getReply(oldId, chatMessage));
+                sendMessage(session, ChatMessage.getReply(oldId, chatMessage));
                 sendCheckHandler(chatMessage);
             } else {
                 sendMessage(session, AjaxResult.error());
@@ -65,18 +64,22 @@ public class ChatMedalService extends BaseWebsocketService {
             return;
         }
         Set<Long> userFriendsSet = redisService.getCacheSet(getUserFriendsRedisKey(userId));
-        userFriendsSet.add(friendId);
-        redisService.setCacheSet(USER_FRIENDS + ":USER_ID_" + userId, userFriendsSet);
+        if (!userFriendsSet.contains(friendId)) {
+            userFriendsSet.add(friendId);
+            redisService.setCacheSet(USER_FRIENDS + ":USER_ID_" + userId, userFriendsSet);
+        }
 
         Set<Long> friendsSet = redisService.getCacheSet(getUserFriendsRedisKey(friendId));
-        friendsSet.add(userId);
-        redisService.setCacheSet(USER_FRIENDS + ":USER_ID_" + friendId, friendsSet);
+        if (!friendsSet.contains(userId)) {
+            friendsSet.add(userId);
+            redisService.setCacheSet(USER_FRIENDS + ":USER_ID_" + friendId, friendsSet);
+        }
     }
 
     public void sendCheckHandler(ChatMessage chatMessage) throws IOException {
         if (webSocketMap.containsKey(chatMessage.getTargetId())) {
             // 消息接收用户连接在此服务
-            sendMessage(chatMessage.getTargetId(), SendMessage.getResult(chatMessage));
+            sendMessage(chatMessage.getTargetId(), ChatMessage.getResult(chatMessage));
         } else {
             // 不在此服务 查询redis
             String userRoutingKey = redisService.getCacheObject(getUserRoutingRedisKey(chatMessage.getTargetId()));

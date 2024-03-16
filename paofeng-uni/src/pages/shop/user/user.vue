@@ -16,17 +16,17 @@
     <div class="mui-content">
       <div class="main-top">
         <p>
-          <img src="@/static/image/shop/user/touxiang.png" class="tx" />
-          <img src="@/static/image/shop/user/bianji.png" alt="" />
-          <input type="file" id="file1" name="file1" />
+          <img :src="getAvatar" class="tx" />
+          <!-- <img src="@/static/image/shop/user/bianji.png" alt="" />
+          <input type="file" id="file1" name="file1" /> -->
         </p>
         <p>
           <img src="@/static/image/shop/user/jinbi.png" alt="" />
-          <span>余额</span>
-          <b>566</b>
+          <span>余额(元):</span>
+          <b>{{ shopInfo.shopMoney || 0 }}</b>
         </p>
-        <p class="link" data-link="../../html/user/renZheng_ziLiao.html">
-          <span>商家信息已验证</span><span>，点击查看</span>
+        <p v-if="shopInfo.status">
+          <span>商家信息{{ shopInfo.status === '0' ? '已' : '未' }}验证</span><span>，点击查看</span>
         </p>
       </div>
       <div class="main_bot">
@@ -62,28 +62,33 @@
         </table>
       </div>
     </div>
-    <div class="tx_pop">
-      <div class="tx_main">
-        <p>拍照</p>
-        <p>
-          <input type="file" name="file" id="file" />
-          <span>从手机相册中选择</span>
-        </p>
-        <p class="cancel">取消</p>
-      </div>
-    </div>
   </view>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import { selectShopByUserId } from "@/api/shop";
+
 export default {
   data() {
     return {
+      shopInfo: {}
     }
   },
+  computed: {
+    ...mapGetters(['getName', 'getAvatar', 'getUserInfo'])
+  },
   onLoad() {
+    this.getShopInfo()
   },
   methods: {
+    getShopInfo() {
+      selectShopByUserId().then(res => {
+        if (res.code === 200) {
+          this.shopInfo = res.data
+        }
+      })
+    }
   }
 }
 </script>

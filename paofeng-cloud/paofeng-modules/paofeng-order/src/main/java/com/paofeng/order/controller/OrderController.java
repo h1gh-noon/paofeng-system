@@ -12,7 +12,7 @@ import com.paofeng.common.log.enums.BusinessType;
 import com.paofeng.common.security.annotation.RequiresPermissions;
 import com.paofeng.common.security.auth.AuthUtil;
 import com.paofeng.common.security.utils.SecurityUtils;
-import com.paofeng.order.domain.Order;
+import com.paofeng.common.core.domain.Order;
 import com.paofeng.order.domain.OrderVo;
 import com.paofeng.order.service.IOrderService;
 import com.paofeng.order.service.RabbitMQService;

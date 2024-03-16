@@ -2,6 +2,7 @@ package com.paofeng.order.service.impl;
 
 import com.paofeng.common.core.constant.SecurityConstants;
 import com.paofeng.common.core.domain.MQMessage;
+import com.paofeng.common.core.domain.Order;
 import com.paofeng.common.core.domain.R;
 import com.paofeng.common.core.exception.CheckedException;
 import com.paofeng.common.core.exception.auth.NotPermissionException;
@@ -9,7 +10,6 @@ import com.paofeng.common.core.exception.base.BaseException;
 import com.paofeng.common.core.utils.DateUtils;
 import com.paofeng.common.core.utils.uuid.UUID;
 import com.paofeng.common.security.utils.SecurityUtils;
-import com.paofeng.order.domain.Order;
 import com.paofeng.order.domain.OrderVo;
 import com.paofeng.order.mapper.OrderMapper;
 import com.paofeng.order.service.IOrderService;
@@ -23,9 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 订单Service业务层处理
@@ -124,18 +122,7 @@ public class OrderServiceImpl implements IOrderService {
         order.setCurrentRider(SecurityUtils.getUserId());
         order.setStatus(Order.TYPE_DELIVERING_TAKING);
 
-        int n = updateOrder(order);
-        if (n > 0) {
-            // 通过mq传递消息
-            Map<String, Object> map = new HashMap<>();
-            map.put("currentRiderId", order.getCurrentRider());
-            map.put("shopUserId", orderVo.getCreatId());
-            MQMessage<Map<String, Object>> mqMessage = new MQMessage<>();
-            mqMessage.setType("1");
-            mqMessage.setData(map);
-            rabbitMQService.sendMessage(chatTopic, mqMessage);
-        }
-        return n;
+        return updateOrderSendMsgMQ(order);
     }
 
     @Transactional
@@ -146,7 +133,7 @@ public class OrderServiceImpl implements IOrderService {
         order.setOrderId(orderId);
         order.setPickupTime(DateUtils.getTime());
         order.setCurrentRider(SecurityUtils.getUserId());
-        if (!orderVo.getCurrentRider().equals(order.getCurrentRider())) {
+        if (!order.getCurrentRider().equals(orderVo.getCurrentRider())) {
             // 校验只有骑手本人可以修改状态
             throw new NotPermissionException("401");
         }
@@ -156,7 +143,7 @@ public class OrderServiceImpl implements IOrderService {
         }
 
         order.setStatus(Order.TYPE_DELIVERING);
-        return updateOrder(order);
+        return updateOrderSendMsgMQ(order);
     }
 
     @Transactional
@@ -177,8 +164,9 @@ public class OrderServiceImpl implements IOrderService {
         order.setSuccessTime(DateUtils.getTime());
         order.setCurrentRider(SecurityUtils.getUserId());
         order.setStatus(Order.TYPE_SUCCESS);
-        return updateOrder(order);
+        return updateOrderSendMsgMQ(order);
     }
+
 
     @Transactional
     @Override
@@ -187,28 +175,57 @@ public class OrderServiceImpl implements IOrderService {
         Order order = new Order();
         order.setOrderId(orderId);
         Long userId = SecurityUtils.getUserId();
+
+        if (!userId.equals(orderVo.getCreatId()) && !userId.equals(orderVo.getCurrentRider())) {
+            throw new NotPermissionException("401");
+        }
+        if (Order.TYPE_SUCCESS.equals(orderVo.getStatus())) {
+            // 订单完成不允许修改
+            return 0;
+        }
+
         // 根据userId判断是谁取消的订单
         if (userId.equals(orderVo.getCurrentRider())) {
             // 骑手取消
-            if (orderVo.getStatus().equals(Order.TYPE_DELIVERING_TAKING)) {
+            if (Order.TYPE_DELIVERING_TAKING.equals(orderVo.getStatus())) {
                 // 如果 订单还没取货 那么订单改为已发布状态
                 order.setStatus(Order.TYPE_PUBLISH);
+                log.info("骑手取消,订单状态待取货,userName={},userId={}", SecurityUtils.getUsername(), userId);
+                return updateOrder(order);
             } else {
                 // 已经取货 状态改为骑手取消
                 order.setStatus(Order.TYPE_CANCEL_RIDER);
+                order.setSuccessTime(DateUtils.getTime());
+                log.info("骑手取消,订单状态已取货,userName={},userId={}", SecurityUtils.getUsername(), userId);
             }
         } else {
             // 商家取消
-            if (orderVo.getStatus().equals(Order.TYPE_DELIVERING_TAKING)) {
-                // 如果 订单还没取货 那么订单改为已发布状态
-                order.setStatus(Order.TYPE_PUBLISH);
+            if (Order.TYPE_PUBLISH.equals(orderVo.getStatus())) {
+                // 如果 订单为已发布状态 那么订单改为未发布状态
+                order.setStatus(Order.TYPE_DRAFT);
+                return updateOrder(order);
             } else {
-                // 已经取货 状态改为商家取消
+                // 已接单已经取货 状态改为商家取消
                 order.setStatus(Order.TYPE_CANCEL_SHOP);
+                order.setSuccessTime(DateUtils.getTime());
+                log.info("商家取消,订单状态已接单,userName={},userId={}", SecurityUtils.getUsername(), userId);
             }
         }
 
-        return updateOrder(order);
+        return updateOrderSendMsgMQ(order);
+    }
+
+    private int updateOrderSendMsgMQ(Order order) {
+        int n = updateOrder(order);
+        if (n > 0) {
+            // 通过mq传递消息
+            MQMessage<Order> mqMessage = new MQMessage<>();
+            // mqMessage.setType("1");
+            order.setParams(null);
+            mqMessage.setData(order);
+            rabbitMQService.sendMessage(chatTopic, mqMessage);
+        }
+        return n;
     }
 
     /**

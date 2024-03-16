@@ -24,15 +24,6 @@
         <result property="type" column="type"/>
     </resultMap>
 
-    <resultMap type="SendMessage" id="SendMessageResult">
-        <result property="id" column="id"/>
-        <result property="content" column="content"/>
-        <result property="senderId" column="sender_id"/>
-        <result property="targetId" column="target_id"/>
-        <result property="createTime" column="create_time"/>
-        <result property="type" column="type"/>
-    </resultMap>
-
     <sql id="selectChatMessageVo">
         select c.id,
                c.content,
@@ -65,7 +56,7 @@
         and c.id = #{id}
     </select>
 
-    <insert id="insertChatMessage" parameterType="ChatMessage" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertChatMessage" parameterType="ChatMessageVo" useGeneratedKeys="true" keyProperty="id">
         insert into chat_message
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="content != null">content,</if>
@@ -83,7 +74,7 @@
         </trim>
     </insert>
 
-    <update id="updateChatMessage" parameterType="ChatMessage">
+    <update id="updateChatMessage" parameterType="ChatMessageVo">
         update chat_message
         <trim prefix="SET" suffixOverrides=",">
             <if test="content != null">content = #{content},</if>
@@ -108,7 +99,7 @@
         </foreach>
     </delete>
 
-    <select id="selectChatMessageListByUser" parameterType="ChatMessage" resultMap="SendMessageResult">
+    <select id="selectChatMessageListByUser" parameterType="ChatMessageVo" resultMap="ChatMessageResult">
         select c.id,
         c.content,
         c.sender_id,

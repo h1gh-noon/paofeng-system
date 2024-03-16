@@ -66,7 +66,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { dateUtils } from '@/common/util';
 export default {
   data() {
     return {

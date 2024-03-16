@@ -58,13 +58,7 @@ public class SysShopController extends BaseController {
     // 查询当前登陆人的店铺
     @GetMapping("/selectShopByUserId")
     public AjaxResult selectShopByUserId() {
-        SysShop sysShop = shopService.selectShopByUserId(SecurityUtils.getUserId());
-        // 检测是否可用
-        if ("1".equals(sysShop.getStatus())) {
-            return success(sysShop);
-        } else {
-            return error(sysShop.getStatus());
-        }
+        return success(shopService.selectShopByUserId(SecurityUtils.getUserId()));
     }
 
     // 根据userId查询店铺

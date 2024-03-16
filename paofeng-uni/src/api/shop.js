@@ -8,10 +8,15 @@ export const orderAdd = data => request.post('/api/order/order/add', data)
 
 export const updateDeliveryFee = data =>
   request.post('/api/order/order/updateDeliveryFee', data)
+
 export const subOrder = params =>
   request.post(`/api/order/order/subOrder?orderId=${params.orderId}`, params)
+
 export const cancelOrder = params =>
   request.post(`/api/order/order/cancelOrder?orderId=${params.orderId}`, params)
+
+export const selectShopByUserId = () =>
+  request.get('/api/system/shop/selectShopByUserId')
 
 export const orderList = (data, params) =>
   request.post('/api/order/order/shopList', data, params)

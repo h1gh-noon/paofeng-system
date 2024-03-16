@@ -10,6 +10,9 @@ export const riderTakeOrderList = (data, params) =>
 export const riderList = (data, params) =>
   request.post('/api/order/order/riderList', data, params)
 
+export const selectRiderByUserId = () =>
+  request.get('/api/system/rider/selectRiderByUserId')
+
 export const takeOrderGoods = params =>
   request.get('/api/order/order/takeOrderGoods', params)
 

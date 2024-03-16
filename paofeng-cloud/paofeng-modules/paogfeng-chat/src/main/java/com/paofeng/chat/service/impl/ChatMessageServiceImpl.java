@@ -2,7 +2,6 @@ package com.paofeng.chat.service.impl;
 
 import com.paofeng.chat.domain.ChatMessage;
 import com.paofeng.chat.domain.ChatMessageVo;
-import com.paofeng.chat.domain.SendMessage;
 import com.paofeng.chat.mapper.ChatMessageMapper;
 import com.paofeng.chat.service.IChatMessageService;
 import com.paofeng.common.core.utils.DateUtils;
@@ -100,7 +99,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
      * @param chatMessage senderId
      */
     @Override
-    public List<SendMessage> selectChatMessageListByUser(ChatMessage chatMessage) {
+    public List<ChatMessage> selectChatMessageListByUser(ChatMessageVo chatMessage) {
         // 最多支持查询 七天之内的记录
         Date nowDate = DateUtils.addDays(DateUtils.getNowDate(), -7);
         Date selectDate = chatMessage.getCreateTime();

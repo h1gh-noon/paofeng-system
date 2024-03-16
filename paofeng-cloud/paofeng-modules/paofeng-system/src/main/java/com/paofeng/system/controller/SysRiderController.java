@@ -54,13 +54,7 @@ public class SysRiderController extends BaseController {
     // 查询当前登陆人的骑手
     @GetMapping("/selectRiderByUserId")
     public AjaxResult selectRiderByUserId() {
-        SysRider sysRider = riderService.selectRiderByUserId(SecurityUtils.getUserId());
-        // 检测是否可用
-        if ("1".equals(sysRider.getStatus())) {
-            return success(sysRider);
-        } else {
-            return error(sysRider.getStatus());
-        }
+        return success(riderService.selectRiderByUserId(SecurityUtils.getUserId()));
     }
 
     @Log(title = "骑手管理", businessType = BusinessType.INSERT)

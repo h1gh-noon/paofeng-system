@@ -2,7 +2,6 @@ package com.paofeng.chat.service;
 
 import com.paofeng.chat.domain.ChatMessage;
 import com.paofeng.chat.domain.ChatMessageVo;
-import com.paofeng.chat.domain.SendMessage;
 
 import java.util.List;
 
@@ -66,5 +65,5 @@ public interface IChatMessageService {
      *
      * @param chatMessage senderId
      */
-    List<SendMessage> selectChatMessageListByUser(ChatMessage chatMessage);
+    List<ChatMessage> selectChatMessageListByUser(ChatMessageVo chatMessage);
 }
